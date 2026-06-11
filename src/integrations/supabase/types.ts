@@ -14,16 +14,207 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      lore_entries: {
+        Row: {
+          banner_image_url: string | null
+          body: string | null
+          category: Database["public"]["Enums"]["lore_category"]
+          clearance: Database["public"]["Enums"]["clearance_level"]
+          cover_image_url: string | null
+          created_at: string
+          created_by: string | null
+          id: string
+          metadata: Json
+          slug: string
+          status: Database["public"]["Enums"]["entry_status"]
+          subtitle: string | null
+          summary: string | null
+          tags: string[]
+          timeline_date: string | null
+          timeline_order: number | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          banner_image_url?: string | null
+          body?: string | null
+          category: Database["public"]["Enums"]["lore_category"]
+          clearance?: Database["public"]["Enums"]["clearance_level"]
+          cover_image_url?: string | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          metadata?: Json
+          slug: string
+          status?: Database["public"]["Enums"]["entry_status"]
+          subtitle?: string | null
+          summary?: string | null
+          tags?: string[]
+          timeline_date?: string | null
+          timeline_order?: number | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          banner_image_url?: string | null
+          body?: string | null
+          category?: Database["public"]["Enums"]["lore_category"]
+          clearance?: Database["public"]["Enums"]["clearance_level"]
+          cover_image_url?: string | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          metadata?: Json
+          slug?: string
+          status?: Database["public"]["Enums"]["entry_status"]
+          subtitle?: string | null
+          summary?: string | null
+          tags?: string[]
+          timeline_date?: string | null
+          timeline_order?: number | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      lore_relations: {
+        Row: {
+          created_at: string
+          from_entry: string
+          id: string
+          notes: string | null
+          relation_type: string
+          to_entry: string
+        }
+        Insert: {
+          created_at?: string
+          from_entry: string
+          id?: string
+          notes?: string | null
+          relation_type: string
+          to_entry: string
+        }
+        Update: {
+          created_at?: string
+          from_entry?: string
+          id?: string
+          notes?: string | null
+          relation_type?: string
+          to_entry?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "lore_relations_from_entry_fkey"
+            columns: ["from_entry"]
+            isOneToOne: false
+            referencedRelation: "lore_entries"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "lore_relations_to_entry_fkey"
+            columns: ["to_entry"]
+            isOneToOne: false
+            referencedRelation: "lore_entries"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          bio: string | null
+          created_at: string
+          display_name: string | null
+          id: string
+          updated_at: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          bio?: string | null
+          created_at?: string
+          display_name?: string | null
+          id: string
+          updated_at?: string
+        }
+        Update: {
+          avatar_url?: string | null
+          bio?: string | null
+          created_at?: string
+          display_name?: string | null
+          id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          granted_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          granted_at?: string
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          granted_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      can_view_clearance: {
+        Args: {
+          _clearance: Database["public"]["Enums"]["clearance_level"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
+      is_admin: { Args: { _user_id: string }; Returns: boolean }
+      is_staff: { Args: { _user_id: string }; Returns: boolean }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "visitante" | "narrador" | "administrador"
+      clearance_level:
+        | "publico"
+        | "nivel_1"
+        | "nivel_2"
+        | "nivel_3"
+        | "nivel_4"
+        | "nivel_diretor"
+      entry_status: "rascunho" | "publicado" | "arquivado"
+      lore_category:
+        | "universo"
+        | "historia"
+        | "npc"
+        | "faccao"
+        | "vestigio"
+        | "regente"
+        | "curador"
+        | "dominio"
+        | "evento"
+        | "bastiao"
+        | "esquadrao"
+        | "personagem_historico"
+        | "documento_restrito"
+        | "classe"
+        | "ruptura"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +341,34 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["visitante", "narrador", "administrador"],
+      clearance_level: [
+        "publico",
+        "nivel_1",
+        "nivel_2",
+        "nivel_3",
+        "nivel_4",
+        "nivel_diretor",
+      ],
+      entry_status: ["rascunho", "publicado", "arquivado"],
+      lore_category: [
+        "universo",
+        "historia",
+        "npc",
+        "faccao",
+        "vestigio",
+        "regente",
+        "curador",
+        "dominio",
+        "evento",
+        "bastiao",
+        "esquadrao",
+        "personagem_historico",
+        "documento_restrito",
+        "classe",
+        "ruptura",
+      ],
+    },
   },
 } as const
