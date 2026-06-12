@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as LinhaDoTempoRouteImport } from './routes/linha-do-tempo'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as AuthRouteImport } from './routes/auth'
@@ -23,6 +24,11 @@ import { Route as AuthenticatedAdminUsuariosRouteImport } from './routes/_authen
 import { Route as AuthenticatedAdminNovoRouteImport } from './routes/_authenticated/admin.novo'
 import { Route as AuthenticatedAdminEditarIdRouteImport } from './routes/_authenticated/admin.editar.$id'
 
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LinhaDoTempoRoute = LinhaDoTempoRouteImport.update({
   id: '/linha-do-tempo',
   path: '/linha-do-tempo',
@@ -96,6 +102,7 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/dashboard': typeof DashboardRoute
   '/linha-do-tempo': typeof LinhaDoTempoRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin': typeof AuthenticatedAdminRouteWithChildren
   '/categoria/$category': typeof CategoriaCategoryRoute
   '/wiki/$slug': typeof WikiSlugRoute
@@ -110,6 +117,7 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/dashboard': typeof DashboardRoute
   '/linha-do-tempo': typeof LinhaDoTempoRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin': typeof AuthenticatedAdminRouteWithChildren
   '/categoria/$category': typeof CategoriaCategoryRoute
   '/wiki/$slug': typeof WikiSlugRoute
@@ -126,6 +134,7 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/dashboard': typeof DashboardRoute
   '/linha-do-tempo': typeof LinhaDoTempoRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
   '/categoria/$category': typeof CategoriaCategoryRoute
   '/wiki/$slug': typeof WikiSlugRoute
@@ -142,6 +151,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/dashboard'
     | '/linha-do-tempo'
+    | '/sitemap.xml'
     | '/admin'
     | '/categoria/$category'
     | '/wiki/$slug'
@@ -156,6 +166,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/dashboard'
     | '/linha-do-tempo'
+    | '/sitemap.xml'
     | '/admin'
     | '/categoria/$category'
     | '/wiki/$slug'
@@ -171,6 +182,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/dashboard'
     | '/linha-do-tempo'
+    | '/sitemap.xml'
     | '/_authenticated/admin'
     | '/categoria/$category'
     | '/wiki/$slug'
@@ -187,6 +199,7 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRoute
   DashboardRoute: typeof DashboardRoute
   LinhaDoTempoRoute: typeof LinhaDoTempoRoute
+  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   CategoriaCategoryRoute: typeof CategoriaCategoryRoute
   WikiSlugRoute: typeof WikiSlugRoute
   WikiIndexRoute: typeof WikiIndexRoute
@@ -194,6 +207,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/linha-do-tempo': {
       id: '/linha-do-tempo'
       path: '/linha-do-tempo'
@@ -321,6 +341,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRoute,
   DashboardRoute: DashboardRoute,
   LinhaDoTempoRoute: LinhaDoTempoRoute,
+  SitemapDotxmlRoute: SitemapDotxmlRoute,
   CategoriaCategoryRoute: CategoriaCategoryRoute,
   WikiSlugRoute: WikiSlugRoute,
   WikiIndexRoute: WikiIndexRoute,
@@ -328,3 +349,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
