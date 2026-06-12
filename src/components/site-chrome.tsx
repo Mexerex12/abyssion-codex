@@ -10,7 +10,7 @@ const NAV = [
 ];
 
 export function SiteHeader() {
-  const { user, isAdmin } = useAuth();
+  const { user, isAdmin, isStaff } = useAuth();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
 
   return (
