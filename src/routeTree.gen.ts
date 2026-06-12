@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as LinhaDoTempoRouteImport } from './routes/linha-do-tempo'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as IndexRouteImport } from './routes/index'
@@ -16,6 +17,11 @@ import { Route as WikiIndexRouteImport } from './routes/wiki.index'
 import { Route as WikiSlugRouteImport } from './routes/wiki.$slug'
 import { Route as CategoriaCategoryRouteImport } from './routes/categoria.$category'
 
+const LinhaDoTempoRoute = LinhaDoTempoRouteImport.update({
+  id: '/linha-do-tempo',
+  path: '/linha-do-tempo',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const DashboardRoute = DashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
@@ -51,6 +57,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/dashboard': typeof DashboardRoute
+  '/linha-do-tempo': typeof LinhaDoTempoRoute
   '/categoria/$category': typeof CategoriaCategoryRoute
   '/wiki/$slug': typeof WikiSlugRoute
   '/wiki/': typeof WikiIndexRoute
@@ -59,6 +66,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/dashboard': typeof DashboardRoute
+  '/linha-do-tempo': typeof LinhaDoTempoRoute
   '/categoria/$category': typeof CategoriaCategoryRoute
   '/wiki/$slug': typeof WikiSlugRoute
   '/wiki': typeof WikiIndexRoute
@@ -68,6 +76,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/dashboard': typeof DashboardRoute
+  '/linha-do-tempo': typeof LinhaDoTempoRoute
   '/categoria/$category': typeof CategoriaCategoryRoute
   '/wiki/$slug': typeof WikiSlugRoute
   '/wiki/': typeof WikiIndexRoute
@@ -78,6 +87,7 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/dashboard'
+    | '/linha-do-tempo'
     | '/categoria/$category'
     | '/wiki/$slug'
     | '/wiki/'
@@ -86,6 +96,7 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/dashboard'
+    | '/linha-do-tempo'
     | '/categoria/$category'
     | '/wiki/$slug'
     | '/wiki'
@@ -94,6 +105,7 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/dashboard'
+    | '/linha-do-tempo'
     | '/categoria/$category'
     | '/wiki/$slug'
     | '/wiki/'
@@ -103,6 +115,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthRoute: typeof AuthRoute
   DashboardRoute: typeof DashboardRoute
+  LinhaDoTempoRoute: typeof LinhaDoTempoRoute
   CategoriaCategoryRoute: typeof CategoriaCategoryRoute
   WikiSlugRoute: typeof WikiSlugRoute
   WikiIndexRoute: typeof WikiIndexRoute
@@ -110,6 +123,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/linha-do-tempo': {
+      id: '/linha-do-tempo'
+      path: '/linha-do-tempo'
+      fullPath: '/linha-do-tempo'
+      preLoaderRoute: typeof LinhaDoTempoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/dashboard': {
       id: '/dashboard'
       path: '/dashboard'
@@ -159,6 +179,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthRoute: AuthRoute,
   DashboardRoute: DashboardRoute,
+  LinhaDoTempoRoute: LinhaDoTempoRoute,
   CategoriaCategoryRoute: CategoriaCategoryRoute,
   WikiSlugRoute: WikiSlugRoute,
   WikiIndexRoute: WikiIndexRoute,
