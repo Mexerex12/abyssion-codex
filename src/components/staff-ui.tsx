@@ -13,12 +13,13 @@ export function PageHeader({ eyebrow, title, sub, actions }: { eyebrow: string; 
   );
 }
 
-export function StatCard({ label, value, tone = "neutral" }: { label: string; value: ReactNode; tone?: "neutral" | "cyan" | "alert" | "amber" }) {
-  const toneClass = tone === "cyan" ? "text-cyan border-cyan/40" : tone === "alert" ? "text-destructive border-destructive/40" : tone === "amber" ? "text-amber-400 border-amber-400/40" : "border-border";
+export function StatCard({ label, value, tone = "neutral" }: { label: string; value: ReactNode; tone?: "neutral" | "cyan" | "alert" | "amber" | "green" }) {
+  const toneClass = tone === "cyan" ? "text-cyan border-cyan/40" : tone === "alert" ? "text-destructive border-destructive/40" : tone === "amber" ? "text-amber-400 border-amber-400/40" : tone === "green" ? "text-emerald-400 border-emerald-500/40" : "border-border";
+  const valueClass = tone === "cyan" ? "text-cyan" : tone === "alert" ? "text-destructive" : tone === "amber" ? "text-amber-400" : tone === "green" ? "text-emerald-400" : "text-foreground";
   return (
     <div className={`border ${toneClass} bg-surface-1 px-4 py-3`}>
       <p className="hud-label">{label}</p>
-      <p className={`mt-1 text-display text-2xl font-bold ${tone === "cyan" ? "text-cyan" : tone === "alert" ? "text-destructive" : tone === "amber" ? "text-amber-400" : "text-foreground"}`}>{value}</p>
+      <p className={`mt-1 text-display text-2xl font-bold ${valueClass}`}>{value}</p>
     </div>
   );
 }
