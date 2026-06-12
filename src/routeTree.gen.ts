@@ -19,7 +19,19 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as WikiIndexRouteImport } from './routes/wiki.index'
 import { Route as WikiSlugRouteImport } from './routes/wiki.$slug'
 import { Route as CategoriaCategoryRouteImport } from './routes/categoria.$category'
+import { Route as AuthenticatedStaffRouteImport } from './routes/_authenticated/staff'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
+import { Route as AuthenticatedStaffIndexRouteImport } from './routes/_authenticated/staff.index'
+import { Route as AuthenticatedStaffVestigiosRouteImport } from './routes/_authenticated/staff.vestigios'
+import { Route as AuthenticatedStaffTimelineRouteImport } from './routes/_authenticated/staff.timeline'
+import { Route as AuthenticatedStaffRupturasRouteImport } from './routes/_authenticated/staff.rupturas'
+import { Route as AuthenticatedStaffNpcsRouteImport } from './routes/_authenticated/staff.npcs'
+import { Route as AuthenticatedStaffGrafoRouteImport } from './routes/_authenticated/staff.grafo'
+import { Route as AuthenticatedStaffGanchosRouteImport } from './routes/_authenticated/staff.ganchos'
+import { Route as AuthenticatedStaffEventosRouteImport } from './routes/_authenticated/staff.eventos'
+import { Route as AuthenticatedStaffDominiosRouteImport } from './routes/_authenticated/staff.dominios'
+import { Route as AuthenticatedStaffDocumentosRouteImport } from './routes/_authenticated/staff.documentos'
+import { Route as AuthenticatedStaffBuscarRouteImport } from './routes/_authenticated/staff.buscar'
 import { Route as AuthenticatedAdminUsuariosRouteImport } from './routes/_authenticated/admin.usuarios'
 import { Route as AuthenticatedAdminNovoRouteImport } from './routes/_authenticated/admin.novo'
 import { Route as AuthenticatedAdminEditarIdRouteImport } from './routes/_authenticated/admin.editar.$id'
@@ -73,11 +85,79 @@ const CategoriaCategoryRoute = CategoriaCategoryRouteImport.update({
   path: '/categoria/$category',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedStaffRoute = AuthenticatedStaffRouteImport.update({
+  id: '/staff',
+  path: '/staff',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
   id: '/admin',
   path: '/admin',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedStaffIndexRoute = AuthenticatedStaffIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AuthenticatedStaffRoute,
+} as any)
+const AuthenticatedStaffVestigiosRoute =
+  AuthenticatedStaffVestigiosRouteImport.update({
+    id: '/vestigios',
+    path: '/vestigios',
+    getParentRoute: () => AuthenticatedStaffRoute,
+  } as any)
+const AuthenticatedStaffTimelineRoute =
+  AuthenticatedStaffTimelineRouteImport.update({
+    id: '/timeline',
+    path: '/timeline',
+    getParentRoute: () => AuthenticatedStaffRoute,
+  } as any)
+const AuthenticatedStaffRupturasRoute =
+  AuthenticatedStaffRupturasRouteImport.update({
+    id: '/rupturas',
+    path: '/rupturas',
+    getParentRoute: () => AuthenticatedStaffRoute,
+  } as any)
+const AuthenticatedStaffNpcsRoute = AuthenticatedStaffNpcsRouteImport.update({
+  id: '/npcs',
+  path: '/npcs',
+  getParentRoute: () => AuthenticatedStaffRoute,
+} as any)
+const AuthenticatedStaffGrafoRoute = AuthenticatedStaffGrafoRouteImport.update({
+  id: '/grafo',
+  path: '/grafo',
+  getParentRoute: () => AuthenticatedStaffRoute,
+} as any)
+const AuthenticatedStaffGanchosRoute =
+  AuthenticatedStaffGanchosRouteImport.update({
+    id: '/ganchos',
+    path: '/ganchos',
+    getParentRoute: () => AuthenticatedStaffRoute,
+  } as any)
+const AuthenticatedStaffEventosRoute =
+  AuthenticatedStaffEventosRouteImport.update({
+    id: '/eventos',
+    path: '/eventos',
+    getParentRoute: () => AuthenticatedStaffRoute,
+  } as any)
+const AuthenticatedStaffDominiosRoute =
+  AuthenticatedStaffDominiosRouteImport.update({
+    id: '/dominios',
+    path: '/dominios',
+    getParentRoute: () => AuthenticatedStaffRoute,
+  } as any)
+const AuthenticatedStaffDocumentosRoute =
+  AuthenticatedStaffDocumentosRouteImport.update({
+    id: '/documentos',
+    path: '/documentos',
+    getParentRoute: () => AuthenticatedStaffRoute,
+  } as any)
+const AuthenticatedStaffBuscarRoute =
+  AuthenticatedStaffBuscarRouteImport.update({
+    id: '/buscar',
+    path: '/buscar',
+    getParentRoute: () => AuthenticatedStaffRoute,
+  } as any)
 const AuthenticatedAdminUsuariosRoute =
   AuthenticatedAdminUsuariosRouteImport.update({
     id: '/usuarios',
@@ -104,11 +184,23 @@ export interface FileRoutesByFullPath {
   '/linha-do-tempo': typeof LinhaDoTempoRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin': typeof AuthenticatedAdminRouteWithChildren
+  '/staff': typeof AuthenticatedStaffRouteWithChildren
   '/categoria/$category': typeof CategoriaCategoryRoute
   '/wiki/$slug': typeof WikiSlugRoute
   '/wiki/': typeof WikiIndexRoute
   '/admin/novo': typeof AuthenticatedAdminNovoRoute
   '/admin/usuarios': typeof AuthenticatedAdminUsuariosRoute
+  '/staff/buscar': typeof AuthenticatedStaffBuscarRoute
+  '/staff/documentos': typeof AuthenticatedStaffDocumentosRoute
+  '/staff/dominios': typeof AuthenticatedStaffDominiosRoute
+  '/staff/eventos': typeof AuthenticatedStaffEventosRoute
+  '/staff/ganchos': typeof AuthenticatedStaffGanchosRoute
+  '/staff/grafo': typeof AuthenticatedStaffGrafoRoute
+  '/staff/npcs': typeof AuthenticatedStaffNpcsRoute
+  '/staff/rupturas': typeof AuthenticatedStaffRupturasRoute
+  '/staff/timeline': typeof AuthenticatedStaffTimelineRoute
+  '/staff/vestigios': typeof AuthenticatedStaffVestigiosRoute
+  '/staff/': typeof AuthenticatedStaffIndexRoute
   '/admin/editar/$id': typeof AuthenticatedAdminEditarIdRoute
 }
 export interface FileRoutesByTo {
@@ -124,6 +216,17 @@ export interface FileRoutesByTo {
   '/wiki': typeof WikiIndexRoute
   '/admin/novo': typeof AuthenticatedAdminNovoRoute
   '/admin/usuarios': typeof AuthenticatedAdminUsuariosRoute
+  '/staff/buscar': typeof AuthenticatedStaffBuscarRoute
+  '/staff/documentos': typeof AuthenticatedStaffDocumentosRoute
+  '/staff/dominios': typeof AuthenticatedStaffDominiosRoute
+  '/staff/eventos': typeof AuthenticatedStaffEventosRoute
+  '/staff/ganchos': typeof AuthenticatedStaffGanchosRoute
+  '/staff/grafo': typeof AuthenticatedStaffGrafoRoute
+  '/staff/npcs': typeof AuthenticatedStaffNpcsRoute
+  '/staff/rupturas': typeof AuthenticatedStaffRupturasRoute
+  '/staff/timeline': typeof AuthenticatedStaffTimelineRoute
+  '/staff/vestigios': typeof AuthenticatedStaffVestigiosRoute
+  '/staff': typeof AuthenticatedStaffIndexRoute
   '/admin/editar/$id': typeof AuthenticatedAdminEditarIdRoute
 }
 export interface FileRoutesById {
@@ -136,11 +239,23 @@ export interface FileRoutesById {
   '/linha-do-tempo': typeof LinhaDoTempoRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
+  '/_authenticated/staff': typeof AuthenticatedStaffRouteWithChildren
   '/categoria/$category': typeof CategoriaCategoryRoute
   '/wiki/$slug': typeof WikiSlugRoute
   '/wiki/': typeof WikiIndexRoute
   '/_authenticated/admin/novo': typeof AuthenticatedAdminNovoRoute
   '/_authenticated/admin/usuarios': typeof AuthenticatedAdminUsuariosRoute
+  '/_authenticated/staff/buscar': typeof AuthenticatedStaffBuscarRoute
+  '/_authenticated/staff/documentos': typeof AuthenticatedStaffDocumentosRoute
+  '/_authenticated/staff/dominios': typeof AuthenticatedStaffDominiosRoute
+  '/_authenticated/staff/eventos': typeof AuthenticatedStaffEventosRoute
+  '/_authenticated/staff/ganchos': typeof AuthenticatedStaffGanchosRoute
+  '/_authenticated/staff/grafo': typeof AuthenticatedStaffGrafoRoute
+  '/_authenticated/staff/npcs': typeof AuthenticatedStaffNpcsRoute
+  '/_authenticated/staff/rupturas': typeof AuthenticatedStaffRupturasRoute
+  '/_authenticated/staff/timeline': typeof AuthenticatedStaffTimelineRoute
+  '/_authenticated/staff/vestigios': typeof AuthenticatedStaffVestigiosRoute
+  '/_authenticated/staff/': typeof AuthenticatedStaffIndexRoute
   '/_authenticated/admin/editar/$id': typeof AuthenticatedAdminEditarIdRoute
 }
 export interface FileRouteTypes {
@@ -153,11 +268,23 @@ export interface FileRouteTypes {
     | '/linha-do-tempo'
     | '/sitemap.xml'
     | '/admin'
+    | '/staff'
     | '/categoria/$category'
     | '/wiki/$slug'
     | '/wiki/'
     | '/admin/novo'
     | '/admin/usuarios'
+    | '/staff/buscar'
+    | '/staff/documentos'
+    | '/staff/dominios'
+    | '/staff/eventos'
+    | '/staff/ganchos'
+    | '/staff/grafo'
+    | '/staff/npcs'
+    | '/staff/rupturas'
+    | '/staff/timeline'
+    | '/staff/vestigios'
+    | '/staff/'
     | '/admin/editar/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -173,6 +300,17 @@ export interface FileRouteTypes {
     | '/wiki'
     | '/admin/novo'
     | '/admin/usuarios'
+    | '/staff/buscar'
+    | '/staff/documentos'
+    | '/staff/dominios'
+    | '/staff/eventos'
+    | '/staff/ganchos'
+    | '/staff/grafo'
+    | '/staff/npcs'
+    | '/staff/rupturas'
+    | '/staff/timeline'
+    | '/staff/vestigios'
+    | '/staff'
     | '/admin/editar/$id'
   id:
     | '__root__'
@@ -184,11 +322,23 @@ export interface FileRouteTypes {
     | '/linha-do-tempo'
     | '/sitemap.xml'
     | '/_authenticated/admin'
+    | '/_authenticated/staff'
     | '/categoria/$category'
     | '/wiki/$slug'
     | '/wiki/'
     | '/_authenticated/admin/novo'
     | '/_authenticated/admin/usuarios'
+    | '/_authenticated/staff/buscar'
+    | '/_authenticated/staff/documentos'
+    | '/_authenticated/staff/dominios'
+    | '/_authenticated/staff/eventos'
+    | '/_authenticated/staff/ganchos'
+    | '/_authenticated/staff/grafo'
+    | '/_authenticated/staff/npcs'
+    | '/_authenticated/staff/rupturas'
+    | '/_authenticated/staff/timeline'
+    | '/_authenticated/staff/vestigios'
+    | '/_authenticated/staff/'
     | '/_authenticated/admin/editar/$id'
   fileRoutesById: FileRoutesById
 }
@@ -277,12 +427,96 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CategoriaCategoryRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/staff': {
+      id: '/_authenticated/staff'
+      path: '/staff'
+      fullPath: '/staff'
+      preLoaderRoute: typeof AuthenticatedStaffRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/admin': {
       id: '/_authenticated/admin'
       path: '/admin'
       fullPath: '/admin'
       preLoaderRoute: typeof AuthenticatedAdminRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/staff/': {
+      id: '/_authenticated/staff/'
+      path: '/'
+      fullPath: '/staff/'
+      preLoaderRoute: typeof AuthenticatedStaffIndexRouteImport
+      parentRoute: typeof AuthenticatedStaffRoute
+    }
+    '/_authenticated/staff/vestigios': {
+      id: '/_authenticated/staff/vestigios'
+      path: '/vestigios'
+      fullPath: '/staff/vestigios'
+      preLoaderRoute: typeof AuthenticatedStaffVestigiosRouteImport
+      parentRoute: typeof AuthenticatedStaffRoute
+    }
+    '/_authenticated/staff/timeline': {
+      id: '/_authenticated/staff/timeline'
+      path: '/timeline'
+      fullPath: '/staff/timeline'
+      preLoaderRoute: typeof AuthenticatedStaffTimelineRouteImport
+      parentRoute: typeof AuthenticatedStaffRoute
+    }
+    '/_authenticated/staff/rupturas': {
+      id: '/_authenticated/staff/rupturas'
+      path: '/rupturas'
+      fullPath: '/staff/rupturas'
+      preLoaderRoute: typeof AuthenticatedStaffRupturasRouteImport
+      parentRoute: typeof AuthenticatedStaffRoute
+    }
+    '/_authenticated/staff/npcs': {
+      id: '/_authenticated/staff/npcs'
+      path: '/npcs'
+      fullPath: '/staff/npcs'
+      preLoaderRoute: typeof AuthenticatedStaffNpcsRouteImport
+      parentRoute: typeof AuthenticatedStaffRoute
+    }
+    '/_authenticated/staff/grafo': {
+      id: '/_authenticated/staff/grafo'
+      path: '/grafo'
+      fullPath: '/staff/grafo'
+      preLoaderRoute: typeof AuthenticatedStaffGrafoRouteImport
+      parentRoute: typeof AuthenticatedStaffRoute
+    }
+    '/_authenticated/staff/ganchos': {
+      id: '/_authenticated/staff/ganchos'
+      path: '/ganchos'
+      fullPath: '/staff/ganchos'
+      preLoaderRoute: typeof AuthenticatedStaffGanchosRouteImport
+      parentRoute: typeof AuthenticatedStaffRoute
+    }
+    '/_authenticated/staff/eventos': {
+      id: '/_authenticated/staff/eventos'
+      path: '/eventos'
+      fullPath: '/staff/eventos'
+      preLoaderRoute: typeof AuthenticatedStaffEventosRouteImport
+      parentRoute: typeof AuthenticatedStaffRoute
+    }
+    '/_authenticated/staff/dominios': {
+      id: '/_authenticated/staff/dominios'
+      path: '/dominios'
+      fullPath: '/staff/dominios'
+      preLoaderRoute: typeof AuthenticatedStaffDominiosRouteImport
+      parentRoute: typeof AuthenticatedStaffRoute
+    }
+    '/_authenticated/staff/documentos': {
+      id: '/_authenticated/staff/documentos'
+      path: '/documentos'
+      fullPath: '/staff/documentos'
+      preLoaderRoute: typeof AuthenticatedStaffDocumentosRouteImport
+      parentRoute: typeof AuthenticatedStaffRoute
+    }
+    '/_authenticated/staff/buscar': {
+      id: '/_authenticated/staff/buscar'
+      path: '/buscar'
+      fullPath: '/staff/buscar'
+      preLoaderRoute: typeof AuthenticatedStaffBuscarRouteImport
+      parentRoute: typeof AuthenticatedStaffRoute
     }
     '/_authenticated/admin/usuarios': {
       id: '/_authenticated/admin/usuarios'
@@ -323,12 +557,45 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
 const AuthenticatedAdminRouteWithChildren =
   AuthenticatedAdminRoute._addFileChildren(AuthenticatedAdminRouteChildren)
 
+interface AuthenticatedStaffRouteChildren {
+  AuthenticatedStaffBuscarRoute: typeof AuthenticatedStaffBuscarRoute
+  AuthenticatedStaffDocumentosRoute: typeof AuthenticatedStaffDocumentosRoute
+  AuthenticatedStaffDominiosRoute: typeof AuthenticatedStaffDominiosRoute
+  AuthenticatedStaffEventosRoute: typeof AuthenticatedStaffEventosRoute
+  AuthenticatedStaffGanchosRoute: typeof AuthenticatedStaffGanchosRoute
+  AuthenticatedStaffGrafoRoute: typeof AuthenticatedStaffGrafoRoute
+  AuthenticatedStaffNpcsRoute: typeof AuthenticatedStaffNpcsRoute
+  AuthenticatedStaffRupturasRoute: typeof AuthenticatedStaffRupturasRoute
+  AuthenticatedStaffTimelineRoute: typeof AuthenticatedStaffTimelineRoute
+  AuthenticatedStaffVestigiosRoute: typeof AuthenticatedStaffVestigiosRoute
+  AuthenticatedStaffIndexRoute: typeof AuthenticatedStaffIndexRoute
+}
+
+const AuthenticatedStaffRouteChildren: AuthenticatedStaffRouteChildren = {
+  AuthenticatedStaffBuscarRoute: AuthenticatedStaffBuscarRoute,
+  AuthenticatedStaffDocumentosRoute: AuthenticatedStaffDocumentosRoute,
+  AuthenticatedStaffDominiosRoute: AuthenticatedStaffDominiosRoute,
+  AuthenticatedStaffEventosRoute: AuthenticatedStaffEventosRoute,
+  AuthenticatedStaffGanchosRoute: AuthenticatedStaffGanchosRoute,
+  AuthenticatedStaffGrafoRoute: AuthenticatedStaffGrafoRoute,
+  AuthenticatedStaffNpcsRoute: AuthenticatedStaffNpcsRoute,
+  AuthenticatedStaffRupturasRoute: AuthenticatedStaffRupturasRoute,
+  AuthenticatedStaffTimelineRoute: AuthenticatedStaffTimelineRoute,
+  AuthenticatedStaffVestigiosRoute: AuthenticatedStaffVestigiosRoute,
+  AuthenticatedStaffIndexRoute: AuthenticatedStaffIndexRoute,
+}
+
+const AuthenticatedStaffRouteWithChildren =
+  AuthenticatedStaffRoute._addFileChildren(AuthenticatedStaffRouteChildren)
+
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedAdminRoute: typeof AuthenticatedAdminRouteWithChildren
+  AuthenticatedStaffRoute: typeof AuthenticatedStaffRouteWithChildren
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAdminRoute: AuthenticatedAdminRouteWithChildren,
+  AuthenticatedStaffRoute: AuthenticatedStaffRouteWithChildren,
 }
 
 const AuthenticatedRouteRouteWithChildren =

@@ -30,6 +30,12 @@ export const CLEARANCE_META: Record<
   { label: string; short: string; tone: "neutral" | "amber" | "alert" }
 > = {
   publico: { label: "Acesso Público", short: "PÚBLICO", tone: "neutral" },
+  uniao: { label: "União Trivalente", short: "UNIÃO", tone: "neutral" },
+  instrutores: { label: "Instrutores", short: "INSTR", tone: "neutral" },
+  diretores: { label: "Diretores", short: "DIR", tone: "amber" },
+  curadores: { label: "Curadores", short: "CUR", tone: "amber" },
+  restrito: { label: "Restrito", short: "RESTR", tone: "alert" },
+  verdade_absoluta: { label: "Verdade Absoluta", short: "VERDADE", tone: "alert" },
   nivel_1: { label: "Nível I — Operacional", short: "N-I", tone: "neutral" },
   nivel_2: { label: "Nível II — Restrito", short: "N-II", tone: "neutral" },
   nivel_3: { label: "Nível III — Confidencial", short: "N-III", tone: "amber" },
