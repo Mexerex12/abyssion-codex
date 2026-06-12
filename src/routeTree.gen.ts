@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as LinhaDoTempoRouteImport } from './routes/linha-do-tempo'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as ArquivosRestritosRouteImport } from './routes/arquivos-restritos'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as WikiIndexRouteImport } from './routes/wiki.index'
 import { Route as WikiSlugRouteImport } from './routes/wiki.$slug'
@@ -30,6 +31,11 @@ const DashboardRoute = DashboardRouteImport.update({
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ArquivosRestritosRoute = ArquivosRestritosRouteImport.update({
+  id: '/arquivos-restritos',
+  path: '/arquivos-restritos',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -55,6 +61,7 @@ const CategoriaCategoryRoute = CategoriaCategoryRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/arquivos-restritos': typeof ArquivosRestritosRoute
   '/auth': typeof AuthRoute
   '/dashboard': typeof DashboardRoute
   '/linha-do-tempo': typeof LinhaDoTempoRoute
@@ -64,6 +71,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/arquivos-restritos': typeof ArquivosRestritosRoute
   '/auth': typeof AuthRoute
   '/dashboard': typeof DashboardRoute
   '/linha-do-tempo': typeof LinhaDoTempoRoute
@@ -74,6 +82,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/arquivos-restritos': typeof ArquivosRestritosRoute
   '/auth': typeof AuthRoute
   '/dashboard': typeof DashboardRoute
   '/linha-do-tempo': typeof LinhaDoTempoRoute
@@ -85,6 +94,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/arquivos-restritos'
     | '/auth'
     | '/dashboard'
     | '/linha-do-tempo'
@@ -94,6 +104,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/arquivos-restritos'
     | '/auth'
     | '/dashboard'
     | '/linha-do-tempo'
@@ -103,6 +114,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/arquivos-restritos'
     | '/auth'
     | '/dashboard'
     | '/linha-do-tempo'
@@ -113,6 +125,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ArquivosRestritosRoute: typeof ArquivosRestritosRoute
   AuthRoute: typeof AuthRoute
   DashboardRoute: typeof DashboardRoute
   LinhaDoTempoRoute: typeof LinhaDoTempoRoute
@@ -142,6 +155,13 @@ declare module '@tanstack/react-router' {
       path: '/auth'
       fullPath: '/auth'
       preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/arquivos-restritos': {
+      id: '/arquivos-restritos'
+      path: '/arquivos-restritos'
+      fullPath: '/arquivos-restritos'
+      preLoaderRoute: typeof ArquivosRestritosRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -177,6 +197,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ArquivosRestritosRoute: ArquivosRestritosRoute,
   AuthRoute: AuthRoute,
   DashboardRoute: DashboardRoute,
   LinhaDoTempoRoute: LinhaDoTempoRoute,
