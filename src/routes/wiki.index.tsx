@@ -9,7 +9,7 @@ import { CATEGORY_META } from "@/lib/lore-meta";
 import type { LoreCategory } from "@/lib/lore-meta";
 import { Search } from "lucide-react";
 
-export const Route = createFileRoute("/wiki")({
+export const Route = createFileRoute("/wiki/")({
   head: () => ({
     meta: [
       { title: "Enciclopédia — Arquivos da União Trivalente" },
