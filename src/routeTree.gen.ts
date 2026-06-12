@@ -19,6 +19,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as WikiIndexRouteImport } from './routes/wiki.index'
 import { Route as WikiSlugRouteImport } from './routes/wiki.$slug'
 import { Route as CategoriaCategoryRouteImport } from './routes/categoria.$category'
+import { Route as AuthenticatedStaffRouteImport } from './routes/_authenticated/staff'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as AuthenticatedAdminUsuariosRouteImport } from './routes/_authenticated/admin.usuarios'
 import { Route as AuthenticatedAdminNovoRouteImport } from './routes/_authenticated/admin.novo'
@@ -73,6 +74,11 @@ const CategoriaCategoryRoute = CategoriaCategoryRouteImport.update({
   path: '/categoria/$category',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedStaffRoute = AuthenticatedStaffRouteImport.update({
+  id: '/staff',
+  path: '/staff',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
   id: '/admin',
   path: '/admin',
@@ -104,6 +110,7 @@ export interface FileRoutesByFullPath {
   '/linha-do-tempo': typeof LinhaDoTempoRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin': typeof AuthenticatedAdminRouteWithChildren
+  '/staff': typeof AuthenticatedStaffRoute
   '/categoria/$category': typeof CategoriaCategoryRoute
   '/wiki/$slug': typeof WikiSlugRoute
   '/wiki/': typeof WikiIndexRoute
@@ -119,6 +126,7 @@ export interface FileRoutesByTo {
   '/linha-do-tempo': typeof LinhaDoTempoRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin': typeof AuthenticatedAdminRouteWithChildren
+  '/staff': typeof AuthenticatedStaffRoute
   '/categoria/$category': typeof CategoriaCategoryRoute
   '/wiki/$slug': typeof WikiSlugRoute
   '/wiki': typeof WikiIndexRoute
@@ -136,6 +144,7 @@ export interface FileRoutesById {
   '/linha-do-tempo': typeof LinhaDoTempoRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
+  '/_authenticated/staff': typeof AuthenticatedStaffRoute
   '/categoria/$category': typeof CategoriaCategoryRoute
   '/wiki/$slug': typeof WikiSlugRoute
   '/wiki/': typeof WikiIndexRoute
@@ -153,6 +162,7 @@ export interface FileRouteTypes {
     | '/linha-do-tempo'
     | '/sitemap.xml'
     | '/admin'
+    | '/staff'
     | '/categoria/$category'
     | '/wiki/$slug'
     | '/wiki/'
@@ -168,6 +178,7 @@ export interface FileRouteTypes {
     | '/linha-do-tempo'
     | '/sitemap.xml'
     | '/admin'
+    | '/staff'
     | '/categoria/$category'
     | '/wiki/$slug'
     | '/wiki'
@@ -184,6 +195,7 @@ export interface FileRouteTypes {
     | '/linha-do-tempo'
     | '/sitemap.xml'
     | '/_authenticated/admin'
+    | '/_authenticated/staff'
     | '/categoria/$category'
     | '/wiki/$slug'
     | '/wiki/'
@@ -277,6 +289,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CategoriaCategoryRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/staff': {
+      id: '/_authenticated/staff'
+      path: '/staff'
+      fullPath: '/staff'
+      preLoaderRoute: typeof AuthenticatedStaffRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/admin': {
       id: '/_authenticated/admin'
       path: '/admin'
@@ -325,10 +344,12 @@ const AuthenticatedAdminRouteWithChildren =
 
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedAdminRoute: typeof AuthenticatedAdminRouteWithChildren
+  AuthenticatedStaffRoute: typeof AuthenticatedStaffRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAdminRoute: AuthenticatedAdminRouteWithChildren,
+  AuthenticatedStaffRoute: AuthenticatedStaffRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =
@@ -349,3 +370,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
