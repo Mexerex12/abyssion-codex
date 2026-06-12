@@ -1,6 +1,6 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 import { useAuth, signOut } from "@/hooks/use-auth";
-import { Shield, Search, LogOut, Database, Clock, Lock, Settings } from "lucide-react";
+import { Shield, Search, LogOut, Database, Clock, Lock, Settings, Activity } from "lucide-react";
 
 const NAV = [
   { to: "/dashboard", label: "Painel", icon: Database },
