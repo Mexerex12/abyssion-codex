@@ -20,6 +20,7 @@ import { Route as WikiSlugRouteImport } from './routes/wiki.$slug'
 import { Route as CategoriaCategoryRouteImport } from './routes/categoria.$category'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as AuthenticatedAdminNovoRouteImport } from './routes/_authenticated/admin.novo'
+import { Route as AuthenticatedAdminEditarIdRouteImport } from './routes/_authenticated/admin.editar.$id'
 
 const LinhaDoTempoRoute = LinhaDoTempoRouteImport.update({
   id: '/linha-do-tempo',
@@ -75,6 +76,12 @@ const AuthenticatedAdminNovoRoute = AuthenticatedAdminNovoRouteImport.update({
   path: '/novo',
   getParentRoute: () => AuthenticatedAdminRoute,
 } as any)
+const AuthenticatedAdminEditarIdRoute =
+  AuthenticatedAdminEditarIdRouteImport.update({
+    id: '/editar/$id',
+    path: '/editar/$id',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -87,6 +94,7 @@ export interface FileRoutesByFullPath {
   '/wiki/$slug': typeof WikiSlugRoute
   '/wiki/': typeof WikiIndexRoute
   '/admin/novo': typeof AuthenticatedAdminNovoRoute
+  '/admin/editar/$id': typeof AuthenticatedAdminEditarIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -99,6 +107,7 @@ export interface FileRoutesByTo {
   '/wiki/$slug': typeof WikiSlugRoute
   '/wiki': typeof WikiIndexRoute
   '/admin/novo': typeof AuthenticatedAdminNovoRoute
+  '/admin/editar/$id': typeof AuthenticatedAdminEditarIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -113,6 +122,7 @@ export interface FileRoutesById {
   '/wiki/$slug': typeof WikiSlugRoute
   '/wiki/': typeof WikiIndexRoute
   '/_authenticated/admin/novo': typeof AuthenticatedAdminNovoRoute
+  '/_authenticated/admin/editar/$id': typeof AuthenticatedAdminEditarIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -127,6 +137,7 @@ export interface FileRouteTypes {
     | '/wiki/$slug'
     | '/wiki/'
     | '/admin/novo'
+    | '/admin/editar/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -139,6 +150,7 @@ export interface FileRouteTypes {
     | '/wiki/$slug'
     | '/wiki'
     | '/admin/novo'
+    | '/admin/editar/$id'
   id:
     | '__root__'
     | '/'
@@ -152,6 +164,7 @@ export interface FileRouteTypes {
     | '/wiki/$slug'
     | '/wiki/'
     | '/_authenticated/admin/novo'
+    | '/_authenticated/admin/editar/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -245,15 +258,24 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminNovoRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/editar/$id': {
+      id: '/_authenticated/admin/editar/$id'
+      path: '/editar/$id'
+      fullPath: '/admin/editar/$id'
+      preLoaderRoute: typeof AuthenticatedAdminEditarIdRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
   }
 }
 
 interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminNovoRoute: typeof AuthenticatedAdminNovoRoute
+  AuthenticatedAdminEditarIdRoute: typeof AuthenticatedAdminEditarIdRoute
 }
 
 const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminNovoRoute: AuthenticatedAdminNovoRoute,
+  AuthenticatedAdminEditarIdRoute: AuthenticatedAdminEditarIdRoute,
 }
 
 const AuthenticatedAdminRouteWithChildren =
