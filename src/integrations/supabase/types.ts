@@ -198,6 +198,12 @@ export type Database = {
         | "nivel_3"
         | "nivel_4"
         | "nivel_diretor"
+        | "uniao"
+        | "instrutores"
+        | "diretores"
+        | "curadores"
+        | "restrito"
+        | "verdade_absoluta"
       entry_status: "rascunho" | "publicado" | "arquivado"
       lore_category:
         | "universo"
@@ -350,6 +356,12 @@ export const Constants = {
         "nivel_3",
         "nivel_4",
         "nivel_diretor",
+        "uniao",
+        "instrutores",
+        "diretores",
+        "curadores",
+        "restrito",
+        "verdade_absoluta",
       ],
       entry_status: ["rascunho", "publicado", "arquivado"],
       lore_category: [
