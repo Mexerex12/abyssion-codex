@@ -46,13 +46,22 @@ export function SiteHeader() {
         </nav>
 
         <div className="ml-auto flex items-center gap-2">
+          {isStaff && (
+            <Link
+              to="/staff"
+              className="hidden items-center gap-1.5 border border-cyan/40 bg-cyan/10 px-2.5 py-1.5 text-mono text-[10px] uppercase tracking-[0.16em] text-cyan hover:bg-cyan hover:text-cyan-foreground sm:flex"
+            >
+              <Activity className="h-3 w-3" />
+              Central
+            </Link>
+          )}
           {isAdmin && (
             <Link
               to="/admin"
-              className="hidden items-center gap-1.5 border border-cyan/40 bg-cyan/10 px-2.5 py-1.5 text-mono text-[10px] uppercase tracking-[0.16em] text-cyan hover:bg-cyan hover:text-cyan-foreground sm:flex"
+              className="hidden items-center gap-1.5 border border-border px-2.5 py-1.5 text-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground hover:border-cyan hover:text-cyan sm:flex"
             >
               <Settings className="h-3 w-3" />
-              Admin
+              CMS
             </Link>
           )}
           {user ? (
