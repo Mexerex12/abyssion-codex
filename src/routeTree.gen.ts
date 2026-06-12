@@ -13,10 +13,12 @@ import { Route as LinhaDoTempoRouteImport } from './routes/linha-do-tempo'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as ArquivosRestritosRouteImport } from './routes/arquivos-restritos'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as WikiIndexRouteImport } from './routes/wiki.index'
 import { Route as WikiSlugRouteImport } from './routes/wiki.$slug'
 import { Route as CategoriaCategoryRouteImport } from './routes/categoria.$category'
+import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 
 const LinhaDoTempoRoute = LinhaDoTempoRouteImport.update({
   id: '/linha-do-tempo',
@@ -36,6 +38,10 @@ const AuthRoute = AuthRouteImport.update({
 const ArquivosRestritosRoute = ArquivosRestritosRouteImport.update({
   id: '/arquivos-restritos',
   path: '/arquivos-restritos',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -58,6 +64,11 @@ const CategoriaCategoryRoute = CategoriaCategoryRouteImport.update({
   path: '/categoria/$category',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -65,6 +76,7 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/dashboard': typeof DashboardRoute
   '/linha-do-tempo': typeof LinhaDoTempoRoute
+  '/admin': typeof AuthenticatedAdminRoute
   '/categoria/$category': typeof CategoriaCategoryRoute
   '/wiki/$slug': typeof WikiSlugRoute
   '/wiki/': typeof WikiIndexRoute
@@ -75,6 +87,7 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/dashboard': typeof DashboardRoute
   '/linha-do-tempo': typeof LinhaDoTempoRoute
+  '/admin': typeof AuthenticatedAdminRoute
   '/categoria/$category': typeof CategoriaCategoryRoute
   '/wiki/$slug': typeof WikiSlugRoute
   '/wiki': typeof WikiIndexRoute
@@ -82,10 +95,12 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/arquivos-restritos': typeof ArquivosRestritosRoute
   '/auth': typeof AuthRoute
   '/dashboard': typeof DashboardRoute
   '/linha-do-tempo': typeof LinhaDoTempoRoute
+  '/_authenticated/admin': typeof AuthenticatedAdminRoute
   '/categoria/$category': typeof CategoriaCategoryRoute
   '/wiki/$slug': typeof WikiSlugRoute
   '/wiki/': typeof WikiIndexRoute
@@ -98,6 +113,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/dashboard'
     | '/linha-do-tempo'
+    | '/admin'
     | '/categoria/$category'
     | '/wiki/$slug'
     | '/wiki/'
@@ -108,16 +124,19 @@ export interface FileRouteTypes {
     | '/auth'
     | '/dashboard'
     | '/linha-do-tempo'
+    | '/admin'
     | '/categoria/$category'
     | '/wiki/$slug'
     | '/wiki'
   id:
     | '__root__'
     | '/'
+    | '/_authenticated'
     | '/arquivos-restritos'
     | '/auth'
     | '/dashboard'
     | '/linha-do-tempo'
+    | '/_authenticated/admin'
     | '/categoria/$category'
     | '/wiki/$slug'
     | '/wiki/'
@@ -125,6 +144,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   ArquivosRestritosRoute: typeof ArquivosRestritosRoute
   AuthRoute: typeof AuthRoute
   DashboardRoute: typeof DashboardRoute
@@ -164,6 +184,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ArquivosRestritosRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -192,11 +219,30 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CategoriaCategoryRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/admin': {
+      id: '/_authenticated/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AuthenticatedAdminRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
   }
 }
 
+interface AuthenticatedRouteRouteChildren {
+  AuthenticatedAdminRoute: typeof AuthenticatedAdminRoute
+}
+
+const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedAdminRoute: AuthenticatedAdminRoute,
+}
+
+const AuthenticatedRouteRouteWithChildren =
+  AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   ArquivosRestritosRoute: ArquivosRestritosRoute,
   AuthRoute: AuthRoute,
   DashboardRoute: DashboardRoute,
@@ -208,3 +254,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
