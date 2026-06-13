@@ -36,11 +36,11 @@ export const CLEARANCE_META: Record<
   curadores: { label: "Curadores", short: "CUR", tone: "amber" },
   restrito: { label: "Restrito", short: "RESTR", tone: "alert" },
   verdade_absoluta: { label: "Verdade Absoluta", short: "VERDADE", tone: "alert" },
-  nivel_1: { label: "Nível I — Operacional", short: "N-I", tone: "neutral" },
-  nivel_2: { label: "Nível II — Restrito", short: "N-II", tone: "neutral" },
-  nivel_3: { label: "Nível III — Confidencial", short: "N-III", tone: "amber" },
-  nivel_4: { label: "Nível IV — Secreto", short: "N-IV", tone: "amber" },
-  nivel_diretor: { label: "Nível Diretor — Alto Conselho", short: "DIRETOR", tone: "alert" },
+  nivel_1: { label: "Nível I: Operacional", short: "N-I", tone: "neutral" },
+  nivel_2: { label: "Nível II: Restrito", short: "N-II", tone: "neutral" },
+  nivel_3: { label: "Nível III: Confidencial", short: "N-III", tone: "amber" },
+  nivel_4: { label: "Nível IV: Secreto", short: "N-IV", tone: "amber" },
+  nivel_diretor: { label: "Nível Diretor: Alto Conselho", short: "DIRETOR", tone: "alert" },
 };
 
 export const DASHBOARD_CARDS: { title: string; subtitle: string; href: string; classified?: boolean }[] = [
