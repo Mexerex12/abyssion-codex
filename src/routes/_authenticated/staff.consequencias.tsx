@@ -31,7 +31,7 @@ function ConsPage() {
       <PageHeader
         eyebrow="Workspace · Sistema de Consequências"
         title="Consequências"
-        sub="Toda ação importante gera consequências registradas — agrupadas por evento de origem."
+        sub="Toda ação importante gera consequências registradas, agrupadas por evento de origem."
         actions={<Button onClick={() => { setEditing({}); setOpen(true); }}><Plus className="h-3 w-3" /> Nova Consequência</Button>}
       />
 

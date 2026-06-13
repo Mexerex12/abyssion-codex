@@ -37,7 +37,7 @@ function MisteriosPage() {
       <PageHeader
         eyebrow="Workspace · Painel de Mistérios"
         title="Mistérios em Aberto"
-        sub="Nem tudo na lore precisa de resposta — mas tudo precisa estar rastreado."
+        sub="Nem tudo na lore precisa de resposta, mas tudo precisa estar rastreado."
         actions={<Button onClick={() => { setEditing({}); setOpen(true); }}><Plus className="h-3 w-3" /> Novo Mistério</Button>}
       />
 
