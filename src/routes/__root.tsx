@@ -80,13 +80,13 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Abyssion SMP — Portal da União Trivalente" },
+      { title: "Abyssion SMP | Portal da União Trivalente" },
       {
         name: "description",
         content:
           "Arquivo oficial da União Trivalente: lore, Domínios, Vestígios, Curadores e Rupturas do universo Abyssion SMP.",
       },
-      { property: "og:title", content: "Abyssion SMP — Portal da União Trivalente" },
+      { property: "og:title", content: "Abyssion SMP | Portal da União Trivalente" },
       {
         property: "og:description",
         content: "O Núcleo está morrendo. A União observa. Sete Vestígios permanecem.",
