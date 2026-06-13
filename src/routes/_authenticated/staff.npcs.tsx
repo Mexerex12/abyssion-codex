@@ -146,6 +146,7 @@ function NpcModal({ npc, onClose }: { npc: any; onClose: () => void }) {
           <Field label="Classificação dos Segredos"><Select value={form.segredos_clearance} onChange={(e) => setForm({ ...form, segredos_clearance: e.target.value })}>{CLEARANCE.map((c) => <option key={c} value={c}>{c}</option>)}</Select></Field>
         </div>
         <Field label="Observações da Staff"><Textarea rows={3} value={form.observacoes_staff} onChange={(e) => setForm({ ...form, observacoes_staff: e.target.value })} /></Field>
+        <ContradictionCheck text={`${form.nome} ${form.cargo ?? ""} ${form.segredos ?? ""} ${form.observacoes_staff ?? ""} ${(form.objetivos ?? []).join(" ")}`} />
         {m.error && <p className="text-mono text-xs text-destructive">{(m.error as Error).message}</p>}
         <div className="flex justify-end gap-2"><Button variant="ghost" onClick={onClose}>Cancelar</Button><Button type="submit" disabled={m.isPending}>Salvar</Button></div>
       </form>
