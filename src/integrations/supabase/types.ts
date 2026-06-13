@@ -14,6 +14,62 @@ export type Database = {
   }
   public: {
     Tables: {
+      consequencias: {
+        Row: {
+          created_at: string
+          criado_por: string | null
+          descricao: string | null
+          dominios_afetados: string[] | null
+          escopo_conhecimento: Database["public"]["Enums"]["knowledge_scope"]
+          evento_id: string | null
+          fatos_gerados: string[] | null
+          id: string
+          misterios_gerados: string[] | null
+          npcs_afetados: string[] | null
+          tipo: string | null
+          titulo: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          criado_por?: string | null
+          descricao?: string | null
+          dominios_afetados?: string[] | null
+          escopo_conhecimento?: Database["public"]["Enums"]["knowledge_scope"]
+          evento_id?: string | null
+          fatos_gerados?: string[] | null
+          id?: string
+          misterios_gerados?: string[] | null
+          npcs_afetados?: string[] | null
+          tipo?: string | null
+          titulo: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          criado_por?: string | null
+          descricao?: string | null
+          dominios_afetados?: string[] | null
+          escopo_conhecimento?: Database["public"]["Enums"]["knowledge_scope"]
+          evento_id?: string | null
+          fatos_gerados?: string[] | null
+          id?: string
+          misterios_gerados?: string[] | null
+          npcs_afetados?: string[] | null
+          tipo?: string | null
+          titulo?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "consequencias_evento_id_fkey"
+            columns: ["evento_id"]
+            isOneToOne: false
+            referencedRelation: "eventos_operacionais"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       documento_revisoes: {
         Row: {
           conteudo: string | null
@@ -227,6 +283,60 @@ export type Database = {
           },
         ]
       }
+      fatos_canonicos: {
+        Row: {
+          categoria: string
+          created_at: string
+          criado_por: string | null
+          descricao: string
+          escopo_conhecimento: Database["public"]["Enums"]["knowledge_scope"]
+          eventos_relacionados: string[] | null
+          faccoes_relacionadas: string[] | null
+          fonte: string | null
+          id: string
+          notas: string | null
+          npcs_relacionados: string[] | null
+          palavras_chave: string[] | null
+          status: Database["public"]["Enums"]["fact_status"]
+          titulo: string
+          updated_at: string
+        }
+        Insert: {
+          categoria: string
+          created_at?: string
+          criado_por?: string | null
+          descricao: string
+          escopo_conhecimento?: Database["public"]["Enums"]["knowledge_scope"]
+          eventos_relacionados?: string[] | null
+          faccoes_relacionadas?: string[] | null
+          fonte?: string | null
+          id?: string
+          notas?: string | null
+          npcs_relacionados?: string[] | null
+          palavras_chave?: string[] | null
+          status?: Database["public"]["Enums"]["fact_status"]
+          titulo: string
+          updated_at?: string
+        }
+        Update: {
+          categoria?: string
+          created_at?: string
+          criado_por?: string | null
+          descricao?: string
+          escopo_conhecimento?: Database["public"]["Enums"]["knowledge_scope"]
+          eventos_relacionados?: string[] | null
+          faccoes_relacionadas?: string[] | null
+          fonte?: string | null
+          id?: string
+          notas?: string | null
+          npcs_relacionados?: string[] | null
+          palavras_chave?: string[] | null
+          status?: Database["public"]["Enums"]["fact_status"]
+          titulo?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       ganchos_narrativos: {
         Row: {
           created_at: string
@@ -371,6 +481,57 @@ export type Database = {
           },
         ]
       }
+      misterios: {
+        Row: {
+          contexto: string | null
+          created_at: string
+          criado_por: string | null
+          escopo_conhecimento: Database["public"]["Enums"]["knowledge_scope"]
+          eventos_envolvidos: string[] | null
+          faccoes_envolvidas: string[] | null
+          id: string
+          npcs_envolvidos: string[] | null
+          pergunta: string
+          possiveis_respostas: Json | null
+          resolucao_planejada: string | null
+          resolvido_em: string | null
+          status: Database["public"]["Enums"]["mystery_status"]
+          updated_at: string
+        }
+        Insert: {
+          contexto?: string | null
+          created_at?: string
+          criado_por?: string | null
+          escopo_conhecimento?: Database["public"]["Enums"]["knowledge_scope"]
+          eventos_envolvidos?: string[] | null
+          faccoes_envolvidas?: string[] | null
+          id?: string
+          npcs_envolvidos?: string[] | null
+          pergunta: string
+          possiveis_respostas?: Json | null
+          resolucao_planejada?: string | null
+          resolvido_em?: string | null
+          status?: Database["public"]["Enums"]["mystery_status"]
+          updated_at?: string
+        }
+        Update: {
+          contexto?: string | null
+          created_at?: string
+          criado_por?: string | null
+          escopo_conhecimento?: Database["public"]["Enums"]["knowledge_scope"]
+          eventos_envolvidos?: string[] | null
+          faccoes_envolvidas?: string[] | null
+          id?: string
+          npcs_envolvidos?: string[] | null
+          pergunta?: string
+          possiveis_respostas?: Json | null
+          resolucao_planejada?: string | null
+          resolvido_em?: string | null
+          status?: Database["public"]["Enums"]["mystery_status"]
+          updated_at?: string
+        }
+        Relationships: []
+      }
       npc_relations: {
         Row: {
           created_at: string
@@ -477,6 +638,63 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      plots: {
+        Row: {
+          created_at: string
+          criado_por: string | null
+          data_prevista: string | null
+          dependencias: string[] | null
+          faccoes_envolvidas: string[] | null
+          fatos_relacionados: string[] | null
+          id: string
+          misterios_relacionados: string[] | null
+          narrador_id: string | null
+          notas: string | null
+          npcs_envolvidos: string[] | null
+          objetivo: string | null
+          resumo: string | null
+          status: Database["public"]["Enums"]["plot_status"]
+          titulo: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          criado_por?: string | null
+          data_prevista?: string | null
+          dependencias?: string[] | null
+          faccoes_envolvidas?: string[] | null
+          fatos_relacionados?: string[] | null
+          id?: string
+          misterios_relacionados?: string[] | null
+          narrador_id?: string | null
+          notas?: string | null
+          npcs_envolvidos?: string[] | null
+          objetivo?: string | null
+          resumo?: string | null
+          status?: Database["public"]["Enums"]["plot_status"]
+          titulo: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          criado_por?: string | null
+          data_prevista?: string | null
+          dependencias?: string[] | null
+          faccoes_envolvidas?: string[] | null
+          fatos_relacionados?: string[] | null
+          id?: string
+          misterios_relacionados?: string[] | null
+          narrador_id?: string | null
+          notas?: string | null
+          npcs_envolvidos?: string[] | null
+          objetivo?: string | null
+          resumo?: string | null
+          status?: Database["public"]["Enums"]["plot_status"]
+          titulo?: string
+          updated_at?: string
+        }
+        Relationships: []
       }
       profiles: {
         Row: {
@@ -663,6 +881,17 @@ export type Database = {
         }
         Returns: boolean
       }
+      check_contradictions: {
+        Args: { _text: string }
+        Returns: {
+          categoria: string
+          descricao: string
+          id: string
+          matched_keyword: string
+          status: Database["public"]["Enums"]["fact_status"]
+          titulo: string
+        }[]
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -692,6 +921,12 @@ export type Database = {
       entry_status: "rascunho" | "publicado" | "arquivado"
       evento_status: "planejado" | "em_andamento" | "concluido" | "cancelado"
       evento_tipo: "global" | "faccao" | "esquadrao" | "secreto"
+      fact_status:
+        | "canonico"
+        | "provavel"
+        | "rumor"
+        | "descartado"
+        | "retconado"
       gancho_prioridade: "baixa" | "media" | "alta" | "critica"
       gancho_status:
         | "nao_iniciado"
@@ -699,6 +934,12 @@ export type Database = {
         | "em_andamento"
         | "executado"
         | "arquivado"
+      knowledge_scope:
+        | "players"
+        | "uniao"
+        | "diretores"
+        | "curadores"
+        | "staff_apenas"
       lore_category:
         | "universo"
         | "historia"
@@ -715,7 +956,20 @@ export type Database = {
         | "documento_restrito"
         | "classe"
         | "ruptura"
+      mystery_status:
+        | "sem_resposta"
+        | "parcial"
+        | "em_revelacao"
+        | "resolvido"
+        | "arquivado"
       npc_status: "ativo" | "morto" | "desaparecido" | "oculto" | "corrompido"
+      plot_status:
+        | "rascunho"
+        | "planejado"
+        | "em_andamento"
+        | "executado"
+        | "arquivado"
+        | "cancelado"
       ruptura_estado: "aberta" | "contida" | "critica" | "fechada"
       threat_level: "baixo" | "medio" | "alto" | "critico" | "catastrofico"
       vestigio_estado: "ativo" | "morto" | "instavel" | "desaparecido"
@@ -865,6 +1119,7 @@ export const Constants = {
       entry_status: ["rascunho", "publicado", "arquivado"],
       evento_status: ["planejado", "em_andamento", "concluido", "cancelado"],
       evento_tipo: ["global", "faccao", "esquadrao", "secreto"],
+      fact_status: ["canonico", "provavel", "rumor", "descartado", "retconado"],
       gancho_prioridade: ["baixa", "media", "alta", "critica"],
       gancho_status: [
         "nao_iniciado",
@@ -872,6 +1127,13 @@ export const Constants = {
         "em_andamento",
         "executado",
         "arquivado",
+      ],
+      knowledge_scope: [
+        "players",
+        "uniao",
+        "diretores",
+        "curadores",
+        "staff_apenas",
       ],
       lore_category: [
         "universo",
@@ -890,7 +1152,22 @@ export const Constants = {
         "classe",
         "ruptura",
       ],
+      mystery_status: [
+        "sem_resposta",
+        "parcial",
+        "em_revelacao",
+        "resolvido",
+        "arquivado",
+      ],
       npc_status: ["ativo", "morto", "desaparecido", "oculto", "corrompido"],
+      plot_status: [
+        "rascunho",
+        "planejado",
+        "em_andamento",
+        "executado",
+        "arquivado",
+        "cancelado",
+      ],
       ruptura_estado: ["aberta", "contida", "critica", "fechada"],
       threat_level: ["baixo", "medio", "alto", "critico", "catastrofico"],
       vestigio_estado: ["ativo", "morto", "instavel", "desaparecido"],
