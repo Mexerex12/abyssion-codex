@@ -105,6 +105,7 @@ function DocModal({ d, onClose }: { d: any; onClose: () => void }) {
           <Field label="Classificação"><Select value={form.clearance} onChange={(e) => setForm({ ...form, clearance: e.target.value })}>{CLEARANCE.map((c) => <option key={c} value={c}>{c}</option>)}</Select></Field>
         </div>
         <Field label="Conteúdo (markdown)"><Textarea rows={14} value={form.conteudo} onChange={(e) => setForm({ ...form, conteudo: e.target.value })} className="font-mono text-xs" /></Field>
+        <ContradictionCheck text={`${form.titulo} ${form.conteudo ?? ""}`} />
         {m.error && <p className="text-mono text-xs text-destructive">{(m.error as Error).message}</p>}
         <div className="flex justify-end gap-2"><Button variant="ghost" onClick={onClose}>Cancelar</Button><Button type="submit" disabled={m.isPending}>Salvar</Button></div>
       </form>
