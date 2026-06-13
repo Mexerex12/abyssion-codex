@@ -16,7 +16,7 @@ async function buildUniverseContext(opts?: { full?: boolean; limit?: number }) {
   const limit = opts?.limit ?? (opts?.full ? 400 : 120);
 
   const [lore, npcs, dominios, vestigios, rupturas, eventos, fatos, misterios, faccoes, docs, ws] = await Promise.all([
-    supabaseAdmin.from("lore_entries").select("title, category, summary, body, status").eq("status", "published").limit(limit),
+    supabaseAdmin.from("lore_entries").select("title, category, summary, body, status").eq("status", "publicado").limit(limit),
     supabaseAdmin.from("npcs").select("nome, cargo, faccao, status, localizacao, objetivos, segredos, observacoes_staff, ultima_aparicao").limit(limit),
     supabaseAdmin.from("dominios").select("nome, classe, dificuldade, status, recompensas, historico, ultima_abertura").limit(limit),
     supabaseAdmin.from("vestigios").select("nome, numero, vidas_atuais, vidas_limite, estado, ultima_aparicao").limit(limit),
