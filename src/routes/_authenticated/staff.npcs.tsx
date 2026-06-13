@@ -5,6 +5,7 @@ import { useState, useMemo } from "react";
 import { listNpcs, upsertNpc, deleteNpc } from "@/lib/staff.functions";
 import { PageHeader, Button, Field, Input, Select, Textarea, Modal, Empty, Badge } from "@/components/staff-ui";
 import { Plus, Search, Pencil, Trash2 } from "lucide-react";
+import { ContradictionCheck } from "@/components/contradiction-check";
 import { useAuth } from "@/hooks/use-auth";
 
 export const Route = createFileRoute("/_authenticated/staff/npcs")({
