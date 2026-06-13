@@ -39,10 +39,15 @@ export function StaffShell() {
             Workspace · Staff
           </p>
           <nav className="mt-5 flex flex-col gap-0.5">
-            {NAV.map((item) => {
-              const active = item.exact
-                ? pathname === item.to
-                : pathname.startsWith(item.to);
+            {NAV.map((item, i) => {
+              if ("section" in item) {
+                return (
+                  <p key={`s-${i}`} className="mt-3 px-3 pb-1 text-mono text-[9px] uppercase tracking-[0.2em] text-muted-foreground/60">
+                    {item.section}
+                  </p>
+                );
+              }
+              const active = item.exact ? pathname === item.to : pathname.startsWith(item.to);
               const Icon = item.icon;
               return (
                 <Link
