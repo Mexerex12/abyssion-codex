@@ -28,6 +28,7 @@ import { Route as AuthenticatedStaffRupturasRouteImport } from './routes/_authen
 import { Route as AuthenticatedStaffPlotsRouteImport } from './routes/_authenticated/staff.plots'
 import { Route as AuthenticatedStaffNpcsRouteImport } from './routes/_authenticated/staff.npcs'
 import { Route as AuthenticatedStaffMisteriosRouteImport } from './routes/_authenticated/staff.misterios'
+import { Route as AuthenticatedStaffIaRouteImport } from './routes/_authenticated/staff.ia'
 import { Route as AuthenticatedStaffGrafoRouteImport } from './routes/_authenticated/staff.grafo'
 import { Route as AuthenticatedStaffGanchosRouteImport } from './routes/_authenticated/staff.ganchos'
 import { Route as AuthenticatedStaffFatosRouteImport } from './routes/_authenticated/staff.fatos'
@@ -138,6 +139,11 @@ const AuthenticatedStaffMisteriosRoute =
     path: '/misterios',
     getParentRoute: () => AuthenticatedStaffRoute,
   } as any)
+const AuthenticatedStaffIaRoute = AuthenticatedStaffIaRouteImport.update({
+  id: '/ia',
+  path: '/ia',
+  getParentRoute: () => AuthenticatedStaffRoute,
+} as any)
 const AuthenticatedStaffGrafoRoute = AuthenticatedStaffGrafoRouteImport.update({
   id: '/grafo',
   path: '/grafo',
@@ -224,6 +230,7 @@ export interface FileRoutesByFullPath {
   '/staff/fatos': typeof AuthenticatedStaffFatosRoute
   '/staff/ganchos': typeof AuthenticatedStaffGanchosRoute
   '/staff/grafo': typeof AuthenticatedStaffGrafoRoute
+  '/staff/ia': typeof AuthenticatedStaffIaRoute
   '/staff/misterios': typeof AuthenticatedStaffMisteriosRoute
   '/staff/npcs': typeof AuthenticatedStaffNpcsRoute
   '/staff/plots': typeof AuthenticatedStaffPlotsRoute
@@ -254,6 +261,7 @@ export interface FileRoutesByTo {
   '/staff/fatos': typeof AuthenticatedStaffFatosRoute
   '/staff/ganchos': typeof AuthenticatedStaffGanchosRoute
   '/staff/grafo': typeof AuthenticatedStaffGrafoRoute
+  '/staff/ia': typeof AuthenticatedStaffIaRoute
   '/staff/misterios': typeof AuthenticatedStaffMisteriosRoute
   '/staff/npcs': typeof AuthenticatedStaffNpcsRoute
   '/staff/plots': typeof AuthenticatedStaffPlotsRoute
@@ -287,6 +295,7 @@ export interface FileRoutesById {
   '/_authenticated/staff/fatos': typeof AuthenticatedStaffFatosRoute
   '/_authenticated/staff/ganchos': typeof AuthenticatedStaffGanchosRoute
   '/_authenticated/staff/grafo': typeof AuthenticatedStaffGrafoRoute
+  '/_authenticated/staff/ia': typeof AuthenticatedStaffIaRoute
   '/_authenticated/staff/misterios': typeof AuthenticatedStaffMisteriosRoute
   '/_authenticated/staff/npcs': typeof AuthenticatedStaffNpcsRoute
   '/_authenticated/staff/plots': typeof AuthenticatedStaffPlotsRoute
@@ -320,6 +329,7 @@ export interface FileRouteTypes {
     | '/staff/fatos'
     | '/staff/ganchos'
     | '/staff/grafo'
+    | '/staff/ia'
     | '/staff/misterios'
     | '/staff/npcs'
     | '/staff/plots'
@@ -350,6 +360,7 @@ export interface FileRouteTypes {
     | '/staff/fatos'
     | '/staff/ganchos'
     | '/staff/grafo'
+    | '/staff/ia'
     | '/staff/misterios'
     | '/staff/npcs'
     | '/staff/plots'
@@ -382,6 +393,7 @@ export interface FileRouteTypes {
     | '/_authenticated/staff/fatos'
     | '/_authenticated/staff/ganchos'
     | '/_authenticated/staff/grafo'
+    | '/_authenticated/staff/ia'
     | '/_authenticated/staff/misterios'
     | '/_authenticated/staff/npcs'
     | '/_authenticated/staff/plots'
@@ -540,6 +552,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedStaffMisteriosRouteImport
       parentRoute: typeof AuthenticatedStaffRoute
     }
+    '/_authenticated/staff/ia': {
+      id: '/_authenticated/staff/ia'
+      path: '/ia'
+      fullPath: '/staff/ia'
+      preLoaderRoute: typeof AuthenticatedStaffIaRouteImport
+      parentRoute: typeof AuthenticatedStaffRoute
+    }
     '/_authenticated/staff/grafo': {
       id: '/_authenticated/staff/grafo'
       path: '/grafo'
@@ -644,6 +663,7 @@ interface AuthenticatedStaffRouteChildren {
   AuthenticatedStaffFatosRoute: typeof AuthenticatedStaffFatosRoute
   AuthenticatedStaffGanchosRoute: typeof AuthenticatedStaffGanchosRoute
   AuthenticatedStaffGrafoRoute: typeof AuthenticatedStaffGrafoRoute
+  AuthenticatedStaffIaRoute: typeof AuthenticatedStaffIaRoute
   AuthenticatedStaffMisteriosRoute: typeof AuthenticatedStaffMisteriosRoute
   AuthenticatedStaffNpcsRoute: typeof AuthenticatedStaffNpcsRoute
   AuthenticatedStaffPlotsRoute: typeof AuthenticatedStaffPlotsRoute
@@ -662,6 +682,7 @@ const AuthenticatedStaffRouteChildren: AuthenticatedStaffRouteChildren = {
   AuthenticatedStaffFatosRoute: AuthenticatedStaffFatosRoute,
   AuthenticatedStaffGanchosRoute: AuthenticatedStaffGanchosRoute,
   AuthenticatedStaffGrafoRoute: AuthenticatedStaffGrafoRoute,
+  AuthenticatedStaffIaRoute: AuthenticatedStaffIaRoute,
   AuthenticatedStaffMisteriosRoute: AuthenticatedStaffMisteriosRoute,
   AuthenticatedStaffNpcsRoute: AuthenticatedStaffNpcsRoute,
   AuthenticatedStaffPlotsRoute: AuthenticatedStaffPlotsRoute,
@@ -702,3 +723,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
