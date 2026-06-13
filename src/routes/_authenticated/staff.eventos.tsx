@@ -5,6 +5,7 @@ import { useState } from "react";
 import { listEventos, upsertEvento, listDominios, listNpcs } from "@/lib/staff.functions";
 import { PageHeader, Button, Field, Input, Select, Textarea, Modal, Empty, Badge } from "@/components/staff-ui";
 import { Plus, Pencil } from "lucide-react";
+import { ContradictionCheck } from "@/components/contradiction-check";
 
 export const Route = createFileRoute("/_authenticated/staff/eventos")({
   component: EventosPage,
