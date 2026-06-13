@@ -5,6 +5,7 @@ import { useState } from "react";
 import { listDocumentos, upsertDocumento, getDocumento } from "@/lib/staff.functions";
 import { PageHeader, Button, Field, Input, Select, Textarea, Modal, Empty, Badge } from "@/components/staff-ui";
 import { Plus, FileText, History } from "lucide-react";
+import { ContradictionCheck } from "@/components/contradiction-check";
 import { renderMarkdown } from "@/lib/markdown";
 
 export const Route = createFileRoute("/_authenticated/staff/documentos")({
