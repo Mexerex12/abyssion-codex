@@ -2,23 +2,30 @@ import { Link, Outlet, useRouterState } from "@tanstack/react-router";
 import { SiteHeader } from "@/components/site-chrome";
 import {
   Activity, Users, Skull, MapPin, Zap, Calendar, Clock, Lightbulb,
-  FileText, Network, Search, Settings,
+  FileText, Network, Search, Settings, ShieldCheck, HelpCircle, GitBranch, BookMarked,
 } from "lucide-react";
 
 const NAV = [
   { to: "/staff", label: "Estado do Mundo", icon: Activity, exact: true },
+  { section: "Operações" },
   { to: "/staff/npcs", label: "NPCs", icon: Users },
   { to: "/staff/vestigios", label: "Vestígios", icon: Skull },
   { to: "/staff/dominios", label: "Domínios", icon: MapPin },
   { to: "/staff/rupturas", label: "Rupturas", icon: Zap },
   { to: "/staff/eventos", label: "Eventos", icon: Calendar },
   { to: "/staff/timeline", label: "Linha do Tempo", icon: Clock },
+  { section: "Consistência Narrativa" },
+  { to: "/staff/fatos", label: "Fatos Canônicos", icon: ShieldCheck },
+  { to: "/staff/misterios", label: "Mistérios", icon: HelpCircle },
+  { to: "/staff/consequencias", label: "Consequências", icon: GitBranch },
+  { to: "/staff/plots", label: "Plots Futuros", icon: BookMarked },
   { to: "/staff/ganchos", label: "Ganchos", icon: Lightbulb },
+  { section: "Arquivo" },
   { to: "/staff/documentos", label: "Documentos", icon: FileText },
   { to: "/staff/grafo", label: "Mapa de Relações", icon: Network },
   { to: "/staff/buscar", label: "Busca Universal", icon: Search },
   { to: "/admin", label: "CMS Wiki", icon: Settings },
-];
+] as const;
 
 export function StaffShell() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
@@ -32,10 +39,15 @@ export function StaffShell() {
             Workspace · Staff
           </p>
           <nav className="mt-5 flex flex-col gap-0.5">
-            {NAV.map((item) => {
-              const active = item.exact
-                ? pathname === item.to
-                : pathname.startsWith(item.to);
+            {NAV.map((item, i) => {
+              if ("section" in item) {
+                return (
+                  <p key={`s-${i}`} className="mt-3 px-3 pb-1 text-mono text-[9px] uppercase tracking-[0.2em] text-muted-foreground/60">
+                    {item.section}
+                  </p>
+                );
+              }
+              const active = "exact" in item && item.exact ? pathname === item.to : pathname.startsWith(item.to);
               const Icon = item.icon;
               return (
                 <Link

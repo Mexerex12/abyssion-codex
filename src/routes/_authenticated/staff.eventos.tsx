@@ -5,6 +5,7 @@ import { useState } from "react";
 import { listEventos, upsertEvento, listDominios, listNpcs } from "@/lib/staff.functions";
 import { PageHeader, Button, Field, Input, Select, Textarea, Modal, Empty, Badge } from "@/components/staff-ui";
 import { Plus, Pencil } from "lucide-react";
+import { ContradictionCheck } from "@/components/contradiction-check";
 
 export const Route = createFileRoute("/_authenticated/staff/eventos")({
   component: EventosPage,
@@ -97,6 +98,7 @@ function EvModal({ e, onClose }: { e: any; onClose: () => void }) {
         <Field label="Resumo"><Textarea rows={3} value={form.resumo} onChange={(ev) => setForm({ ...form, resumo: ev.target.value })} /></Field>
         <Field label="Consequências"><Textarea rows={3} value={form.consequencias} onChange={(ev) => setForm({ ...form, consequencias: ev.target.value })} /></Field>
         {form.status === "concluido" && !e?.lore_entry_id && <p className="text-mono text-[11px] text-amber-400">⚠ Ao salvar como "concluído", uma entrada será criada automaticamente na linha do tempo pública.</p>}
+        <ContradictionCheck text={`${form.nome} ${form.resumo ?? ""} ${form.consequencias ?? ""}`} />
         {m.error && <p className="text-mono text-xs text-destructive">{(m.error as Error).message}</p>}
         <div className="flex justify-end gap-2"><Button variant="ghost" onClick={onClose}>Cancelar</Button><Button type="submit" disabled={m.isPending}>Salvar</Button></div>
       </form>
