@@ -13,7 +13,7 @@ const QUOTES = [
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Abyssion SMP — Portal da União Trivalente" },
+      { title: "Abyssion SMP | Portal da União Trivalente" },
       {
         name: "description",
         content:

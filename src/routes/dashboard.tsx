@@ -9,7 +9,7 @@ import { Lock, ArrowUpRight } from "lucide-react";
 export const Route = createFileRoute("/dashboard")({
   head: () => ({
     meta: [
-      { title: "Painel — União Trivalente" },
+      { title: "Painel | União Trivalente" },
       { name: "description", content: "Painel central dos Arquivos da União Trivalente. Acesso aos setores temáticos do banco de dados." },
     ],
   }),

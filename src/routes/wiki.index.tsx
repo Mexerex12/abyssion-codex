@@ -12,7 +12,7 @@ import { Search } from "lucide-react";
 export const Route = createFileRoute("/wiki/")({
   head: () => ({
     meta: [
-      { title: "Enciclopédia — Arquivos da União Trivalente" },
+      { title: "Enciclopédia | Arquivos da União Trivalente" },
       { name: "description", content: "Banco de dados completo da lore Abyssion SMP." },
     ],
   }),

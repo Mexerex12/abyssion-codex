@@ -16,7 +16,7 @@ export const Route = createFileRoute("/categoria/$category")({
     const meta = CATEGORY_META[params.category as LoreCategory];
     return {
       meta: [
-        { title: `${meta?.plural ?? "Categoria"} — União Trivalente` },
+        { title: `${meta?.plural ?? "Categoria"} | União Trivalente` },
         { name: "description", content: meta?.description ?? "" },
       ],
     };

@@ -7,7 +7,7 @@ import { Shield, ArrowLeft } from "lucide-react";
 export const Route = createFileRoute("/auth")({
   head: () => ({
     meta: [
-      { title: "Identificação — União Trivalente" },
+      { title: "Identificação | União Trivalente" },
       { name: "description", content: "Acesso ao Portal dos Arquivos da União Trivalente." },
     ],
   }),
