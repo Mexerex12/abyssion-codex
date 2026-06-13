@@ -8,7 +8,7 @@ import { ArrowLeft } from "lucide-react";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/_authenticated/admin/usuarios")({
-  head: () => ({ meta: [{ title: "Usuários — Admin" }] }),
+  head: () => ({ meta: [{ title: "Usuários | Admin" }] }),
   component: Users,
 });
 

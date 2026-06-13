@@ -9,7 +9,7 @@ import { Plus, Users, FileEdit } from "lucide-react";
 import { useEffect } from "react";
 
 export const Route = createFileRoute("/_authenticated/admin")({
-  head: () => ({ meta: [{ title: "Painel Administrativo — União Trivalente" }] }),
+  head: () => ({ meta: [{ title: "Painel Administrativo | União Trivalente" }] }),
   component: AdminHome,
 });
 
@@ -37,7 +37,7 @@ function AdminHome() {
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div>
             <p className="hud-label text-cyan">Painel · {isAdmin ? "Administrador" : "Narrador"}</p>
-            <h1 className="mt-2 text-display text-4xl font-bold">CMS — Arquivos da União</h1>
+            <h1 className="mt-2 text-display text-4xl font-bold">CMS · Arquivos da União</h1>
             <p className="mt-2 text-sm text-muted-foreground">
               Edite a lore diretamente. {isAdmin ? "Você possui controle total sobre o banco." : "Você pode criar Eventos e atualizar status de NPCs/Domínios."}
             </p>

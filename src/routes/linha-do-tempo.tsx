@@ -9,7 +9,7 @@ export const Route = createFileRoute("/linha-do-tempo")({
   loader: () => listTimeline(),
   head: () => ({
     meta: [
-      { title: "Linha do Tempo — União Trivalente" },
+      { title: "Linha do Tempo | União Trivalente" },
       { name: "description", content: "Cronologia dos eventos catalogados do universo Abyssion SMP." },
     ],
   }),

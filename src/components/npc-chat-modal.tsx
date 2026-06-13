@@ -33,7 +33,7 @@ export function NpcChatModal({ npc, onClose }: { npc: { id: string; nome: string
   const tipo = cargo.includes("curador") ? "Curador" : cargo.includes("regente") ? "Regente" : "NPC";
 
   return (
-    <Modal open onClose={onClose} title={`Interpretando — ${npc.nome} (${tipo})`} wide>
+    <Modal open onClose={onClose} title={`Interpretando: ${npc.nome} (${tipo})`} wide>
       <div className="flex h-[60vh] flex-col gap-3">
         <div className="flex-1 space-y-3 overflow-y-auto border border-border bg-surface-2 p-4">
           {messages.length === 0 && (

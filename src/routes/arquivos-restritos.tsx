@@ -11,7 +11,7 @@ import { Lock, Shield } from "lucide-react";
 export const Route = createFileRoute("/arquivos-restritos")({
   head: () => ({
     meta: [
-      { title: "Arquivos Restritos — União Trivalente" },
+      { title: "Arquivos Restritos | União Trivalente" },
       { name: "description", content: "Documentação classificada da União Trivalente. Acesso restrito por nível de credencial." },
     ],
   }),

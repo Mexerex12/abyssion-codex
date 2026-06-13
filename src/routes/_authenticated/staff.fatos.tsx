@@ -124,7 +124,7 @@ function FatoModal({ f, onClose }: { f: any; onClose: () => void }) {
   });
 
   return (
-    <Modal open onClose={onClose} title={f?.id ? `Editar — ${f.titulo}` : "Novo Fato Canônico"} wide>
+    <Modal open onClose={onClose} title={f?.id ? `Editar: ${f.titulo}` : "Novo Fato Canônico"} wide>
       <form onSubmit={(e) => { e.preventDefault(); m.mutate(); }} className="space-y-4">
         <Field label="Título*"><Input required value={form.titulo} onChange={(e) => setForm({ ...form, titulo: e.target.value })} /></Field>
         <Field label="Descrição*"><Textarea required rows={4} value={form.descricao} onChange={(e) => setForm({ ...form, descricao: e.target.value })} /></Field>
@@ -134,7 +134,7 @@ function FatoModal({ f, onClose }: { f: any; onClose: () => void }) {
           <Field label="Quem sabe"><Select value={form.escopo_conhecimento} onChange={(e) => setForm({ ...form, escopo_conhecimento: e.target.value })}>{SCOPE.map((s) => <option key={s} value={s}>{s.replace("_", " ")}</option>)}</Select></Field>
         </div>
         <Field label="Fonte (sessão, livro, decisão da staff)"><Input value={form.fonte} onChange={(e) => setForm({ ...form, fonte: e.target.value })} /></Field>
-        <Field label="Palavras-chave (separe por vírgula — usadas pelo verificador automático)">
+        <Field label="Palavras-chave (separe por vírgula; usadas pelo verificador automático)">
           <Input value={form.palavras_chave} onChange={(e) => setForm({ ...form, palavras_chave: e.target.value })} placeholder="rei pálido, vestígio, núcleo" />
         </Field>
         <Field label="Facções relacionadas (separe por vírgula)">

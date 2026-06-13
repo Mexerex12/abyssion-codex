@@ -17,7 +17,7 @@ export const Route = createFileRoute("/wiki/$slug")({
   head: ({ loaderData }) => ({
     meta: loaderData
       ? [
-          { title: `${loaderData.entry.title} — Arquivos da União Trivalente` },
+          { title: `${loaderData.entry.title} | Arquivos da União Trivalente` },
           {
             name: "description",
             content: loaderData.entry.summary ?? `Registro oficial: ${loaderData.entry.title}`,

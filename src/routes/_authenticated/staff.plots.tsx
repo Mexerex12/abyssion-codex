@@ -104,7 +104,7 @@ function PlotModal({ p, onClose }: { p: any; onClose: () => void }) {
   }
 
   return (
-    <Modal open onClose={onClose} title={p?.id ? `Editar — ${p.titulo}` : "Novo Plot"} wide>
+    <Modal open onClose={onClose} title={p?.id ? `Editar: ${p.titulo}` : "Novo Plot"} wide>
       <form onSubmit={(e) => { e.preventDefault(); m.mutate(); }} className="space-y-4">
         <Field label="Título*"><Input required value={form.titulo} onChange={(e) => setForm({ ...form, titulo: e.target.value })} /></Field>
         <Field label="Objetivo"><Textarea rows={2} value={form.objetivo} onChange={(e) => setForm({ ...form, objetivo: e.target.value })} /></Field>

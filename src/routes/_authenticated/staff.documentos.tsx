@@ -67,7 +67,7 @@ function DocView({ slug, onEdit }: { slug: string; onEdit: (d: any) => void }) {
       </div>
       <div className="prose prose-invert mt-6 max-w-none text-sm" dangerouslySetInnerHTML={{ __html: renderMarkdown(data.doc.conteudo || "") }} />
       {showRev && (
-        <Modal open onClose={() => setShowRev(false)} title={`Revisões — ${data.doc.titulo}`} wide>
+        <Modal open onClose={() => setShowRev(false)} title={`Revisões: ${data.doc.titulo}`} wide>
           <div className="space-y-3">
             {data.revisoes.length === 0 && <Empty>Sem revisões.</Empty>}
             {data.revisoes.map((r: any) => (
@@ -96,7 +96,7 @@ function DocModal({ d, onClose }: { d: any; onClose: () => void }) {
     onSuccess: () => { qc.invalidateQueries({ queryKey: ["documentos"] }); qc.invalidateQueries({ queryKey: ["doc"] }); onClose(); },
   });
   return (
-    <Modal open onClose={onClose} title={d?.id ? `Editar — ${d.titulo}` : "Novo Documento"} wide>
+    <Modal open onClose={onClose} title={d?.id ? `Editar: ${d.titulo}` : "Novo Documento"} wide>
       <form onSubmit={(e) => { e.preventDefault(); m.mutate(); }} className="space-y-4">
         <div className="grid grid-cols-2 gap-3">
           <Field label="Título*"><Input required value={form.titulo} onChange={(e) => setForm({ ...form, titulo: e.target.value })} /></Field>

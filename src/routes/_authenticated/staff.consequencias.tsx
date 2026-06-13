@@ -21,7 +21,7 @@ function ConsPage() {
   const [editing, setEditing] = useState<any | null>(null);
 
   const byEvento = (data ?? []).reduce((acc: any, c: any) => {
-    const k = c.evento?.nome ?? "— sem evento —";
+    const k = c.evento?.nome ?? "sem evento";
     (acc[k] ||= []).push(c);
     return acc;
   }, {} as Record<string, any[]>);
@@ -31,7 +31,7 @@ function ConsPage() {
       <PageHeader
         eyebrow="Workspace · Sistema de Consequências"
         title="Consequências"
-        sub="Toda ação importante gera consequências registradas — agrupadas por evento de origem."
+        sub="Toda ação importante gera consequências registradas, agrupadas por evento de origem."
         actions={<Button onClick={() => { setEditing({}); setOpen(true); }}><Plus className="h-3 w-3" /> Nova Consequência</Button>}
       />
 
@@ -99,7 +99,7 @@ function ConsModal({ c, onClose }: { c: any; onClose: () => void }) {
   });
 
   return (
-    <Modal open onClose={onClose} title={c?.id ? `Editar — ${c.titulo}` : "Nova Consequência"} wide>
+    <Modal open onClose={onClose} title={c?.id ? `Editar: ${c.titulo}` : "Nova Consequência"} wide>
       <form onSubmit={(e) => { e.preventDefault(); m.mutate(); }} className="space-y-4">
         <Field label="Evento de origem">
           <Select value={form.evento_id} onChange={(e) => setForm({ ...form, evento_id: e.target.value })}>

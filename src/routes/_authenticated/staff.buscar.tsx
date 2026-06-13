@@ -20,13 +20,13 @@ function BuscarPage() {
   });
 
   const groups: { label: string; key: keyof NonNullable<typeof data>; render: (r: any) => React.ReactNode }[] = [
-    { label: "NPCs", key: "npcs", render: (r) => `${r.nome} — ${r.cargo || ""} (${r.status})` },
-    { label: "Eventos", key: "eventos", render: (r) => `${r.nome} — ${r.tipo} / ${r.status}` },
-    { label: "Domínios", key: "dominios", render: (r) => `${r.nome} — ${r.classe || ""} (${r.status})` },
-    { label: "Vestígios", key: "vestigios", render: (r) => `${r.nome} — VEST-${String(r.numero ?? "?").padStart(3, "0")} (${r.estado})` },
-    { label: "Ganchos", key: "ganchos", render: (r) => `${r.titulo} — ${r.prioridade} / ${r.status}` },
-    { label: "Documentos", key: "documentos", render: (r) => `${r.titulo} — ${r.categoria || ""}` },
-    { label: "Wiki (Lore)", key: "lore", render: (r) => `${r.title} — ${r.category}` },
+    { label: "NPCs", key: "npcs", render: (r) => `${r.nome} | ${r.cargo || ""} (${r.status})` },
+    { label: "Eventos", key: "eventos", render: (r) => `${r.nome} | ${r.tipo} / ${r.status}` },
+    { label: "Domínios", key: "dominios", render: (r) => `${r.nome} | ${r.classe || ""} (${r.status})` },
+    { label: "Vestígios", key: "vestigios", render: (r) => `${r.nome} | VEST-${String(r.numero ?? "?").padStart(3, "0")} (${r.estado})` },
+    { label: "Ganchos", key: "ganchos", render: (r) => `${r.titulo} | ${r.prioridade} / ${r.status}` },
+    { label: "Documentos", key: "documentos", render: (r) => `${r.titulo} | ${r.categoria || ""}` },
+    { label: "Wiki (Lore)", key: "lore", render: (r) => `${r.title} | ${r.category}` },
   ];
 
   return (

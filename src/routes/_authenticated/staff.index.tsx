@@ -118,10 +118,10 @@ function EditModal({ open, onClose, state }: { open: boolean; onClose: () => voi
               {["baixo", "medio", "alto", "critico", "catastrofico"].map((l) => <option key={l} value={l}>{l}</option>)}
             </Select>
           </Field>
-          <Field label="Peregrino — Último Local">
+          <Field label="Peregrino · Último Local">
             <Input value={form.peregrino_ultimo_local} onChange={(e) => setForm({ ...form, peregrino_ultimo_local: e.target.value })} />
           </Field>
-          <Field label="Peregrino — Visto em">
+          <Field label="Peregrino · Visto em">
             <Input type="datetime-local" value={form.peregrino_ultimo_em} onChange={(e) => setForm({ ...form, peregrino_ultimo_em: e.target.value })} />
           </Field>
         </div>
