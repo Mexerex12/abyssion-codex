@@ -16,7 +16,7 @@ function TimelinePage() {
   const filtered = (data ?? []).filter((e: any) => !filter || e.tipo === filter);
   return (
     <div className="space-y-5">
-      <PageHeader eyebrow="Workspace · Linha do Tempo" title="Linha do Tempo" sub="Visão interna — inclui eventos secretos e classificados." />
+      <PageHeader eyebrow="Workspace · Linha do Tempo" title="Linha do Tempo" sub="Visão interna. Inclui eventos secretos e classificados." />
       <Select value={filter} onChange={(e) => setFilter(e.target.value)} className="w-auto">
         <option value="">Todos os tipos</option>
         {["global", "faccao", "esquadrao", "secreto"].map((t) => <option key={t} value={t}>{t}</option>)}

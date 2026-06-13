@@ -4,7 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { EntryEditor } from "@/components/entry-editor";
 
 export const Route = createFileRoute("/_authenticated/admin/editar/$id")({
-  head: () => ({ meta: [{ title: "Editar Entrada — Admin" }] }),
+  head: () => ({ meta: [{ title: "Editar Entrada | Admin" }] }),
   component: EditEntry,
 });
 
