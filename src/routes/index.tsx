@@ -86,7 +86,7 @@ function Home() {
 
         {/* Rotating quote */}
         <div className="mt-10 border-l-2 border-cyan/60 pl-5">
-          <p className="hud-label text-cyan">Mensagem recorrente — origem desconhecida</p>
+          <p className="hud-label text-cyan">Mensagem recorrente. Origem desconhecida.</p>
           <div className="relative mt-2 h-12">
             {QUOTES.map((q, i) => (
               <p
