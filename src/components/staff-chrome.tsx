@@ -47,7 +47,7 @@ export function StaffShell() {
                   </p>
                 );
               }
-              const active = item.exact ? pathname === item.to : pathname.startsWith(item.to);
+              const active = "exact" in item && item.exact ? pathname === item.to : pathname.startsWith(item.to);
               const Icon = item.icon;
               return (
                 <Link
