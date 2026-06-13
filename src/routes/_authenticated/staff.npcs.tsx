@@ -78,6 +78,7 @@ function NpcsPage() {
 function NpcCard({ npc, onEdit, canDelete }: { npc: any; onEdit: () => void; canDelete: boolean }) {
   const qc = useQueryClient();
   const del = useServerFn(deleteNpc);
+  const [chatOpen, setChatOpen] = useState(false);
   const m = useMutation({ mutationFn: (id: string) => del({ data: { id } }), onSuccess: () => qc.invalidateQueries({ queryKey: ["npcs"] }) });
   const tone: any = npc.status === "ativo" ? "green" : npc.status === "morto" ? "alert" : npc.status === "corrompido" ? "amber" : "neutral";
   return (
@@ -100,10 +101,12 @@ function NpcCard({ npc, onEdit, canDelete }: { npc: any; onEdit: () => void; can
         </div>
       </div>
       {npc.localizacao && <p className="mt-2 text-mono text-[11px] text-muted-foreground">📍 {npc.localizacao}</p>}
-      <div className="mt-3 flex justify-end gap-1 opacity-0 transition-opacity group-hover:opacity-100">
+      <div className="mt-3 flex flex-wrap justify-end gap-1 opacity-0 transition-opacity group-hover:opacity-100">
+        <Button size="sm" variant="ghost" onClick={() => setChatOpen(true)}><MessageCircle className="h-3 w-3" /> Conversar</Button>
         <Button size="sm" variant="ghost" onClick={onEdit}><Pencil className="h-3 w-3" /> Editar</Button>
         {canDelete && <Button size="sm" variant="danger" onClick={() => confirm(`Apagar ${npc.nome}?`) && m.mutate(npc.id)}><Trash2 className="h-3 w-3" /></Button>}
       </div>
+      {chatOpen && <NpcChatModal npc={npc} onClose={() => setChatOpen(false)} />}
     </div>
   );
 }
