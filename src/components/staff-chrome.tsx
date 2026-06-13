@@ -2,7 +2,7 @@ import { Link, Outlet, useRouterState } from "@tanstack/react-router";
 import { SiteHeader } from "@/components/site-chrome";
 import {
   Activity, Users, Skull, MapPin, Zap, Calendar, Clock, Lightbulb,
-  FileText, Network, Search, Settings, ShieldCheck, HelpCircle, GitBranch, BookMarked,
+  FileText, Network, Search, Settings, ShieldCheck, HelpCircle, GitBranch, BookMarked, Sparkles,
 } from "lucide-react";
 
 const NAV = [
@@ -14,6 +14,8 @@ const NAV = [
   { to: "/staff/rupturas", label: "Rupturas", icon: Zap },
   { to: "/staff/eventos", label: "Eventos", icon: Calendar },
   { to: "/staff/timeline", label: "Linha do Tempo", icon: Clock },
+  { section: "IA Narrativa" },
+  { to: "/staff/ia", label: "Curador-Auxiliar", icon: Sparkles },
   { section: "Consistência Narrativa" },
   { to: "/staff/fatos", label: "Fatos Canônicos", icon: ShieldCheck },
   { to: "/staff/misterios", label: "Mistérios", icon: HelpCircle },
