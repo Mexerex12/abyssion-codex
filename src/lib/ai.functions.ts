@@ -24,7 +24,7 @@ async function buildUniverseContext(opts?: { full?: boolean; limit?: number }) {
     supabaseAdmin.from("eventos_operacionais").select("nome, data, tipo, status, resumo, consequencias").order("data", { ascending: false }).limit(limit),
     supabaseAdmin.from("fatos_canonicos").select("titulo, descricao, categoria, fonte, nivel_confirmacao").limit(limit),
     supabaseAdmin.from("misterios").select("titulo, descricao, status, hipoteses").limit(limit),
-    supabaseAdmin.from("lore_entries").select("title, summary").eq("category", "faccao").eq("is_published", true).limit(50),
+    supabaseAdmin.from("lore_entries").select("title, summary").eq("category", "faccao").eq("status", "publicado").limit(50),
     supabaseAdmin.from("documentos").select("titulo, conteudo, clearance").limit(50),
     supabaseAdmin.from("world_state").select("*").maybeSingle(),
   ]);
