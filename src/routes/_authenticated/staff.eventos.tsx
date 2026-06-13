@@ -75,7 +75,7 @@ function EvModal({ e, onClose }: { e: any; onClose: () => void }) {
   });
   const toggleNpc = (id: string) => setForm((f: any) => ({ ...f, npcs_envolvidos: f.npcs_envolvidos.includes(id) ? f.npcs_envolvidos.filter((x: string) => x !== id) : [...f.npcs_envolvidos, id] }));
   return (
-    <Modal open onClose={onClose} title={e?.id ? `Editar — ${e.nome}` : "Novo Evento"} wide>
+    <Modal open onClose={onClose} title={e?.id ? `Editar: ${e.nome}` : "Novo Evento"} wide>
       <form onSubmit={(ev) => { ev.preventDefault(); m.mutate(); }} className="space-y-4">
         <div className="grid grid-cols-2 gap-3">
           <Field label="Nome*"><Input required value={form.nome} onChange={(ev) => setForm({ ...form, nome: ev.target.value })} /></Field>

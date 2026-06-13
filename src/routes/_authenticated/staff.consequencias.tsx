@@ -99,7 +99,7 @@ function ConsModal({ c, onClose }: { c: any; onClose: () => void }) {
   });
 
   return (
-    <Modal open onClose={onClose} title={c?.id ? `Editar — ${c.titulo}` : "Nova Consequência"} wide>
+    <Modal open onClose={onClose} title={c?.id ? `Editar: ${c.titulo}` : "Nova Consequência"} wide>
       <form onSubmit={(e) => { e.preventDefault(); m.mutate(); }} className="space-y-4">
         <Field label="Evento de origem">
           <Select value={form.evento_id} onChange={(e) => setForm({ ...form, evento_id: e.target.value })}>

@@ -83,7 +83,7 @@ function VestModal({ v, onClose }: { v: any; onClose: () => void }) {
     onSuccess: () => { qc.invalidateQueries({ queryKey: ["vestigios"] }); onClose(); },
   });
   return (
-    <Modal open onClose={onClose} title={v?.id ? `Editar — ${v.nome}` : "Novo Vestígio"}>
+    <Modal open onClose={onClose} title={v?.id ? `Editar: ${v.nome}` : "Novo Vestígio"}>
       <form onSubmit={(e) => { e.preventDefault(); m.mutate(); }} className="space-y-4">
         <div className="grid grid-cols-2 gap-3">
           <Field label="Nome*"><Input required value={form.nome} onChange={(e) => setForm({ ...form, nome: e.target.value })} /></Field>
@@ -112,7 +112,7 @@ function HistoricoModal({ v, onClose }: { v: any; onClose: () => void }) {
   });
   const entries = Array.isArray(v.historico) ? v.historico : [];
   return (
-    <Modal open onClose={onClose} title={`Histórico — ${v.nome}`}>
+    <Modal open onClose={onClose} title={`Histórico: ${v.nome}`}>
       <div className="space-y-4">
         <div className="max-h-80 space-y-2 overflow-y-auto">
           {entries.length === 0 && <Empty>Sem entradas no histórico.</Empty>}

@@ -78,7 +78,7 @@ function RuptModal({ r, onClose }: { r: any; onClose: () => void }) {
     onSuccess: () => { qc.invalidateQueries({ queryKey: ["rupturas"] }); onClose(); },
   });
   return (
-    <Modal open onClose={onClose} title={r?.id ? `Editar — ${r.nome}` : "Nova Ruptura"}>
+    <Modal open onClose={onClose} title={r?.id ? `Editar: ${r.nome}` : "Nova Ruptura"}>
       <form onSubmit={(e) => { e.preventDefault(); m.mutate(); }} className="space-y-4">
         <div className="grid grid-cols-2 gap-3">
           <Field label="Nome*"><Input required value={form.nome} onChange={(e) => setForm({ ...form, nome: e.target.value })} /></Field>

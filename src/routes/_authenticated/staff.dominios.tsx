@@ -88,7 +88,7 @@ function DomModal({ d, onClose }: { d: any; onClose: () => void }) {
     onSuccess: () => { qc.invalidateQueries({ queryKey: ["dominios"] }); onClose(); },
   });
   return (
-    <Modal open onClose={onClose} title={d?.id ? `Editar — ${d.nome}` : "Novo Domínio"} wide>
+    <Modal open onClose={onClose} title={d?.id ? `Editar: ${d.nome}` : "Novo Domínio"} wide>
       <form onSubmit={(e) => { e.preventDefault(); m.mutate(); }} className="space-y-4">
         <div className="grid grid-cols-2 gap-3">
           <Field label="Nome*"><Input required value={form.nome} onChange={(e) => setForm({ ...form, nome: e.target.value })} /></Field>
