@@ -21,7 +21,7 @@ function ConsPage() {
   const [editing, setEditing] = useState<any | null>(null);
 
   const byEvento = (data ?? []).reduce((acc: any, c: any) => {
-    const k = c.evento?.nome ?? "— sem evento —";
+    const k = c.evento?.nome ?? "sem evento";
     (acc[k] ||= []).push(c);
     return acc;
   }, {} as Record<string, any[]>);

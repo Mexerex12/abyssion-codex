@@ -133,7 +133,7 @@ function NpcModal({ npc, onClose }: { npc: any; onClose: () => void }) {
     onSuccess: () => { qc.invalidateQueries({ queryKey: ["npcs"] }); onClose(); },
   });
   return (
-    <Modal open onClose={onClose} title={npc?.id ? `Editar — ${npc.nome}` : "Novo NPC"} wide>
+    <Modal open onClose={onClose} title={npc?.id ? `Editar: ${npc.nome}` : "Novo NPC"} wide>
       <form onSubmit={(e) => { e.preventDefault(); m.mutate(); }} className="space-y-4">
         <div className="grid grid-cols-2 gap-3">
           <Field label="Nome*"><Input required value={form.nome} onChange={(e) => setForm({ ...form, nome: e.target.value })} /></Field>

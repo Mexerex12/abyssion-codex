@@ -73,7 +73,7 @@ function GModal({ g, onClose }: { g: any; onClose: () => void }) {
     onSuccess: () => { qc.invalidateQueries({ queryKey: ["ganchos"] }); onClose(); },
   });
   return (
-    <Modal open onClose={onClose} title={g?.id ? `Editar — ${g.titulo}` : "Novo Gancho"}>
+    <Modal open onClose={onClose} title={g?.id ? `Editar: ${g.titulo}` : "Novo Gancho"}>
       <form onSubmit={(e) => { e.preventDefault(); m.mutate(); }} className="space-y-4">
         <Field label="Título*"><Input required value={form.titulo} onChange={(e) => setForm({ ...form, titulo: e.target.value })} /></Field>
         <Field label="Resumo"><Textarea rows={5} value={form.resumo} onChange={(e) => setForm({ ...form, resumo: e.target.value })} /></Field>
