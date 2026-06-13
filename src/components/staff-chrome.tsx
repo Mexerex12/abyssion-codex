@@ -2,23 +2,30 @@ import { Link, Outlet, useRouterState } from "@tanstack/react-router";
 import { SiteHeader } from "@/components/site-chrome";
 import {
   Activity, Users, Skull, MapPin, Zap, Calendar, Clock, Lightbulb,
-  FileText, Network, Search, Settings,
+  FileText, Network, Search, Settings, ShieldCheck, HelpCircle, GitBranch, BookMarked,
 } from "lucide-react";
 
 const NAV = [
   { to: "/staff", label: "Estado do Mundo", icon: Activity, exact: true },
+  { section: "Operações" },
   { to: "/staff/npcs", label: "NPCs", icon: Users },
   { to: "/staff/vestigios", label: "Vestígios", icon: Skull },
   { to: "/staff/dominios", label: "Domínios", icon: MapPin },
   { to: "/staff/rupturas", label: "Rupturas", icon: Zap },
   { to: "/staff/eventos", label: "Eventos", icon: Calendar },
   { to: "/staff/timeline", label: "Linha do Tempo", icon: Clock },
+  { section: "Consistência Narrativa" },
+  { to: "/staff/fatos", label: "Fatos Canônicos", icon: ShieldCheck },
+  { to: "/staff/misterios", label: "Mistérios", icon: HelpCircle },
+  { to: "/staff/consequencias", label: "Consequências", icon: GitBranch },
+  { to: "/staff/plots", label: "Plots Futuros", icon: BookMarked },
   { to: "/staff/ganchos", label: "Ganchos", icon: Lightbulb },
+  { section: "Arquivo" },
   { to: "/staff/documentos", label: "Documentos", icon: FileText },
   { to: "/staff/grafo", label: "Mapa de Relações", icon: Network },
   { to: "/staff/buscar", label: "Busca Universal", icon: Search },
   { to: "/admin", label: "CMS Wiki", icon: Settings },
-];
+] as const;
 
 export function StaffShell() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });

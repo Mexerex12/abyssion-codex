@@ -25,12 +25,16 @@ import { Route as AuthenticatedStaffIndexRouteImport } from './routes/_authentic
 import { Route as AuthenticatedStaffVestigiosRouteImport } from './routes/_authenticated/staff.vestigios'
 import { Route as AuthenticatedStaffTimelineRouteImport } from './routes/_authenticated/staff.timeline'
 import { Route as AuthenticatedStaffRupturasRouteImport } from './routes/_authenticated/staff.rupturas'
+import { Route as AuthenticatedStaffPlotsRouteImport } from './routes/_authenticated/staff.plots'
 import { Route as AuthenticatedStaffNpcsRouteImport } from './routes/_authenticated/staff.npcs'
+import { Route as AuthenticatedStaffMisteriosRouteImport } from './routes/_authenticated/staff.misterios'
 import { Route as AuthenticatedStaffGrafoRouteImport } from './routes/_authenticated/staff.grafo'
 import { Route as AuthenticatedStaffGanchosRouteImport } from './routes/_authenticated/staff.ganchos'
+import { Route as AuthenticatedStaffFatosRouteImport } from './routes/_authenticated/staff.fatos'
 import { Route as AuthenticatedStaffEventosRouteImport } from './routes/_authenticated/staff.eventos'
 import { Route as AuthenticatedStaffDominiosRouteImport } from './routes/_authenticated/staff.dominios'
 import { Route as AuthenticatedStaffDocumentosRouteImport } from './routes/_authenticated/staff.documentos'
+import { Route as AuthenticatedStaffConsequenciasRouteImport } from './routes/_authenticated/staff.consequencias'
 import { Route as AuthenticatedStaffBuscarRouteImport } from './routes/_authenticated/staff.buscar'
 import { Route as AuthenticatedAdminUsuariosRouteImport } from './routes/_authenticated/admin.usuarios'
 import { Route as AuthenticatedAdminNovoRouteImport } from './routes/_authenticated/admin.novo'
@@ -118,11 +122,22 @@ const AuthenticatedStaffRupturasRoute =
     path: '/rupturas',
     getParentRoute: () => AuthenticatedStaffRoute,
   } as any)
+const AuthenticatedStaffPlotsRoute = AuthenticatedStaffPlotsRouteImport.update({
+  id: '/plots',
+  path: '/plots',
+  getParentRoute: () => AuthenticatedStaffRoute,
+} as any)
 const AuthenticatedStaffNpcsRoute = AuthenticatedStaffNpcsRouteImport.update({
   id: '/npcs',
   path: '/npcs',
   getParentRoute: () => AuthenticatedStaffRoute,
 } as any)
+const AuthenticatedStaffMisteriosRoute =
+  AuthenticatedStaffMisteriosRouteImport.update({
+    id: '/misterios',
+    path: '/misterios',
+    getParentRoute: () => AuthenticatedStaffRoute,
+  } as any)
 const AuthenticatedStaffGrafoRoute = AuthenticatedStaffGrafoRouteImport.update({
   id: '/grafo',
   path: '/grafo',
@@ -134,6 +149,11 @@ const AuthenticatedStaffGanchosRoute =
     path: '/ganchos',
     getParentRoute: () => AuthenticatedStaffRoute,
   } as any)
+const AuthenticatedStaffFatosRoute = AuthenticatedStaffFatosRouteImport.update({
+  id: '/fatos',
+  path: '/fatos',
+  getParentRoute: () => AuthenticatedStaffRoute,
+} as any)
 const AuthenticatedStaffEventosRoute =
   AuthenticatedStaffEventosRouteImport.update({
     id: '/eventos',
@@ -150,6 +170,12 @@ const AuthenticatedStaffDocumentosRoute =
   AuthenticatedStaffDocumentosRouteImport.update({
     id: '/documentos',
     path: '/documentos',
+    getParentRoute: () => AuthenticatedStaffRoute,
+  } as any)
+const AuthenticatedStaffConsequenciasRoute =
+  AuthenticatedStaffConsequenciasRouteImport.update({
+    id: '/consequencias',
+    path: '/consequencias',
     getParentRoute: () => AuthenticatedStaffRoute,
   } as any)
 const AuthenticatedStaffBuscarRoute =
@@ -191,12 +217,16 @@ export interface FileRoutesByFullPath {
   '/admin/novo': typeof AuthenticatedAdminNovoRoute
   '/admin/usuarios': typeof AuthenticatedAdminUsuariosRoute
   '/staff/buscar': typeof AuthenticatedStaffBuscarRoute
+  '/staff/consequencias': typeof AuthenticatedStaffConsequenciasRoute
   '/staff/documentos': typeof AuthenticatedStaffDocumentosRoute
   '/staff/dominios': typeof AuthenticatedStaffDominiosRoute
   '/staff/eventos': typeof AuthenticatedStaffEventosRoute
+  '/staff/fatos': typeof AuthenticatedStaffFatosRoute
   '/staff/ganchos': typeof AuthenticatedStaffGanchosRoute
   '/staff/grafo': typeof AuthenticatedStaffGrafoRoute
+  '/staff/misterios': typeof AuthenticatedStaffMisteriosRoute
   '/staff/npcs': typeof AuthenticatedStaffNpcsRoute
+  '/staff/plots': typeof AuthenticatedStaffPlotsRoute
   '/staff/rupturas': typeof AuthenticatedStaffRupturasRoute
   '/staff/timeline': typeof AuthenticatedStaffTimelineRoute
   '/staff/vestigios': typeof AuthenticatedStaffVestigiosRoute
@@ -217,12 +247,16 @@ export interface FileRoutesByTo {
   '/admin/novo': typeof AuthenticatedAdminNovoRoute
   '/admin/usuarios': typeof AuthenticatedAdminUsuariosRoute
   '/staff/buscar': typeof AuthenticatedStaffBuscarRoute
+  '/staff/consequencias': typeof AuthenticatedStaffConsequenciasRoute
   '/staff/documentos': typeof AuthenticatedStaffDocumentosRoute
   '/staff/dominios': typeof AuthenticatedStaffDominiosRoute
   '/staff/eventos': typeof AuthenticatedStaffEventosRoute
+  '/staff/fatos': typeof AuthenticatedStaffFatosRoute
   '/staff/ganchos': typeof AuthenticatedStaffGanchosRoute
   '/staff/grafo': typeof AuthenticatedStaffGrafoRoute
+  '/staff/misterios': typeof AuthenticatedStaffMisteriosRoute
   '/staff/npcs': typeof AuthenticatedStaffNpcsRoute
+  '/staff/plots': typeof AuthenticatedStaffPlotsRoute
   '/staff/rupturas': typeof AuthenticatedStaffRupturasRoute
   '/staff/timeline': typeof AuthenticatedStaffTimelineRoute
   '/staff/vestigios': typeof AuthenticatedStaffVestigiosRoute
@@ -246,12 +280,16 @@ export interface FileRoutesById {
   '/_authenticated/admin/novo': typeof AuthenticatedAdminNovoRoute
   '/_authenticated/admin/usuarios': typeof AuthenticatedAdminUsuariosRoute
   '/_authenticated/staff/buscar': typeof AuthenticatedStaffBuscarRoute
+  '/_authenticated/staff/consequencias': typeof AuthenticatedStaffConsequenciasRoute
   '/_authenticated/staff/documentos': typeof AuthenticatedStaffDocumentosRoute
   '/_authenticated/staff/dominios': typeof AuthenticatedStaffDominiosRoute
   '/_authenticated/staff/eventos': typeof AuthenticatedStaffEventosRoute
+  '/_authenticated/staff/fatos': typeof AuthenticatedStaffFatosRoute
   '/_authenticated/staff/ganchos': typeof AuthenticatedStaffGanchosRoute
   '/_authenticated/staff/grafo': typeof AuthenticatedStaffGrafoRoute
+  '/_authenticated/staff/misterios': typeof AuthenticatedStaffMisteriosRoute
   '/_authenticated/staff/npcs': typeof AuthenticatedStaffNpcsRoute
+  '/_authenticated/staff/plots': typeof AuthenticatedStaffPlotsRoute
   '/_authenticated/staff/rupturas': typeof AuthenticatedStaffRupturasRoute
   '/_authenticated/staff/timeline': typeof AuthenticatedStaffTimelineRoute
   '/_authenticated/staff/vestigios': typeof AuthenticatedStaffVestigiosRoute
@@ -275,12 +313,16 @@ export interface FileRouteTypes {
     | '/admin/novo'
     | '/admin/usuarios'
     | '/staff/buscar'
+    | '/staff/consequencias'
     | '/staff/documentos'
     | '/staff/dominios'
     | '/staff/eventos'
+    | '/staff/fatos'
     | '/staff/ganchos'
     | '/staff/grafo'
+    | '/staff/misterios'
     | '/staff/npcs'
+    | '/staff/plots'
     | '/staff/rupturas'
     | '/staff/timeline'
     | '/staff/vestigios'
@@ -301,12 +343,16 @@ export interface FileRouteTypes {
     | '/admin/novo'
     | '/admin/usuarios'
     | '/staff/buscar'
+    | '/staff/consequencias'
     | '/staff/documentos'
     | '/staff/dominios'
     | '/staff/eventos'
+    | '/staff/fatos'
     | '/staff/ganchos'
     | '/staff/grafo'
+    | '/staff/misterios'
     | '/staff/npcs'
+    | '/staff/plots'
     | '/staff/rupturas'
     | '/staff/timeline'
     | '/staff/vestigios'
@@ -329,12 +375,16 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/novo'
     | '/_authenticated/admin/usuarios'
     | '/_authenticated/staff/buscar'
+    | '/_authenticated/staff/consequencias'
     | '/_authenticated/staff/documentos'
     | '/_authenticated/staff/dominios'
     | '/_authenticated/staff/eventos'
+    | '/_authenticated/staff/fatos'
     | '/_authenticated/staff/ganchos'
     | '/_authenticated/staff/grafo'
+    | '/_authenticated/staff/misterios'
     | '/_authenticated/staff/npcs'
+    | '/_authenticated/staff/plots'
     | '/_authenticated/staff/rupturas'
     | '/_authenticated/staff/timeline'
     | '/_authenticated/staff/vestigios'
@@ -469,11 +519,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedStaffRupturasRouteImport
       parentRoute: typeof AuthenticatedStaffRoute
     }
+    '/_authenticated/staff/plots': {
+      id: '/_authenticated/staff/plots'
+      path: '/plots'
+      fullPath: '/staff/plots'
+      preLoaderRoute: typeof AuthenticatedStaffPlotsRouteImport
+      parentRoute: typeof AuthenticatedStaffRoute
+    }
     '/_authenticated/staff/npcs': {
       id: '/_authenticated/staff/npcs'
       path: '/npcs'
       fullPath: '/staff/npcs'
       preLoaderRoute: typeof AuthenticatedStaffNpcsRouteImport
+      parentRoute: typeof AuthenticatedStaffRoute
+    }
+    '/_authenticated/staff/misterios': {
+      id: '/_authenticated/staff/misterios'
+      path: '/misterios'
+      fullPath: '/staff/misterios'
+      preLoaderRoute: typeof AuthenticatedStaffMisteriosRouteImport
       parentRoute: typeof AuthenticatedStaffRoute
     }
     '/_authenticated/staff/grafo': {
@@ -488,6 +552,13 @@ declare module '@tanstack/react-router' {
       path: '/ganchos'
       fullPath: '/staff/ganchos'
       preLoaderRoute: typeof AuthenticatedStaffGanchosRouteImport
+      parentRoute: typeof AuthenticatedStaffRoute
+    }
+    '/_authenticated/staff/fatos': {
+      id: '/_authenticated/staff/fatos'
+      path: '/fatos'
+      fullPath: '/staff/fatos'
+      preLoaderRoute: typeof AuthenticatedStaffFatosRouteImport
       parentRoute: typeof AuthenticatedStaffRoute
     }
     '/_authenticated/staff/eventos': {
@@ -509,6 +580,13 @@ declare module '@tanstack/react-router' {
       path: '/documentos'
       fullPath: '/staff/documentos'
       preLoaderRoute: typeof AuthenticatedStaffDocumentosRouteImport
+      parentRoute: typeof AuthenticatedStaffRoute
+    }
+    '/_authenticated/staff/consequencias': {
+      id: '/_authenticated/staff/consequencias'
+      path: '/consequencias'
+      fullPath: '/staff/consequencias'
+      preLoaderRoute: typeof AuthenticatedStaffConsequenciasRouteImport
       parentRoute: typeof AuthenticatedStaffRoute
     }
     '/_authenticated/staff/buscar': {
@@ -559,12 +637,16 @@ const AuthenticatedAdminRouteWithChildren =
 
 interface AuthenticatedStaffRouteChildren {
   AuthenticatedStaffBuscarRoute: typeof AuthenticatedStaffBuscarRoute
+  AuthenticatedStaffConsequenciasRoute: typeof AuthenticatedStaffConsequenciasRoute
   AuthenticatedStaffDocumentosRoute: typeof AuthenticatedStaffDocumentosRoute
   AuthenticatedStaffDominiosRoute: typeof AuthenticatedStaffDominiosRoute
   AuthenticatedStaffEventosRoute: typeof AuthenticatedStaffEventosRoute
+  AuthenticatedStaffFatosRoute: typeof AuthenticatedStaffFatosRoute
   AuthenticatedStaffGanchosRoute: typeof AuthenticatedStaffGanchosRoute
   AuthenticatedStaffGrafoRoute: typeof AuthenticatedStaffGrafoRoute
+  AuthenticatedStaffMisteriosRoute: typeof AuthenticatedStaffMisteriosRoute
   AuthenticatedStaffNpcsRoute: typeof AuthenticatedStaffNpcsRoute
+  AuthenticatedStaffPlotsRoute: typeof AuthenticatedStaffPlotsRoute
   AuthenticatedStaffRupturasRoute: typeof AuthenticatedStaffRupturasRoute
   AuthenticatedStaffTimelineRoute: typeof AuthenticatedStaffTimelineRoute
   AuthenticatedStaffVestigiosRoute: typeof AuthenticatedStaffVestigiosRoute
@@ -573,12 +655,16 @@ interface AuthenticatedStaffRouteChildren {
 
 const AuthenticatedStaffRouteChildren: AuthenticatedStaffRouteChildren = {
   AuthenticatedStaffBuscarRoute: AuthenticatedStaffBuscarRoute,
+  AuthenticatedStaffConsequenciasRoute: AuthenticatedStaffConsequenciasRoute,
   AuthenticatedStaffDocumentosRoute: AuthenticatedStaffDocumentosRoute,
   AuthenticatedStaffDominiosRoute: AuthenticatedStaffDominiosRoute,
   AuthenticatedStaffEventosRoute: AuthenticatedStaffEventosRoute,
+  AuthenticatedStaffFatosRoute: AuthenticatedStaffFatosRoute,
   AuthenticatedStaffGanchosRoute: AuthenticatedStaffGanchosRoute,
   AuthenticatedStaffGrafoRoute: AuthenticatedStaffGrafoRoute,
+  AuthenticatedStaffMisteriosRoute: AuthenticatedStaffMisteriosRoute,
   AuthenticatedStaffNpcsRoute: AuthenticatedStaffNpcsRoute,
+  AuthenticatedStaffPlotsRoute: AuthenticatedStaffPlotsRoute,
   AuthenticatedStaffRupturasRoute: AuthenticatedStaffRupturasRoute,
   AuthenticatedStaffTimelineRoute: AuthenticatedStaffTimelineRoute,
   AuthenticatedStaffVestigiosRoute: AuthenticatedStaffVestigiosRoute,
