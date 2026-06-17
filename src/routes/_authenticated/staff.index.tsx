@@ -62,14 +62,14 @@ function WorldStatePage() {
       <section className="grid gap-3 md:grid-cols-2">
         <div className="border border-border bg-surface-1 p-5">
           <p className="hud-label text-cyan">Peregrino Branco · Último Avistamento</p>
-          <p className="mt-3 text-display text-xl font-bold">{s?.peregrino_ultimo_local || "—"}</p>
+          <p className="mt-3 text-display text-xl font-bold">{s?.peregrino_ultimo_local || "n/d"}</p>
           <p className="mt-1 text-mono text-[11px] text-muted-foreground">
             {s?.peregrino_ultimo_em ? new Date(s.peregrino_ultimo_em).toLocaleString("pt-BR") : "Sem registro recente"}
           </p>
         </div>
         <div className="border border-border bg-surface-1 p-5">
           <p className="hud-label text-cyan">Último Evento Global</p>
-          <p className="mt-3 text-display text-xl font-bold">{data?.ultimo_evento_global?.nome || "—"}</p>
+          <p className="mt-3 text-display text-xl font-bold">{data?.ultimo_evento_global?.nome || "n/d"}</p>
           <p className="mt-1 text-mono text-[11px] text-muted-foreground">
             {data?.ultimo_evento_global?.data ? new Date(data.ultimo_evento_global.data).toLocaleString("pt-BR") : ""}
           </p>

@@ -36,15 +36,15 @@ function Dashboard() {
           <div className="flex gap-px border border-border bg-border">
             <div className="bg-background px-4 py-3">
               <p className="hud-label">Registros</p>
-              <p className="text-display text-2xl font-bold">{stats.data?.total ?? "—"}</p>
+              <p className="text-display text-2xl font-bold">{stats.data?.total ?? "n/d"}</p>
             </div>
             <div className="bg-background px-4 py-3">
               <p className="hud-label">Domínios</p>
-              <p className="text-display text-2xl font-bold">{stats.data?.byCategory?.dominio ?? "—"}</p>
+              <p className="text-display text-2xl font-bold">{stats.data?.byCategory?.dominio ?? "n/d"}</p>
             </div>
             <div className="bg-background px-4 py-3">
               <p className="hud-label">Eventos</p>
-              <p className="text-display text-2xl font-bold">{stats.data?.byCategory?.evento ?? "—"}</p>
+              <p className="text-display text-2xl font-bold">{stats.data?.byCategory?.evento ?? "n/d"}</p>
             </div>
           </div>
         </div>

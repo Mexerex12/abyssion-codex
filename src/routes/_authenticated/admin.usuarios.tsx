@@ -60,7 +60,7 @@ function Users() {
             {(users.data ?? []).map((u) => (
               <tr key={u.id} className="border-t border-border">
                 <td className="px-3 py-2.5">
-                  <p className="font-medium">{u.display_name ?? "—"}</p>
+                  <p className="font-medium">{u.display_name ?? "n/d"}</p>
                   <p className="text-mono text-[10px] text-muted-foreground">{u.id.slice(0, 8)}</p>
                 </td>
                 <td className="px-3 py-2.5">

@@ -82,7 +82,7 @@ function EvModal({ e, onClose }: { e: any; onClose: () => void }) {
           <Field label="Data"><Input type="datetime-local" value={form.data} onChange={(ev) => setForm({ ...form, data: ev.target.value })} /></Field>
           <Field label="Tipo"><Select value={form.tipo} onChange={(ev) => setForm({ ...form, tipo: ev.target.value })}>{TIPOS.map((t) => <option key={t} value={t}>{t}</option>)}</Select></Field>
           <Field label="Status"><Select value={form.status} onChange={(ev) => setForm({ ...form, status: ev.target.value })}>{STATUS.map((s) => <option key={s} value={s}>{s}</option>)}</Select></Field>
-          <Field label="Domínio"><Select value={form.dominio_id} onChange={(ev) => setForm({ ...form, dominio_id: ev.target.value })}><option value="">—</option>{(doms ?? []).map((d: any) => <option key={d.id} value={d.id}>{d.nome}</option>)}</Select></Field>
+          <Field label="Domínio"><Select value={form.dominio_id} onChange={(ev) => setForm({ ...form, dominio_id: ev.target.value })}><option value="">Selecione...</option>{(doms ?? []).map((d: any) => <option key={d.id} value={d.id}>{d.nome}</option>)}</Select></Field>
           <Field label="Classificação"><Select value={form.clearance} onChange={(ev) => setForm({ ...form, clearance: ev.target.value })}>{CLEARANCE.map((c) => <option key={c} value={c}>{c}</option>)}</Select></Field>
         </div>
         <Field label="NPCs envolvidos">

@@ -83,7 +83,7 @@ function RuptModal({ r, onClose }: { r: any; onClose: () => void }) {
         <div className="grid grid-cols-2 gap-3">
           <Field label="Nome*"><Input required value={form.nome} onChange={(e) => setForm({ ...form, nome: e.target.value })} /></Field>
           <Field label="Estado"><Select value={form.estado} onChange={(e) => setForm({ ...form, estado: e.target.value })}>{ESTADOS.map((s) => <option key={s} value={s}>{s}</option>)}</Select></Field>
-          <Field label="Domínio"><Select value={form.dominio_id} onChange={(e) => setForm({ ...form, dominio_id: e.target.value })}><option value="">—</option>{(doms ?? []).map((d: any) => <option key={d.id} value={d.id}>{d.nome}</option>)}</Select></Field>
+          <Field label="Domínio"><Select value={form.dominio_id} onChange={(e) => setForm({ ...form, dominio_id: e.target.value })}><option value="">Selecione...</option>{(doms ?? []).map((d: any) => <option key={d.id} value={d.id}>{d.nome}</option>)}</Select></Field>
           <Field label="Fechada em"><Input type="datetime-local" value={form.fechada_em} onChange={(e) => setForm({ ...form, fechada_em: e.target.value })} /></Field>
         </div>
         <Field label="Descrição"><Textarea rows={4} value={form.descricao} onChange={(e) => setForm({ ...form, descricao: e.target.value })} /></Field>

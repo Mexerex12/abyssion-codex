@@ -35,7 +35,7 @@ function DocsPage() {
             {(data ?? []).map((d: any) => (
               <button key={d.id} onClick={() => setSelected(d.slug)} className={`block w-full border-l-2 px-3 py-2 text-left transition-colors ${selected === d.slug ? "border-cyan bg-cyan/10" : "border-transparent hover:bg-surface-1"}`}>
                 <p className="flex items-center gap-1.5 text-display text-sm font-medium"><FileText className="h-3 w-3 text-muted-foreground" />{d.titulo}</p>
-                <p className="mt-0.5 text-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground">{d.categoria || "—"}</p>
+                <p className="mt-0.5 text-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground">{d.categoria || "n/d"}</p>
               </button>
             ))}
           </div>
