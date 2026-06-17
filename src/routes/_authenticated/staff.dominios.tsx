@@ -51,7 +51,7 @@ function DominiosPage() {
                 <td className="px-3 py-2.5">{d.regente?.nome || "n/d"}</td>
                 <td className="px-3 py-2.5 text-mono">{d.dificuldade ?? "n/d"}</td>
                 <td className="px-3 py-2.5"><Badge tone={d.status === "ativo" ? "green" : d.status === "instavel" ? "amber" : d.status === "encerrado" ? "neutral" : "cyan"}>{d.status}</Badge></td>
-                <td className="px-3 py-2.5 text-mono text-[11px]">{d.proxima_abertura ? new Date(d.proxima_abertura).toLocaleString("pt-BR") : "—"}</td>
+                <td className="px-3 py-2.5 text-mono text-[11px]">{d.proxima_abertura ? new Date(d.proxima_abertura).toLocaleString("pt-BR") : "n/d"}</td>
                 <td className="px-3 py-2.5 text-right"><Button size="sm" variant="ghost" onClick={() => { setEditing(d); setOpen(true); }}><Pencil className="h-3 w-3" /></Button></td>
               </tr>
             ))}
