@@ -93,7 +93,7 @@ function NpcCard({ npc, onEdit, canDelete }: { npc: any; onEdit: () => void; can
         )}
         <div className="min-w-0 flex-1">
           <p className="truncate text-display text-base font-bold">{npc.nome}</p>
-          <p className="truncate text-mono text-[11px] text-muted-foreground">{npc.cargo || "—"}</p>
+          <p className="truncate text-mono text-[11px] text-muted-foreground">{npc.cargo || "n/d"}</p>
           <div className="mt-1.5 flex flex-wrap gap-1">
             <Badge tone={tone}>{npc.status}</Badge>
             {npc.faccao && <Badge tone="cyan">{npc.faccao}</Badge>}

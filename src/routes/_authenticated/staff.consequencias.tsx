@@ -103,7 +103,7 @@ function ConsModal({ c, onClose }: { c: any; onClose: () => void }) {
       <form onSubmit={(e) => { e.preventDefault(); m.mutate(); }} className="space-y-4">
         <Field label="Evento de origem">
           <Select value={form.evento_id} onChange={(e) => setForm({ ...form, evento_id: e.target.value })}>
-            <option value="">— nenhum —</option>
+            <option value="">Nenhum</option>
             {(eventos ?? []).map((ev: any) => <option key={ev.id} value={ev.id}>{ev.nome}</option>)}
           </Select>
         </Field>
@@ -112,7 +112,7 @@ function ConsModal({ c, onClose }: { c: any; onClose: () => void }) {
         <div className="grid grid-cols-2 gap-3">
           <Field label="Tipo">
             <Select value={form.tipo} onChange={(e) => setForm({ ...form, tipo: e.target.value })}>
-              <option value="">—</option>
+              <option value="">Selecione...</option>
               {TIPOS.map((t) => <option key={t} value={t}>{t}</option>)}
             </Select>
           </Field>

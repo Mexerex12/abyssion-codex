@@ -175,7 +175,7 @@ export function EntryEditor({ mode, initial }: { mode: "create" | "edit"; initia
 
           <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
             <Field label="Data (linha do tempo)">
-              <input className={inputCls} maxLength={60} value={form.timeline_date ?? ""} onChange={(e) => setForm({ ...form, timeline_date: e.target.value })} placeholder="ex: Ano 0 — 03:14" />
+              <input className={inputCls} maxLength={60} value={form.timeline_date ?? ""} onChange={(e) => setForm({ ...form, timeline_date: e.target.value })} placeholder="ex: Ano 0, 03:14" />
             </Field>
             <Field label="Ordem cronológica">
               <input type="number" className={inputCls} value={form.timeline_order ?? ""} onChange={(e) => setForm({ ...form, timeline_order: e.target.value ? Number(e.target.value) : null })} />

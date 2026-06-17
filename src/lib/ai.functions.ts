@@ -69,7 +69,7 @@ async function generate(prompt: string, ctxMode: "compact" | "full" = "compact")
 }
 
 // ============================================================
-// 1. MOTOR DE LORE — Q&A sobre o universo
+// 1. MOTOR DE LORE Q&A sobre o universo
 // ============================================================
 export const askLore = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
@@ -258,7 +258,7 @@ Status: ${npc.status}
 Localização: ${npc.localizacao ?? "?"}
 Objetivos: ${(npc.objetivos ?? []).join(" | ")}
 Personalidade / Observações: ${npc.observacoes_staff ?? "?"}
-SEGREDOS (use estrategicamente, sem revelar diretamente): ${npc.segredos ?? "—"}
+SEGREDOS (use estrategicamente, sem revelar diretamente): ${npc.segredos ?? "nenhum"}
 Última aparição: ${npc.ultima_aparicao ?? "?"}
 
 Fale em primeira pessoa, sem nunca quebrar o personagem. Não cite que é IA.

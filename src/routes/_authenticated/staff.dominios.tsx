@@ -47,9 +47,9 @@ function DominiosPage() {
             {filtered.map((d: any) => (
               <tr key={d.id} className="border-t border-border hover:bg-surface-1">
                 <td className="px-3 py-2.5 font-medium">{d.nome}</td>
-                <td className="px-3 py-2.5 text-muted-foreground">{d.classe || "—"}</td>
-                <td className="px-3 py-2.5">{d.regente?.nome || "—"}</td>
-                <td className="px-3 py-2.5 text-mono">{d.dificuldade ?? "—"}</td>
+                <td className="px-3 py-2.5 text-muted-foreground">{d.classe || "n/d"}</td>
+                <td className="px-3 py-2.5">{d.regente?.nome || "n/d"}</td>
+                <td className="px-3 py-2.5 text-mono">{d.dificuldade ?? "n/d"}</td>
                 <td className="px-3 py-2.5"><Badge tone={d.status === "ativo" ? "green" : d.status === "instavel" ? "amber" : d.status === "encerrado" ? "neutral" : "cyan"}>{d.status}</Badge></td>
                 <td className="px-3 py-2.5 text-mono text-[11px]">{d.proxima_abertura ? new Date(d.proxima_abertura).toLocaleString("pt-BR") : "—"}</td>
                 <td className="px-3 py-2.5 text-right"><Button size="sm" variant="ghost" onClick={() => { setEditing(d); setOpen(true); }}><Pencil className="h-3 w-3" /></Button></td>
@@ -93,8 +93,8 @@ function DomModal({ d, onClose }: { d: any; onClose: () => void }) {
         <div className="grid grid-cols-2 gap-3">
           <Field label="Nome*"><Input required value={form.nome} onChange={(e) => setForm({ ...form, nome: e.target.value })} /></Field>
           <Field label="Classe"><Input value={form.classe} onChange={(e) => setForm({ ...form, classe: e.target.value })} /></Field>
-          <Field label="Regente"><Select value={form.regente_npc_id} onChange={(e) => setForm({ ...form, regente_npc_id: e.target.value })}><option value="">—</option>{(npcs ?? []).map((n: any) => <option key={n.id} value={n.id}>{n.nome}</option>)}</Select></Field>
-          <Field label="Arquiteto"><Select value={form.arquiteto_npc_id} onChange={(e) => setForm({ ...form, arquiteto_npc_id: e.target.value })}><option value="">—</option>{(npcs ?? []).map((n: any) => <option key={n.id} value={n.id}>{n.nome}</option>)}</Select></Field>
+          <Field label="Regente"><Select value={form.regente_npc_id} onChange={(e) => setForm({ ...form, regente_npc_id: e.target.value })}><option value="">Selecione...</option>{(npcs ?? []).map((n: any) => <option key={n.id} value={n.id}>{n.nome}</option>)}</Select></Field>
+          <Field label="Arquiteto"><Select value={form.arquiteto_npc_id} onChange={(e) => setForm({ ...form, arquiteto_npc_id: e.target.value })}><option value="">Selecione...</option>{(npcs ?? []).map((n: any) => <option key={n.id} value={n.id}>{n.nome}</option>)}</Select></Field>
           <Field label="Dificuldade (1-10)"><Input type="number" min={1} max={10} value={form.dificuldade} onChange={(e) => setForm({ ...form, dificuldade: e.target.value })} /></Field>
           <Field label="Status"><Select value={form.status} onChange={(e) => setForm({ ...form, status: e.target.value })}>{STATUS.map((s) => <option key={s} value={s}>{s}</option>)}</Select></Field>
           <Field label="Última abertura"><Input type="datetime-local" value={form.ultima_abertura} onChange={(e) => setForm({ ...form, ultima_abertura: e.target.value })} /></Field>
