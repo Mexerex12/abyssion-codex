@@ -445,6 +445,51 @@ export type Database = {
         }
         Relationships: []
       }
+      lore_index: {
+        Row: {
+          category: string | null
+          chunk_index: number
+          clearance: string | null
+          content: string
+          created_at: string
+          embedding: string
+          id: string
+          metadata: Json
+          slug: string | null
+          source_id: string
+          source_type: string
+          term: string
+        }
+        Insert: {
+          category?: string | null
+          chunk_index?: number
+          clearance?: string | null
+          content: string
+          created_at?: string
+          embedding: string
+          id?: string
+          metadata?: Json
+          slug?: string | null
+          source_id: string
+          source_type: string
+          term: string
+        }
+        Update: {
+          category?: string | null
+          chunk_index?: number
+          clearance?: string | null
+          content?: string
+          created_at?: string
+          embedding?: string
+          id?: string
+          metadata?: Json
+          slug?: string | null
+          source_id?: string
+          source_type?: string
+          term?: string
+        }
+        Relationships: []
+      }
       lore_relations: {
         Row: {
           created_at: string
@@ -907,6 +952,26 @@ export type Database = {
       }
       is_admin: { Args: { _user_id: string }; Returns: boolean }
       is_staff: { Args: { _user_id: string }; Returns: boolean }
+      match_lore_index: {
+        Args: {
+          match_count?: number
+          min_similarity?: number
+          query_embedding: string
+        }
+        Returns: {
+          category: string
+          clearance: string
+          content: string
+          id: string
+          similarity: number
+          slug: string
+          source_id: string
+          source_type: string
+          term: string
+        }[]
+      }
+      show_limit: { Args: never; Returns: number }
+      show_trgm: { Args: { "": string }; Returns: string[] }
     }
     Enums: {
       app_role: "visitante" | "narrador" | "administrador"
