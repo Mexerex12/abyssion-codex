@@ -27,6 +27,7 @@ const NAV = [
   { to: "/staff/documentos", label: "Documentos", icon: FileText },
   { to: "/staff/grafo", label: "Mapa de Relações", icon: Network },
   { to: "/staff/buscar", label: "Busca Universal", icon: Search },
+  { to: "/staff/pesquisa", label: "Pesquisa Inteligente", icon: Sparkles },
   { to: "/admin", label: "CMS Wiki", icon: Settings },
 ] as const;
 
