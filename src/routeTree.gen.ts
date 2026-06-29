@@ -36,6 +36,7 @@ import { Route as AuthenticatedStaffEventosRouteImport } from './routes/_authent
 import { Route as AuthenticatedStaffDominiosRouteImport } from './routes/_authenticated/staff.dominios'
 import { Route as AuthenticatedStaffDocumentosRouteImport } from './routes/_authenticated/staff.documentos'
 import { Route as AuthenticatedStaffConsequenciasRouteImport } from './routes/_authenticated/staff.consequencias'
+import { Route as AuthenticatedStaffCalendarioRouteImport } from './routes/_authenticated/staff.calendario'
 import { Route as AuthenticatedStaffBuscarRouteImport } from './routes/_authenticated/staff.buscar'
 import { Route as AuthenticatedAdminUsuariosRouteImport } from './routes/_authenticated/admin.usuarios'
 import { Route as AuthenticatedAdminNovoRouteImport } from './routes/_authenticated/admin.novo'
@@ -184,6 +185,12 @@ const AuthenticatedStaffConsequenciasRoute =
     path: '/consequencias',
     getParentRoute: () => AuthenticatedStaffRoute,
   } as any)
+const AuthenticatedStaffCalendarioRoute =
+  AuthenticatedStaffCalendarioRouteImport.update({
+    id: '/calendario',
+    path: '/calendario',
+    getParentRoute: () => AuthenticatedStaffRoute,
+  } as any)
 const AuthenticatedStaffBuscarRoute =
   AuthenticatedStaffBuscarRouteImport.update({
     id: '/buscar',
@@ -223,6 +230,7 @@ export interface FileRoutesByFullPath {
   '/admin/novo': typeof AuthenticatedAdminNovoRoute
   '/admin/usuarios': typeof AuthenticatedAdminUsuariosRoute
   '/staff/buscar': typeof AuthenticatedStaffBuscarRoute
+  '/staff/calendario': typeof AuthenticatedStaffCalendarioRoute
   '/staff/consequencias': typeof AuthenticatedStaffConsequenciasRoute
   '/staff/documentos': typeof AuthenticatedStaffDocumentosRoute
   '/staff/dominios': typeof AuthenticatedStaffDominiosRoute
@@ -254,6 +262,7 @@ export interface FileRoutesByTo {
   '/admin/novo': typeof AuthenticatedAdminNovoRoute
   '/admin/usuarios': typeof AuthenticatedAdminUsuariosRoute
   '/staff/buscar': typeof AuthenticatedStaffBuscarRoute
+  '/staff/calendario': typeof AuthenticatedStaffCalendarioRoute
   '/staff/consequencias': typeof AuthenticatedStaffConsequenciasRoute
   '/staff/documentos': typeof AuthenticatedStaffDocumentosRoute
   '/staff/dominios': typeof AuthenticatedStaffDominiosRoute
@@ -288,6 +297,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/novo': typeof AuthenticatedAdminNovoRoute
   '/_authenticated/admin/usuarios': typeof AuthenticatedAdminUsuariosRoute
   '/_authenticated/staff/buscar': typeof AuthenticatedStaffBuscarRoute
+  '/_authenticated/staff/calendario': typeof AuthenticatedStaffCalendarioRoute
   '/_authenticated/staff/consequencias': typeof AuthenticatedStaffConsequenciasRoute
   '/_authenticated/staff/documentos': typeof AuthenticatedStaffDocumentosRoute
   '/_authenticated/staff/dominios': typeof AuthenticatedStaffDominiosRoute
@@ -322,6 +332,7 @@ export interface FileRouteTypes {
     | '/admin/novo'
     | '/admin/usuarios'
     | '/staff/buscar'
+    | '/staff/calendario'
     | '/staff/consequencias'
     | '/staff/documentos'
     | '/staff/dominios'
@@ -353,6 +364,7 @@ export interface FileRouteTypes {
     | '/admin/novo'
     | '/admin/usuarios'
     | '/staff/buscar'
+    | '/staff/calendario'
     | '/staff/consequencias'
     | '/staff/documentos'
     | '/staff/dominios'
@@ -386,6 +398,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/novo'
     | '/_authenticated/admin/usuarios'
     | '/_authenticated/staff/buscar'
+    | '/_authenticated/staff/calendario'
     | '/_authenticated/staff/consequencias'
     | '/_authenticated/staff/documentos'
     | '/_authenticated/staff/dominios'
@@ -608,6 +621,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedStaffConsequenciasRouteImport
       parentRoute: typeof AuthenticatedStaffRoute
     }
+    '/_authenticated/staff/calendario': {
+      id: '/_authenticated/staff/calendario'
+      path: '/calendario'
+      fullPath: '/staff/calendario'
+      preLoaderRoute: typeof AuthenticatedStaffCalendarioRouteImport
+      parentRoute: typeof AuthenticatedStaffRoute
+    }
     '/_authenticated/staff/buscar': {
       id: '/_authenticated/staff/buscar'
       path: '/buscar'
@@ -656,6 +676,7 @@ const AuthenticatedAdminRouteWithChildren =
 
 interface AuthenticatedStaffRouteChildren {
   AuthenticatedStaffBuscarRoute: typeof AuthenticatedStaffBuscarRoute
+  AuthenticatedStaffCalendarioRoute: typeof AuthenticatedStaffCalendarioRoute
   AuthenticatedStaffConsequenciasRoute: typeof AuthenticatedStaffConsequenciasRoute
   AuthenticatedStaffDocumentosRoute: typeof AuthenticatedStaffDocumentosRoute
   AuthenticatedStaffDominiosRoute: typeof AuthenticatedStaffDominiosRoute
@@ -675,6 +696,7 @@ interface AuthenticatedStaffRouteChildren {
 
 const AuthenticatedStaffRouteChildren: AuthenticatedStaffRouteChildren = {
   AuthenticatedStaffBuscarRoute: AuthenticatedStaffBuscarRoute,
+  AuthenticatedStaffCalendarioRoute: AuthenticatedStaffCalendarioRoute,
   AuthenticatedStaffConsequenciasRoute: AuthenticatedStaffConsequenciasRoute,
   AuthenticatedStaffDocumentosRoute: AuthenticatedStaffDocumentosRoute,
   AuthenticatedStaffDominiosRoute: AuthenticatedStaffDominiosRoute,

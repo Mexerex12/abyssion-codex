@@ -13,6 +13,7 @@ const NAV = [
   { to: "/staff/dominios", label: "Domínios", icon: MapPin },
   { to: "/staff/rupturas", label: "Rupturas", icon: Zap },
   { to: "/staff/eventos", label: "Eventos", icon: Calendar },
+  { to: "/staff/calendario", label: "Calendário", icon: Calendar },
   { to: "/staff/timeline", label: "Linha do Tempo", icon: Clock },
   { section: "IA Narrativa" },
   { to: "/staff/ia", label: "Curador-Auxiliar", icon: Sparkles },
