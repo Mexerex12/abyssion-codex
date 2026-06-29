@@ -652,29 +652,29 @@ function buildIndexableRow(table: string, r: any): { term: string; category: str
   const join = (parts: Array<string | null | undefined>) => parts.filter(Boolean).join("\n").trim();
   switch (table) {
     case "npcs":
-      return { term: r.nome, category: r.cargo || "NPC", clearance: r.knowledge_scope ?? null, slug: null,
-        content: join([`NPC: ${r.nome}`, r.cargo && `Cargo: ${r.cargo}`, r.faccao && `Facção: ${r.faccao}`, r.personalidade, r.descricao, r.segredo && `Segredo: ${r.segredo}`]) };
+      return { term: r.nome, category: r.cargo || "NPC", clearance: r.segredos_clearance ?? null, slug: null,
+        content: join([`NPC: ${r.nome}`, r.cargo && `Cargo: ${r.cargo}`, r.faccao && `Facção: ${r.faccao}`, r.localizacao && `Localização: ${r.localizacao}`, r.objetivos && `Objetivos: ${r.objetivos}`, r.segredos && `Segredos: ${r.segredos}`, r.observacoes_staff]) };
     case "vestigios":
-      return { term: r.nome, category: "Vestígio", clearance: r.knowledge_scope ?? null, slug: null,
-        content: join([`Vestígio VEST-${String(r.numero ?? "?").padStart(3, "0")}: ${r.nome}`, r.descricao, r.contencao && `Contenção: ${r.contencao}`, r.estado && `Estado: ${r.estado}`]) };
+      return { term: r.nome, category: "Vestígio", clearance: null, slug: null,
+        content: join([`Vestígio VEST-${String(r.numero ?? "?").padStart(3, "0")}: ${r.nome}`, r.estado && `Estado: ${r.estado}`, r.esquadrao && `Esquadrão: ${r.esquadrao}`, r.historico, r.notas]) };
     case "dominios":
-      return { term: r.nome, category: r.classe || "Domínio", clearance: r.knowledge_scope ?? null, slug: null,
-        content: join([`Domínio: ${r.nome}`, r.classe && `Classe: ${r.classe}`, r.descricao, r.notas_staff]) };
+      return { term: r.nome, category: r.classe || "Domínio", clearance: null, slug: null,
+        content: join([`Domínio: ${r.nome}`, r.classe && `Classe: ${r.classe}`, r.dificuldade && `Dificuldade: ${r.dificuldade}`, r.recompensas && `Recompensas: ${r.recompensas}`, r.historico]) };
     case "eventos_operacionais":
       return { term: r.nome, category: r.tipo || "Evento", clearance: r.clearance ?? null, slug: null,
         content: join([`Evento: ${r.nome}`, r.resumo, r.relatorio && `Relatório: ${r.relatorio}`, r.consequencias && `Consequências: ${r.consequencias}`]) };
     case "ganchos_narrativos":
-      return { term: r.titulo, category: "Gancho", clearance: r.knowledge_scope ?? null, slug: null,
-        content: join([`Gancho: ${r.titulo}`, r.resumo, r.prioridade && `Prioridade: ${r.prioridade}`]) };
+      return { term: r.titulo, category: "Gancho", clearance: null, slug: null,
+        content: join([`Gancho: ${r.titulo}`, r.resumo, r.faccao && `Facção: ${r.faccao}`, r.prioridade && `Prioridade: ${r.prioridade}`]) };
     case "documentos":
       return { term: r.titulo, category: r.categoria || "Documento", clearance: r.clearance ?? null, slug: r.slug,
         content: join([`Documento: ${r.titulo}`, r.conteudo]) };
     case "fatos_canonicos":
-      return { term: r.titulo, category: r.categoria || "Fato", clearance: r.status ?? null, slug: null,
-        content: join([`Fato canônico (${r.status}): ${r.titulo}`, r.descricao]) };
+      return { term: r.titulo, category: r.categoria || "Fato", clearance: r.escopo_conhecimento ?? null, slug: null,
+        content: join([`Fato canônico (${r.status}): ${r.titulo}`, r.descricao, r.notas]) };
     case "lore_entries":
       return { term: r.title, category: r.category || "Lore", clearance: r.clearance ?? null, slug: r.slug,
-        content: join([`Lore: ${r.title}`, r.summary, r.body]) };
+        content: join([`Lore: ${r.title}`, r.subtitle, r.summary, r.body]) };
   }
   return null;
 }
