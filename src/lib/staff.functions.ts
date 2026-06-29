@@ -372,9 +372,11 @@ const eventoSchema = z.object({
   data: z.string().nullable().optional(),
   narrador_id: z.string().uuid().nullable().optional(),
   npcs_envolvidos: z.array(z.string().uuid()).max(50).default([]),
+  esquadroes: z.array(z.string().min(1).max(80)).max(30).default([]),
   dominio_id: z.string().uuid().nullable().optional(),
   resumo: z.string().max(10000).nullable().optional(),
   consequencias: z.string().max(10000).nullable().optional(),
+  relatorio: z.string().max(20000).nullable().optional(),
   status: z.enum(["planejado", "em_andamento", "concluido", "cancelado"]),
   tipo: z.enum(["global", "faccao", "esquadrao", "secreto"]),
   clearance: z.enum([
@@ -392,6 +394,19 @@ export const listEventos = createServerFn({ method: "GET" })
       .order("data", { ascending: false, nullsFirst: false });
     if (error) throw new Error(error.message);
     return data ?? [];
+  });
+
+export const listNarradores = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    await assertStaff(context);
+    const { data: roles } = await context.supabase
+      .from("user_roles").select("user_id, role").in("role", ["narrador", "administrador"]);
+    const ids = Array.from(new Set((roles ?? []).map((r: any) => r.user_id)));
+    if (ids.length === 0) return [];
+    const { data: profiles } = await context.supabase
+      .from("profiles").select("id, display_name").in("id", ids);
+    return (profiles ?? []) as { id: string; display_name: string | null }[];
   });
 
 export const upsertEvento = createServerFn({ method: "POST" })
@@ -414,6 +429,30 @@ export const upsertEvento = createServerFn({ method: "POST" })
     if (error) throw new Error(error.message);
     return { id: row.id };
   });
+
+export const finalizarEvento = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: unknown) => z.object({
+    id: z.string().uuid(),
+    relatorio: z.string().min(10).max(20000),
+    consequencias: z.string().max(10000).nullable().optional(),
+  }).parse(d))
+  .handler(async ({ data, context }) => {
+    await assertStaff(context);
+    const { data: row, error } = await context.supabase
+      .from("eventos_operacionais")
+      .update({
+        relatorio: data.relatorio,
+        consequencias: data.consequencias ?? null,
+        status: "concluido",
+      })
+      .eq("id", data.id)
+      .select("id, lore_entry_id")
+      .single();
+    if (error) throw new Error(error.message);
+    return row;
+  });
+
 
 export const deleteEvento = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
