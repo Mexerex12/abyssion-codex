@@ -82,17 +82,19 @@ function PesquisaPage() {
 
       <form
         onSubmit={(e) => { e.preventDefault(); setSubmitted(q.trim()); }}
-        className="relative"
+        className="flex gap-2"
       >
-        <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-        <Input
-          autoFocus
-          placeholder="Ex: 'quem é o Rei Pálido', 'vestígios consumidos', 'Domínios classe ômega'..."
-          value={q}
-          onChange={(e) => setQ(e.target.value)}
-          className="pl-10 pr-24"
-        />
-        <Button type="submit" className="absolute right-1 top-1">Pesquisar</Button>
+        <div className="relative flex-1">
+          <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+          <Input
+            autoFocus
+            placeholder="Ex: 'quem é o Rei Pálido', 'vestígios consumidos', 'Domínios classe ômega'..."
+            value={q}
+            onChange={(e) => setQ(e.target.value)}
+            className="pl-10"
+          />
+        </div>
+        <Button type="submit">Pesquisar</Button>
       </form>
 
       {(stats?.total ?? 0) === 0 && (
