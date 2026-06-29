@@ -26,6 +26,7 @@ import { Route as AuthenticatedStaffVestigiosRouteImport } from './routes/_authe
 import { Route as AuthenticatedStaffTimelineRouteImport } from './routes/_authenticated/staff.timeline'
 import { Route as AuthenticatedStaffRupturasRouteImport } from './routes/_authenticated/staff.rupturas'
 import { Route as AuthenticatedStaffPlotsRouteImport } from './routes/_authenticated/staff.plots'
+import { Route as AuthenticatedStaffPesquisaRouteImport } from './routes/_authenticated/staff.pesquisa'
 import { Route as AuthenticatedStaffNpcsRouteImport } from './routes/_authenticated/staff.npcs'
 import { Route as AuthenticatedStaffMisteriosRouteImport } from './routes/_authenticated/staff.misterios'
 import { Route as AuthenticatedStaffIaRouteImport } from './routes/_authenticated/staff.ia'
@@ -129,6 +130,12 @@ const AuthenticatedStaffPlotsRoute = AuthenticatedStaffPlotsRouteImport.update({
   path: '/plots',
   getParentRoute: () => AuthenticatedStaffRoute,
 } as any)
+const AuthenticatedStaffPesquisaRoute =
+  AuthenticatedStaffPesquisaRouteImport.update({
+    id: '/pesquisa',
+    path: '/pesquisa',
+    getParentRoute: () => AuthenticatedStaffRoute,
+  } as any)
 const AuthenticatedStaffNpcsRoute = AuthenticatedStaffNpcsRouteImport.update({
   id: '/npcs',
   path: '/npcs',
@@ -241,6 +248,7 @@ export interface FileRoutesByFullPath {
   '/staff/ia': typeof AuthenticatedStaffIaRoute
   '/staff/misterios': typeof AuthenticatedStaffMisteriosRoute
   '/staff/npcs': typeof AuthenticatedStaffNpcsRoute
+  '/staff/pesquisa': typeof AuthenticatedStaffPesquisaRoute
   '/staff/plots': typeof AuthenticatedStaffPlotsRoute
   '/staff/rupturas': typeof AuthenticatedStaffRupturasRoute
   '/staff/timeline': typeof AuthenticatedStaffTimelineRoute
@@ -273,6 +281,7 @@ export interface FileRoutesByTo {
   '/staff/ia': typeof AuthenticatedStaffIaRoute
   '/staff/misterios': typeof AuthenticatedStaffMisteriosRoute
   '/staff/npcs': typeof AuthenticatedStaffNpcsRoute
+  '/staff/pesquisa': typeof AuthenticatedStaffPesquisaRoute
   '/staff/plots': typeof AuthenticatedStaffPlotsRoute
   '/staff/rupturas': typeof AuthenticatedStaffRupturasRoute
   '/staff/timeline': typeof AuthenticatedStaffTimelineRoute
@@ -308,6 +317,7 @@ export interface FileRoutesById {
   '/_authenticated/staff/ia': typeof AuthenticatedStaffIaRoute
   '/_authenticated/staff/misterios': typeof AuthenticatedStaffMisteriosRoute
   '/_authenticated/staff/npcs': typeof AuthenticatedStaffNpcsRoute
+  '/_authenticated/staff/pesquisa': typeof AuthenticatedStaffPesquisaRoute
   '/_authenticated/staff/plots': typeof AuthenticatedStaffPlotsRoute
   '/_authenticated/staff/rupturas': typeof AuthenticatedStaffRupturasRoute
   '/_authenticated/staff/timeline': typeof AuthenticatedStaffTimelineRoute
@@ -343,6 +353,7 @@ export interface FileRouteTypes {
     | '/staff/ia'
     | '/staff/misterios'
     | '/staff/npcs'
+    | '/staff/pesquisa'
     | '/staff/plots'
     | '/staff/rupturas'
     | '/staff/timeline'
@@ -375,6 +386,7 @@ export interface FileRouteTypes {
     | '/staff/ia'
     | '/staff/misterios'
     | '/staff/npcs'
+    | '/staff/pesquisa'
     | '/staff/plots'
     | '/staff/rupturas'
     | '/staff/timeline'
@@ -409,6 +421,7 @@ export interface FileRouteTypes {
     | '/_authenticated/staff/ia'
     | '/_authenticated/staff/misterios'
     | '/_authenticated/staff/npcs'
+    | '/_authenticated/staff/pesquisa'
     | '/_authenticated/staff/plots'
     | '/_authenticated/staff/rupturas'
     | '/_authenticated/staff/timeline'
@@ -551,6 +564,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedStaffPlotsRouteImport
       parentRoute: typeof AuthenticatedStaffRoute
     }
+    '/_authenticated/staff/pesquisa': {
+      id: '/_authenticated/staff/pesquisa'
+      path: '/pesquisa'
+      fullPath: '/staff/pesquisa'
+      preLoaderRoute: typeof AuthenticatedStaffPesquisaRouteImport
+      parentRoute: typeof AuthenticatedStaffRoute
+    }
     '/_authenticated/staff/npcs': {
       id: '/_authenticated/staff/npcs'
       path: '/npcs'
@@ -687,6 +707,7 @@ interface AuthenticatedStaffRouteChildren {
   AuthenticatedStaffIaRoute: typeof AuthenticatedStaffIaRoute
   AuthenticatedStaffMisteriosRoute: typeof AuthenticatedStaffMisteriosRoute
   AuthenticatedStaffNpcsRoute: typeof AuthenticatedStaffNpcsRoute
+  AuthenticatedStaffPesquisaRoute: typeof AuthenticatedStaffPesquisaRoute
   AuthenticatedStaffPlotsRoute: typeof AuthenticatedStaffPlotsRoute
   AuthenticatedStaffRupturasRoute: typeof AuthenticatedStaffRupturasRoute
   AuthenticatedStaffTimelineRoute: typeof AuthenticatedStaffTimelineRoute
@@ -707,6 +728,7 @@ const AuthenticatedStaffRouteChildren: AuthenticatedStaffRouteChildren = {
   AuthenticatedStaffIaRoute: AuthenticatedStaffIaRoute,
   AuthenticatedStaffMisteriosRoute: AuthenticatedStaffMisteriosRoute,
   AuthenticatedStaffNpcsRoute: AuthenticatedStaffNpcsRoute,
+  AuthenticatedStaffPesquisaRoute: AuthenticatedStaffPesquisaRoute,
   AuthenticatedStaffPlotsRoute: AuthenticatedStaffPlotsRoute,
   AuthenticatedStaffRupturasRoute: AuthenticatedStaffRupturasRoute,
   AuthenticatedStaffTimelineRoute: AuthenticatedStaffTimelineRoute,

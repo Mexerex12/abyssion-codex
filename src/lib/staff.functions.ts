@@ -641,3 +641,143 @@ export const listStaffTimeline = createServerFn({ method: "GET" })
     if (error) throw new Error(error.message);
     return data ?? [];
   });
+
+// ============================ SMART SEARCH (RAG) ============================
+const SEARCH_SOURCES = [
+  "npcs", "vestigios", "dominios", "eventos_operacionais",
+  "ganchos_narrativos", "documentos", "fatos_canonicos", "lore_entries",
+] as const;
+
+function buildIndexableRow(table: string, r: any): { term: string; category: string | null; clearance: string | null; slug: string | null; content: string } | null {
+  const join = (parts: Array<string | null | undefined>) => parts.filter(Boolean).join("\n").trim();
+  switch (table) {
+    case "npcs":
+      return { term: r.nome, category: r.cargo || "NPC", clearance: r.segredos_clearance ?? null, slug: null,
+        content: join([`NPC: ${r.nome}`, r.cargo && `Cargo: ${r.cargo}`, r.faccao && `Facção: ${r.faccao}`, r.localizacao && `Localização: ${r.localizacao}`, r.objetivos && `Objetivos: ${r.objetivos}`, r.segredos && `Segredos: ${r.segredos}`, r.observacoes_staff]) };
+    case "vestigios":
+      return { term: r.nome, category: "Vestígio", clearance: null, slug: null,
+        content: join([`Vestígio VEST-${String(r.numero ?? "?").padStart(3, "0")}: ${r.nome}`, r.estado && `Estado: ${r.estado}`, r.esquadrao && `Esquadrão: ${r.esquadrao}`, r.historico, r.notas]) };
+    case "dominios":
+      return { term: r.nome, category: r.classe || "Domínio", clearance: null, slug: null,
+        content: join([`Domínio: ${r.nome}`, r.classe && `Classe: ${r.classe}`, r.dificuldade && `Dificuldade: ${r.dificuldade}`, r.recompensas && `Recompensas: ${r.recompensas}`, r.historico]) };
+    case "eventos_operacionais":
+      return { term: r.nome, category: r.tipo || "Evento", clearance: r.clearance ?? null, slug: null,
+        content: join([`Evento: ${r.nome}`, r.resumo, r.relatorio && `Relatório: ${r.relatorio}`, r.consequencias && `Consequências: ${r.consequencias}`]) };
+    case "ganchos_narrativos":
+      return { term: r.titulo, category: "Gancho", clearance: null, slug: null,
+        content: join([`Gancho: ${r.titulo}`, r.resumo, r.faccao && `Facção: ${r.faccao}`, r.prioridade && `Prioridade: ${r.prioridade}`]) };
+    case "documentos":
+      return { term: r.titulo, category: r.categoria || "Documento", clearance: r.clearance ?? null, slug: r.slug,
+        content: join([`Documento: ${r.titulo}`, r.conteudo]) };
+    case "fatos_canonicos":
+      return { term: r.titulo, category: r.categoria || "Fato", clearance: r.escopo_conhecimento ?? null, slug: null,
+        content: join([`Fato canônico (${r.status}): ${r.titulo}`, r.descricao, r.notas]) };
+    case "lore_entries":
+      return { term: r.title, category: r.category || "Lore", clearance: r.clearance ?? null, slug: r.slug,
+        content: join([`Lore: ${r.title}`, r.subtitle, r.summary, r.body]) };
+  }
+  return null;
+}
+
+export const reindexLoreIndex = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    await assertStaff(context);
+    const { embedText, chunkText } = await import("./embeddings.server");
+    let total = 0;
+    await context.supabase.from("lore_index").delete().neq("id", "00000000-0000-0000-0000-000000000000");
+    for (const table of SEARCH_SOURCES) {
+      const { data: rows, error } = await context.supabase.from(table).select("*").limit(2000);
+      if (error || !rows) continue;
+      const docs: { source_type: string; source_id: string; chunk_index: number; term: string;
+        category: string | null; clearance: string | null; slug: string | null; content: string }[] = [];
+      for (const r of rows as any[]) {
+        const built = buildIndexableRow(table, r);
+        if (!built || !built.content || built.content.length < 5) continue;
+        const chunks = chunkText(built.content, 1200, 150);
+        chunks.forEach((c, i) => docs.push({
+          source_type: table, source_id: r.id, chunk_index: i, term: built.term,
+          category: built.category, clearance: built.clearance, slug: built.slug, content: c,
+        }));
+      }
+      // Embed in batches of 32
+      for (let i = 0; i < docs.length; i += 32) {
+        const batch = docs.slice(i, i + 32);
+        const vectors = await embedText(batch.map((d) => `${d.term}\n${d.content}`));
+        const payload = batch.map((d, idx) => ({ ...d, embedding: vectors[idx] as any }));
+        const { error: insErr } = await context.supabase.from("lore_index").insert(payload);
+        if (insErr) throw new Error(`Falha indexando ${table}: ${insErr.message}`);
+        total += payload.length;
+      }
+    }
+    return { ok: true, indexed: total };
+  });
+
+export const smartSearch = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: unknown) => z.object({
+    q: z.string().min(2).max(400),
+    explain: z.boolean().optional().default(true),
+    limit: z.number().int().min(1).max(30).optional().default(12),
+  }).parse(d))
+  .handler(async ({ data, context }) => {
+    await assertStaff(context);
+    const { embedText } = await import("./embeddings.server");
+    const [qvec] = await embedText(data.q);
+    const { data: semantic, error } = await context.supabase.rpc("match_lore_index", {
+      query_embedding: qvec as any,
+      match_count: data.limit,
+      min_similarity: 0.2,
+    });
+    if (error) throw new Error(error.message);
+
+    // Fallback fuzzy by term/content for the same term
+    const term = `%${data.q}%`;
+    const { data: literal } = await context.supabase
+      .from("lore_index")
+      .select("id,source_type,source_id,slug,term,category,clearance,content")
+      .or(`term.ilike.${term},content.ilike.${term}`)
+      .limit(10);
+
+    // merge unique by id
+    const map = new Map<string, any>();
+    for (const r of (semantic ?? []) as any[]) map.set(r.id, r);
+    for (const r of (literal ?? []) as any[]) if (!map.has(r.id)) map.set(r.id, { ...r, similarity: 0.15 });
+    const results = Array.from(map.values()).sort((a, b) => (b.similarity ?? 0) - (a.similarity ?? 0));
+
+    let explanation: string | null = null;
+    if (data.explain && results.length > 0) {
+      try {
+        const { callAI } = await import("./ai-gateway.server");
+        const context_text = results.slice(0, 6).map((r, i) =>
+          `[${i + 1}] (${r.source_type} · ${r.category ?? ""}) ${r.term}\n${r.content}`
+        ).join("\n\n---\n\n");
+        explanation = await callAI({
+          temperature: 0.4,
+          messages: [
+            { role: "system", content:
+              "Você é o Curador-Auxiliar do universo Abyssion SMP. Responda em português, em no máximo 6 linhas, usando APENAS o contexto fornecido. " +
+              "Se o termo aparecer em múltiplas fontes, sintetize uma definição unificada. " +
+              "Cite as fontes entre colchetes como [1], [2]. Se o contexto não cobrir o termo, diga claramente que não há registro." },
+            { role: "user", content: `Termo pesquisado: "${data.q}"\n\nContexto do banco de lore:\n${context_text}\n\nDefina o termo.` },
+          ],
+        });
+      } catch (e) {
+        explanation = `(IA indisponível: ${(e as Error).message})`;
+      }
+    }
+
+    return { results, explanation, count: results.length };
+  });
+
+export const indexStats = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    await assertStaff(context);
+    const { count } = await context.supabase.from("lore_index").select("*", { count: "exact", head: true });
+    const { data: lastRow } = await context.supabase.from("lore_index").select("created_at").order("created_at", { ascending: false }).limit(1).maybeSingle();
+    const { data: bySource } = await context.supabase.from("lore_index").select("source_type");
+    const counts: Record<string, number> = {};
+    for (const r of (bySource ?? []) as any[]) counts[r.source_type] = (counts[r.source_type] ?? 0) + 1;
+    return { total: count ?? 0, lastIndexedAt: lastRow?.created_at ?? null, bySource: counts };
+  });
