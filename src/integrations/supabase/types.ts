@@ -224,11 +224,13 @@ export type Database = {
           created_at: string
           data: string | null
           dominio_id: string | null
+          esquadroes: string[]
           id: string
           lore_entry_id: string | null
           narrador_id: string | null
           nome: string
           npcs_envolvidos: string[]
+          relatorio: string | null
           resumo: string | null
           status: Database["public"]["Enums"]["evento_status"]
           tipo: Database["public"]["Enums"]["evento_tipo"]
@@ -240,11 +242,13 @@ export type Database = {
           created_at?: string
           data?: string | null
           dominio_id?: string | null
+          esquadroes?: string[]
           id?: string
           lore_entry_id?: string | null
           narrador_id?: string | null
           nome: string
           npcs_envolvidos?: string[]
+          relatorio?: string | null
           resumo?: string | null
           status?: Database["public"]["Enums"]["evento_status"]
           tipo?: Database["public"]["Enums"]["evento_tipo"]
@@ -256,11 +260,13 @@ export type Database = {
           created_at?: string
           data?: string | null
           dominio_id?: string | null
+          esquadroes?: string[]
           id?: string
           lore_entry_id?: string | null
           narrador_id?: string | null
           nome?: string
           npcs_envolvidos?: string[]
+          relatorio?: string | null
           resumo?: string | null
           status?: Database["public"]["Enums"]["evento_status"]
           tipo?: Database["public"]["Enums"]["evento_tipo"]
