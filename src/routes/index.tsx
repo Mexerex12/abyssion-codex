@@ -13,11 +13,11 @@ const QUOTES = [
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Abyssion SMP | Portal da União Trivalente" },
+      { title: "Abyssion SMP" },
       {
         name: "description",
         content:
-          "Arquivo oficial do universo Abyssion SMP. Domínios, Vestígios, Curadores, Bastiões e os registros classificados da União Trivalente.",
+          "Site oficial de Lore",
       },
     ],
   }),

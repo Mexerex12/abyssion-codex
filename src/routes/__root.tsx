@@ -80,20 +80,24 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Abyssion SMP | Portal da União Trivalente" },
+      { title: "Abyssion SMP" },
       {
         name: "description",
         content:
-          "Arquivo oficial da União Trivalente: lore, Domínios, Vestígios, Curadores e Rupturas do universo Abyssion SMP.",
+          "Site oficial de Lore",
       },
-      { property: "og:title", content: "Abyssion SMP | Portal da União Trivalente" },
+      { property: "og:title", content: "Abyssion SMP" },
       {
         property: "og:description",
-        content: "O Núcleo está morrendo. A União observa. Sete Vestígios permanecem.",
+        content: "Site oficial de Lore",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "theme-color", content: "#08090b" },
+      { name: "twitter:title", content: "Abyssion SMP" },
+      { name: "twitter:description", content: "Site oficial de Lore" },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/df710330-67b5-4a81-ae4b-46cbadd9aa8d/id-preview-d01f0c3a--7c7afc81-b86b-4160-9403-cb04e42874ea.lovable.app-1782726429494.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/df710330-67b5-4a81-ae4b-46cbadd9aa8d/id-preview-d01f0c3a--7c7afc81-b86b-4160-9403-cb04e42874ea.lovable.app-1782726429494.png" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
