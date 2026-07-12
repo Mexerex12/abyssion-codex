@@ -108,7 +108,7 @@ export const setUserRole = createServerFn({ method: "POST" })
     z
       .object({
         userId: z.string().uuid(),
-        role: z.enum(["visitante", "narrador", "administrador"]),
+        role: z.enum(["visitante", "narrador", "diretor", "administrador", "fundador"]),
         grant: z.boolean(),
       })
       .parse(data),
@@ -116,6 +116,11 @@ export const setUserRole = createServerFn({ method: "POST" })
   .handler(async ({ data, context }) => {
     const { data: isAdmin } = await context.supabase.rpc("is_admin", { _user_id: context.userId });
     if (!isAdmin) throw new Error("Forbidden");
+    // Only fundador can grant/revoke fundador role
+    if (data.role === "fundador") {
+      const { data: isFundador } = await context.supabase.rpc("is_fundador", { _user_id: context.userId });
+      if (!isFundador) throw new Error("Forbidden: apenas Fundador pode conceder este papel.");
+    }
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     if (data.grant) {
       const { error } = await supabaseAdmin
