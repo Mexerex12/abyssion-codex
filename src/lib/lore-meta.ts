@@ -41,6 +41,7 @@ export const CLEARANCE_META: Record<
   nivel_3: { label: "Nível III: Confidencial", short: "N-III", tone: "amber" },
   nivel_4: { label: "Nível IV: Secreto", short: "N-IV", tone: "amber" },
   nivel_diretor: { label: "Nível Diretor: Alto Conselho", short: "DIRETOR", tone: "alert" },
+  nivel_fundador: { label: "Nível Fundador", short: "FUNDADOR", tone: "alert" },
 };
 
 export const DASHBOARD_CARDS: { title: string; subtitle: string; href: string; classified?: boolean }[] = [
