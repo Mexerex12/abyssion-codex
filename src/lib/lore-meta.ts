@@ -68,5 +68,5 @@ export function clearanceMeta(c: ClearanceLevel) {
 }
 
 export function isClassified(c: ClearanceLevel) {
-  return c === "nivel_3" || c === "nivel_4" || c === "nivel_diretor";
+  return c === "nivel_3" || c === "nivel_4" || c === "nivel_diretor" || c === "nivel_fundador" || c === "restrito" || c === "verdade_absoluta";
 }
