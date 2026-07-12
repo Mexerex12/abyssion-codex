@@ -41,6 +41,8 @@ export function useAuth() {
     isAuthenticated: !!user,
     isAdmin: roleQuery.data?.isAdmin ?? false,
     isStaff: roleQuery.data?.isStaff ?? false,
+    isDiretor: roleQuery.data?.isDiretor ?? false,
+    isFundador: roleQuery.data?.isFundador ?? false,
     roles: roleQuery.data?.roles ?? [],
   };
 }
