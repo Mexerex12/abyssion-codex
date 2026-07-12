@@ -974,7 +974,12 @@ export type Database = {
       show_trgm: { Args: { "": string }; Returns: string[] }
     }
     Enums: {
-      app_role: "visitante" | "narrador" | "administrador"
+      app_role:
+        | "visitante"
+        | "narrador"
+        | "administrador"
+        | "diretor"
+        | "fundador"
       clearance_level:
         | "publico"
         | "nivel_1"
@@ -988,6 +993,7 @@ export type Database = {
         | "curadores"
         | "restrito"
         | "verdade_absoluta"
+        | "nivel_fundador"
       dominio_status: "ativo" | "encerrado" | "selado" | "instavel"
       entry_status: "rascunho" | "publicado" | "arquivado"
       evento_status: "planejado" | "em_andamento" | "concluido" | "cancelado"
@@ -1171,7 +1177,13 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
-      app_role: ["visitante", "narrador", "administrador"],
+      app_role: [
+        "visitante",
+        "narrador",
+        "administrador",
+        "diretor",
+        "fundador",
+      ],
       clearance_level: [
         "publico",
         "nivel_1",
@@ -1185,6 +1197,7 @@ export const Constants = {
         "curadores",
         "restrito",
         "verdade_absoluta",
+        "nivel_fundador",
       ],
       dominio_status: ["ativo", "encerrado", "selado", "instavel"],
       entry_status: ["rascunho", "publicado", "arquivado"],
