@@ -11,12 +11,11 @@ export const getMyRole = createServerFn({ method: "GET" })
       .eq("user_id", context.userId);
     if (error) throw new Error(error.message);
     const roles = (data ?? []).map((r) => r.role);
-    return {
-      userId: context.userId,
-      roles,
-      isAdmin: roles.includes("administrador"),
-      isStaff: roles.includes("administrador") || roles.includes("narrador"),
-    };
+    const isFundador = roles.includes("fundador");
+    const isAdmin = isFundador || roles.includes("administrador");
+    const isDiretor = isAdmin || roles.includes("diretor");
+    const isStaff = isDiretor || roles.includes("narrador");
+    return { userId: context.userId, roles, isAdmin, isStaff, isDiretor, isFundador };
   });
 
 const upsertSchema = z.object({
