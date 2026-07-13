@@ -42,6 +42,8 @@ import { Route as AuthenticatedStaffBuscarRouteImport } from './routes/_authenti
 import { Route as AuthenticatedAdminUsuariosRouteImport } from './routes/_authenticated/admin.usuarios'
 import { Route as AuthenticatedAdminNovoRouteImport } from './routes/_authenticated/admin.novo'
 import { Route as LovableEmailQueueProcessRouteImport } from './routes/lovable/email/queue/process'
+import { Route as LovableEmailAuthWebhookRouteImport } from './routes/lovable/email/auth/webhook'
+import { Route as LovableEmailAuthPreviewRouteImport } from './routes/lovable/email/auth/preview'
 import { Route as AuthenticatedAdminEditarIdRouteImport } from './routes/_authenticated/admin.editar.$id'
 
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
@@ -222,6 +224,16 @@ const LovableEmailQueueProcessRoute =
     path: '/lovable/email/queue/process',
     getParentRoute: () => rootRouteImport,
   } as any)
+const LovableEmailAuthWebhookRoute = LovableEmailAuthWebhookRouteImport.update({
+  id: '/lovable/email/auth/webhook',
+  path: '/lovable/email/auth/webhook',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LovableEmailAuthPreviewRoute = LovableEmailAuthPreviewRouteImport.update({
+  id: '/lovable/email/auth/preview',
+  path: '/lovable/email/auth/preview',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthenticatedAdminEditarIdRoute =
   AuthenticatedAdminEditarIdRouteImport.update({
     id: '/editar/$id',
@@ -262,6 +274,8 @@ export interface FileRoutesByFullPath {
   '/staff/vestigios': typeof AuthenticatedStaffVestigiosRoute
   '/staff/': typeof AuthenticatedStaffIndexRoute
   '/admin/editar/$id': typeof AuthenticatedAdminEditarIdRoute
+  '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
+  '/lovable/email/auth/webhook': typeof LovableEmailAuthWebhookRoute
   '/lovable/email/queue/process': typeof LovableEmailQueueProcessRoute
 }
 export interface FileRoutesByTo {
@@ -296,6 +310,8 @@ export interface FileRoutesByTo {
   '/staff/vestigios': typeof AuthenticatedStaffVestigiosRoute
   '/staff': typeof AuthenticatedStaffIndexRoute
   '/admin/editar/$id': typeof AuthenticatedAdminEditarIdRoute
+  '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
+  '/lovable/email/auth/webhook': typeof LovableEmailAuthWebhookRoute
   '/lovable/email/queue/process': typeof LovableEmailQueueProcessRoute
 }
 export interface FileRoutesById {
@@ -333,6 +349,8 @@ export interface FileRoutesById {
   '/_authenticated/staff/vestigios': typeof AuthenticatedStaffVestigiosRoute
   '/_authenticated/staff/': typeof AuthenticatedStaffIndexRoute
   '/_authenticated/admin/editar/$id': typeof AuthenticatedAdminEditarIdRoute
+  '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
+  '/lovable/email/auth/webhook': typeof LovableEmailAuthWebhookRoute
   '/lovable/email/queue/process': typeof LovableEmailQueueProcessRoute
 }
 export interface FileRouteTypes {
@@ -370,6 +388,8 @@ export interface FileRouteTypes {
     | '/staff/vestigios'
     | '/staff/'
     | '/admin/editar/$id'
+    | '/lovable/email/auth/preview'
+    | '/lovable/email/auth/webhook'
     | '/lovable/email/queue/process'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -404,6 +424,8 @@ export interface FileRouteTypes {
     | '/staff/vestigios'
     | '/staff'
     | '/admin/editar/$id'
+    | '/lovable/email/auth/preview'
+    | '/lovable/email/auth/webhook'
     | '/lovable/email/queue/process'
   id:
     | '__root__'
@@ -440,6 +462,8 @@ export interface FileRouteTypes {
     | '/_authenticated/staff/vestigios'
     | '/_authenticated/staff/'
     | '/_authenticated/admin/editar/$id'
+    | '/lovable/email/auth/preview'
+    | '/lovable/email/auth/webhook'
     | '/lovable/email/queue/process'
   fileRoutesById: FileRoutesById
 }
@@ -454,6 +478,8 @@ export interface RootRouteChildren {
   CategoriaCategoryRoute: typeof CategoriaCategoryRoute
   WikiSlugRoute: typeof WikiSlugRoute
   WikiIndexRoute: typeof WikiIndexRoute
+  LovableEmailAuthPreviewRoute: typeof LovableEmailAuthPreviewRoute
+  LovableEmailAuthWebhookRoute: typeof LovableEmailAuthWebhookRoute
   LovableEmailQueueProcessRoute: typeof LovableEmailQueueProcessRoute
 }
 
@@ -690,6 +716,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LovableEmailQueueProcessRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/lovable/email/auth/webhook': {
+      id: '/lovable/email/auth/webhook'
+      path: '/lovable/email/auth/webhook'
+      fullPath: '/lovable/email/auth/webhook'
+      preLoaderRoute: typeof LovableEmailAuthWebhookRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/lovable/email/auth/preview': {
+      id: '/lovable/email/auth/preview'
+      path: '/lovable/email/auth/preview'
+      fullPath: '/lovable/email/auth/preview'
+      preLoaderRoute: typeof LovableEmailAuthPreviewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_authenticated/admin/editar/$id': {
       id: '/_authenticated/admin/editar/$id'
       path: '/editar/$id'
@@ -784,6 +824,8 @@ const rootRouteChildren: RootRouteChildren = {
   CategoriaCategoryRoute: CategoriaCategoryRoute,
   WikiSlugRoute: WikiSlugRoute,
   WikiIndexRoute: WikiIndexRoute,
+  LovableEmailAuthPreviewRoute: LovableEmailAuthPreviewRoute,
+  LovableEmailAuthWebhookRoute: LovableEmailAuthWebhookRoute,
   LovableEmailQueueProcessRoute: LovableEmailQueueProcessRoute,
 }
 export const routeTree = rootRouteImport
