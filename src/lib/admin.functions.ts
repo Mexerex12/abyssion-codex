@@ -99,7 +99,18 @@ export const listUsersAdmin = createServerFn({ method: "GET" })
     for (const r of roles ?? []) {
       rolesByUser[r.user_id] = [...(rolesByUser[r.user_id] ?? []), r.role];
     }
-    return (profiles ?? []).map((p) => ({ ...p, roles: rolesByUser[p.id] ?? [] }));
+    const emailsByUser: Record<string, string | null> = {};
+    try {
+      const { data: usersList } = await supabaseAdmin.auth.admin.listUsers({ page: 1, perPage: 200 });
+      for (const u of usersList?.users ?? []) emailsByUser[u.id] = u.email ?? null;
+    } catch {
+      // ignore — email unavailable
+    }
+    return (profiles ?? []).map((p) => ({
+      ...p,
+      email: emailsByUser[p.id] ?? null,
+      roles: rolesByUser[p.id] ?? [],
+    }));
   });
 
 export const setUserRole = createServerFn({ method: "POST" })
