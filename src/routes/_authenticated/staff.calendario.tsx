@@ -16,6 +16,14 @@ export const Route = createFileRoute("/_authenticated/staff/calendario")({
 
 const STATUS = ["planejado", "em_andamento", "concluido", "cancelado"] as const;
 const TIPOS = ["global", "faccao", "esquadrao", "secreto"] as const;
+const CATEGORIAS = ["evento", "operacao", "sessao", "reuniao"] as const;
+type Categoria = (typeof CATEGORIAS)[number];
+const CATEGORIA_META: Record<Categoria, { label: string; dot: string; bar: string; chip: string }> = {
+  evento:   { label: "Evento",   dot: "bg-cyan",         bar: "border-cyan bg-cyan/10 text-cyan",                 chip: "border-cyan/40 bg-cyan/10 text-cyan" },
+  operacao: { label: "Operação", dot: "bg-destructive",  bar: "border-destructive bg-destructive/10 text-destructive", chip: "border-destructive/40 bg-destructive/10 text-destructive" },
+  sessao:   { label: "Sessão",   dot: "bg-amber-500",    bar: "border-amber-500 bg-amber-500/10 text-amber-300",  chip: "border-amber-500/40 bg-amber-500/10 text-amber-300" },
+  reuniao:  { label: "Reunião",  dot: "bg-emerald-500",  bar: "border-emerald-500 bg-emerald-500/10 text-emerald-300", chip: "border-emerald-500/40 bg-emerald-500/10 text-emerald-300" },
+};
 const CLEARANCE = ["publico", "uniao", "instrutores", "diretores", "curadores", "restrito", "verdade_absoluta"] as const;
 const STATUS_TONE: Record<string, "cyan" | "amber" | "green" | "alert" | "neutral"> = {
   planejado: "cyan", em_andamento: "amber", concluido: "green", cancelado: "alert",
@@ -33,6 +41,14 @@ function CalendarioPage() {
   const [open, setOpen] = useState(false);
   const [editing, setEditing] = useState<any | null>(null);
   const [finalizing, setFinalizing] = useState<any | null>(null);
+  const [filter, setFilter] = useState<Record<Categoria, boolean>>({
+    evento: true, operacao: true, sessao: true, reuniao: true,
+  });
+
+  const visibleEventos = useMemo(
+    () => (eventos ?? []).filter((e: any) => filter[(e.categoria ?? "evento") as Categoria]),
+    [eventos, filter],
+  );
 
   const grid = useMemo(() => {
     const firstDay = new Date(cursor.getFullYear(), cursor.getMonth(), 1);
@@ -47,13 +63,13 @@ function CalendarioPage() {
 
   const byDay = useMemo(() => {
     const map = new Map<string, any[]>();
-    for (const e of eventos ?? []) {
+    for (const e of visibleEventos) {
       if (!e.data) continue;
       const k = new Date(e.data).toISOString().slice(0, 10);
       const arr = map.get(k) ?? []; arr.push(e); map.set(k, arr);
     }
     return map;
-  }, [eventos]);
+  }, [visibleEventos]);
 
   const openNew = (date?: Date) => {
     const base: any = {};
