@@ -85,11 +85,28 @@ function CalendarioPage() {
   return (
     <div className="space-y-5">
       <PageHeader
-        eyebrow="Operações · Agenda"
-        title="Calendário de Sessões"
-        sub="Agende eventos com narrador, NPCs, domínio e esquadrões. Ao finalizar, gere o relatório que entra na linha do tempo da lore."
-        actions={<Button onClick={() => openNew()}><Plus className="h-3 w-3" /> Agendar Evento</Button>}
+        title="Calendário"
+        actions={<Button onClick={() => openNew()}><Plus className="h-3 w-3" /> Agendar</Button>}
       />
+
+      <div className="flex flex-wrap items-center gap-2 border border-border bg-surface-1 px-3 py-2">
+        {CATEGORIAS.map((c) => {
+          const meta = CATEGORIA_META[c];
+          const active = filter[c];
+          return (
+            <button
+              key={c}
+              onClick={() => setFilter((f) => ({ ...f, [c]: !f[c] }))}
+              className={`inline-flex items-center gap-1.5 border px-2 py-1 text-mono text-[10px] uppercase tracking-[0.14em] transition-opacity ${
+                active ? meta.chip : "border-border text-muted-foreground opacity-50"
+              }`}
+            >
+              <span className={`inline-block h-2 w-2 ${meta.dot}`} />
+              {meta.label}
+            </button>
+          );
+        })}
+      </div>
 
       <div className="border border-border bg-surface-1">
         <div className="flex items-center justify-between border-b border-border bg-surface-2 px-3 py-2">
@@ -128,21 +145,21 @@ function CalendarioPage() {
                   </button>
                 </div>
                 <div className="mt-1 space-y-1">
-                  {items.slice(0, 3).map((e) => (
-                    <button
-                      key={e.id}
-                      onClick={() => { setEditing(e); setOpen(true); }}
-                      className={`block w-full truncate border-l-2 px-1.5 py-0.5 text-left text-mono text-[10px] ${
-                        e.status === "concluido" ? "border-emerald-500 bg-emerald-500/10 text-emerald-300"
-                        : e.status === "em_andamento" ? "border-amber-500 bg-amber-500/10 text-amber-300"
-                        : e.status === "cancelado" ? "border-destructive bg-destructive/10 text-destructive line-through"
-                        : "border-cyan bg-cyan/10 text-cyan"
-                      }`}
-                      title={e.nome}
-                    >
-                      {new Date(e.data).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })} · {e.nome}
-                    </button>
-                  ))}
+                  {items.slice(0, 3).map((e) => {
+                    const cat = (e.categoria ?? "evento") as Categoria;
+                    const cancelled = e.status === "cancelado";
+                    const done = e.status === "concluido";
+                    return (
+                      <button
+                        key={e.id}
+                        onClick={() => { setEditing(e); setOpen(true); }}
+                        className={`block w-full truncate border-l-2 px-1.5 py-0.5 text-left text-mono text-[10px] ${CATEGORIA_META[cat].bar} ${cancelled ? "opacity-50 line-through" : ""} ${done ? "opacity-80" : ""}`}
+                        title={`${CATEGORIA_META[cat].label} · ${e.nome}`}
+                      >
+                        {new Date(e.data).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })} · {e.nome}
+                      </button>
+                    );
+                  })}
                   {items.length > 3 && <p className="px-1.5 text-mono text-[9px] text-muted-foreground">+{items.length - 3} mais</p>}
                 </div>
               </div>
