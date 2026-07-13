@@ -20,8 +20,8 @@ import { Route as WikiIndexRouteImport } from './routes/wiki.index'
 import { Route as WikiSlugRouteImport } from './routes/wiki.$slug'
 import { Route as CategoriaCategoryRouteImport } from './routes/categoria.$category'
 import { Route as AuthenticatedStaffRouteImport } from './routes/_authenticated/staff'
-import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as AuthenticatedStaffIndexRouteImport } from './routes/_authenticated/staff.index'
+import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
 import { Route as AuthenticatedStaffVestigiosRouteImport } from './routes/_authenticated/staff.vestigios'
 import { Route as AuthenticatedStaffTimelineRouteImport } from './routes/_authenticated/staff.timeline'
 import { Route as AuthenticatedStaffRupturasRouteImport } from './routes/_authenticated/staff.rupturas'
@@ -41,6 +41,7 @@ import { Route as AuthenticatedStaffCalendarioRouteImport } from './routes/_auth
 import { Route as AuthenticatedStaffBuscarRouteImport } from './routes/_authenticated/staff.buscar'
 import { Route as AuthenticatedAdminUsuariosRouteImport } from './routes/_authenticated/admin.usuarios'
 import { Route as AuthenticatedAdminNovoRouteImport } from './routes/_authenticated/admin.novo'
+import { Route as AuthenticatedAdminBibliotecaRouteImport } from './routes/_authenticated/admin.biblioteca'
 import { Route as LovableEmailQueueProcessRouteImport } from './routes/lovable/email/queue/process'
 import { Route as LovableEmailAuthWebhookRouteImport } from './routes/lovable/email/auth/webhook'
 import { Route as LovableEmailAuthPreviewRouteImport } from './routes/lovable/email/auth/preview'
@@ -100,15 +101,15 @@ const AuthenticatedStaffRoute = AuthenticatedStaffRouteImport.update({
   path: '/staff',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
-const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
-  id: '/admin',
-  path: '/admin',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
 const AuthenticatedStaffIndexRoute = AuthenticatedStaffIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => AuthenticatedStaffRoute,
+} as any)
+const AuthenticatedAdminIndexRoute = AuthenticatedAdminIndexRouteImport.update({
+  id: '/admin/',
+  path: '/admin/',
+  getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedStaffVestigiosRoute =
   AuthenticatedStaffVestigiosRouteImport.update({
@@ -209,15 +210,21 @@ const AuthenticatedStaffBuscarRoute =
   } as any)
 const AuthenticatedAdminUsuariosRoute =
   AuthenticatedAdminUsuariosRouteImport.update({
-    id: '/usuarios',
-    path: '/usuarios',
-    getParentRoute: () => AuthenticatedAdminRoute,
+    id: '/admin/usuarios',
+    path: '/admin/usuarios',
+    getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedAdminNovoRoute = AuthenticatedAdminNovoRouteImport.update({
-  id: '/novo',
-  path: '/novo',
-  getParentRoute: () => AuthenticatedAdminRoute,
+  id: '/admin/novo',
+  path: '/admin/novo',
+  getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedAdminBibliotecaRoute =
+  AuthenticatedAdminBibliotecaRouteImport.update({
+    id: '/admin/biblioteca',
+    path: '/admin/biblioteca',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const LovableEmailQueueProcessRoute =
   LovableEmailQueueProcessRouteImport.update({
     id: '/lovable/email/queue/process',
@@ -236,9 +243,9 @@ const LovableEmailAuthPreviewRoute = LovableEmailAuthPreviewRouteImport.update({
 } as any)
 const AuthenticatedAdminEditarIdRoute =
   AuthenticatedAdminEditarIdRouteImport.update({
-    id: '/editar/$id',
-    path: '/editar/$id',
-    getParentRoute: () => AuthenticatedAdminRoute,
+    id: '/admin/editar/$id',
+    path: '/admin/editar/$id',
+    getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 
 export interface FileRoutesByFullPath {
@@ -248,11 +255,11 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof DashboardRoute
   '/linha-do-tempo': typeof LinhaDoTempoRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
-  '/admin': typeof AuthenticatedAdminRouteWithChildren
   '/staff': typeof AuthenticatedStaffRouteWithChildren
   '/categoria/$category': typeof CategoriaCategoryRoute
   '/wiki/$slug': typeof WikiSlugRoute
   '/wiki/': typeof WikiIndexRoute
+  '/admin/biblioteca': typeof AuthenticatedAdminBibliotecaRoute
   '/admin/novo': typeof AuthenticatedAdminNovoRoute
   '/admin/usuarios': typeof AuthenticatedAdminUsuariosRoute
   '/staff/buscar': typeof AuthenticatedStaffBuscarRoute
@@ -272,6 +279,7 @@ export interface FileRoutesByFullPath {
   '/staff/rupturas': typeof AuthenticatedStaffRupturasRoute
   '/staff/timeline': typeof AuthenticatedStaffTimelineRoute
   '/staff/vestigios': typeof AuthenticatedStaffVestigiosRoute
+  '/admin/': typeof AuthenticatedAdminIndexRoute
   '/staff/': typeof AuthenticatedStaffIndexRoute
   '/admin/editar/$id': typeof AuthenticatedAdminEditarIdRoute
   '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
@@ -285,10 +293,10 @@ export interface FileRoutesByTo {
   '/dashboard': typeof DashboardRoute
   '/linha-do-tempo': typeof LinhaDoTempoRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
-  '/admin': typeof AuthenticatedAdminRouteWithChildren
   '/categoria/$category': typeof CategoriaCategoryRoute
   '/wiki/$slug': typeof WikiSlugRoute
   '/wiki': typeof WikiIndexRoute
+  '/admin/biblioteca': typeof AuthenticatedAdminBibliotecaRoute
   '/admin/novo': typeof AuthenticatedAdminNovoRoute
   '/admin/usuarios': typeof AuthenticatedAdminUsuariosRoute
   '/staff/buscar': typeof AuthenticatedStaffBuscarRoute
@@ -308,6 +316,7 @@ export interface FileRoutesByTo {
   '/staff/rupturas': typeof AuthenticatedStaffRupturasRoute
   '/staff/timeline': typeof AuthenticatedStaffTimelineRoute
   '/staff/vestigios': typeof AuthenticatedStaffVestigiosRoute
+  '/admin': typeof AuthenticatedAdminIndexRoute
   '/staff': typeof AuthenticatedStaffIndexRoute
   '/admin/editar/$id': typeof AuthenticatedAdminEditarIdRoute
   '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
@@ -323,11 +332,11 @@ export interface FileRoutesById {
   '/dashboard': typeof DashboardRoute
   '/linha-do-tempo': typeof LinhaDoTempoRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
-  '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
   '/_authenticated/staff': typeof AuthenticatedStaffRouteWithChildren
   '/categoria/$category': typeof CategoriaCategoryRoute
   '/wiki/$slug': typeof WikiSlugRoute
   '/wiki/': typeof WikiIndexRoute
+  '/_authenticated/admin/biblioteca': typeof AuthenticatedAdminBibliotecaRoute
   '/_authenticated/admin/novo': typeof AuthenticatedAdminNovoRoute
   '/_authenticated/admin/usuarios': typeof AuthenticatedAdminUsuariosRoute
   '/_authenticated/staff/buscar': typeof AuthenticatedStaffBuscarRoute
@@ -347,6 +356,7 @@ export interface FileRoutesById {
   '/_authenticated/staff/rupturas': typeof AuthenticatedStaffRupturasRoute
   '/_authenticated/staff/timeline': typeof AuthenticatedStaffTimelineRoute
   '/_authenticated/staff/vestigios': typeof AuthenticatedStaffVestigiosRoute
+  '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
   '/_authenticated/staff/': typeof AuthenticatedStaffIndexRoute
   '/_authenticated/admin/editar/$id': typeof AuthenticatedAdminEditarIdRoute
   '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
@@ -362,11 +372,11 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/linha-do-tempo'
     | '/sitemap.xml'
-    | '/admin'
     | '/staff'
     | '/categoria/$category'
     | '/wiki/$slug'
     | '/wiki/'
+    | '/admin/biblioteca'
     | '/admin/novo'
     | '/admin/usuarios'
     | '/staff/buscar'
@@ -386,6 +396,7 @@ export interface FileRouteTypes {
     | '/staff/rupturas'
     | '/staff/timeline'
     | '/staff/vestigios'
+    | '/admin/'
     | '/staff/'
     | '/admin/editar/$id'
     | '/lovable/email/auth/preview'
@@ -399,10 +410,10 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/linha-do-tempo'
     | '/sitemap.xml'
-    | '/admin'
     | '/categoria/$category'
     | '/wiki/$slug'
     | '/wiki'
+    | '/admin/biblioteca'
     | '/admin/novo'
     | '/admin/usuarios'
     | '/staff/buscar'
@@ -422,6 +433,7 @@ export interface FileRouteTypes {
     | '/staff/rupturas'
     | '/staff/timeline'
     | '/staff/vestigios'
+    | '/admin'
     | '/staff'
     | '/admin/editar/$id'
     | '/lovable/email/auth/preview'
@@ -436,11 +448,11 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/linha-do-tempo'
     | '/sitemap.xml'
-    | '/_authenticated/admin'
     | '/_authenticated/staff'
     | '/categoria/$category'
     | '/wiki/$slug'
     | '/wiki/'
+    | '/_authenticated/admin/biblioteca'
     | '/_authenticated/admin/novo'
     | '/_authenticated/admin/usuarios'
     | '/_authenticated/staff/buscar'
@@ -460,6 +472,7 @@ export interface FileRouteTypes {
     | '/_authenticated/staff/rupturas'
     | '/_authenticated/staff/timeline'
     | '/_authenticated/staff/vestigios'
+    | '/_authenticated/admin/'
     | '/_authenticated/staff/'
     | '/_authenticated/admin/editar/$id'
     | '/lovable/email/auth/preview'
@@ -562,19 +575,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedStaffRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/_authenticated/admin': {
-      id: '/_authenticated/admin'
-      path: '/admin'
-      fullPath: '/admin'
-      preLoaderRoute: typeof AuthenticatedAdminRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
     '/_authenticated/staff/': {
       id: '/_authenticated/staff/'
       path: '/'
       fullPath: '/staff/'
       preLoaderRoute: typeof AuthenticatedStaffIndexRouteImport
       parentRoute: typeof AuthenticatedStaffRoute
+    }
+    '/_authenticated/admin/': {
+      id: '/_authenticated/admin/'
+      path: '/admin'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AuthenticatedAdminIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/staff/vestigios': {
       id: '/_authenticated/staff/vestigios'
@@ -697,17 +710,24 @@ declare module '@tanstack/react-router' {
     }
     '/_authenticated/admin/usuarios': {
       id: '/_authenticated/admin/usuarios'
-      path: '/usuarios'
+      path: '/admin/usuarios'
       fullPath: '/admin/usuarios'
       preLoaderRoute: typeof AuthenticatedAdminUsuariosRouteImport
-      parentRoute: typeof AuthenticatedAdminRoute
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/admin/novo': {
       id: '/_authenticated/admin/novo'
-      path: '/novo'
+      path: '/admin/novo'
       fullPath: '/admin/novo'
       preLoaderRoute: typeof AuthenticatedAdminNovoRouteImport
-      parentRoute: typeof AuthenticatedAdminRoute
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/admin/biblioteca': {
+      id: '/_authenticated/admin/biblioteca'
+      path: '/admin/biblioteca'
+      fullPath: '/admin/biblioteca'
+      preLoaderRoute: typeof AuthenticatedAdminBibliotecaRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/lovable/email/queue/process': {
       id: '/lovable/email/queue/process'
@@ -732,28 +752,13 @@ declare module '@tanstack/react-router' {
     }
     '/_authenticated/admin/editar/$id': {
       id: '/_authenticated/admin/editar/$id'
-      path: '/editar/$id'
+      path: '/admin/editar/$id'
       fullPath: '/admin/editar/$id'
       preLoaderRoute: typeof AuthenticatedAdminEditarIdRouteImport
-      parentRoute: typeof AuthenticatedAdminRoute
+      parentRoute: typeof AuthenticatedRouteRoute
     }
   }
 }
-
-interface AuthenticatedAdminRouteChildren {
-  AuthenticatedAdminNovoRoute: typeof AuthenticatedAdminNovoRoute
-  AuthenticatedAdminUsuariosRoute: typeof AuthenticatedAdminUsuariosRoute
-  AuthenticatedAdminEditarIdRoute: typeof AuthenticatedAdminEditarIdRoute
-}
-
-const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
-  AuthenticatedAdminNovoRoute: AuthenticatedAdminNovoRoute,
-  AuthenticatedAdminUsuariosRoute: AuthenticatedAdminUsuariosRoute,
-  AuthenticatedAdminEditarIdRoute: AuthenticatedAdminEditarIdRoute,
-}
-
-const AuthenticatedAdminRouteWithChildren =
-  AuthenticatedAdminRoute._addFileChildren(AuthenticatedAdminRouteChildren)
 
 interface AuthenticatedStaffRouteChildren {
   AuthenticatedStaffBuscarRoute: typeof AuthenticatedStaffBuscarRoute
@@ -801,13 +806,21 @@ const AuthenticatedStaffRouteWithChildren =
   AuthenticatedStaffRoute._addFileChildren(AuthenticatedStaffRouteChildren)
 
 interface AuthenticatedRouteRouteChildren {
-  AuthenticatedAdminRoute: typeof AuthenticatedAdminRouteWithChildren
   AuthenticatedStaffRoute: typeof AuthenticatedStaffRouteWithChildren
+  AuthenticatedAdminBibliotecaRoute: typeof AuthenticatedAdminBibliotecaRoute
+  AuthenticatedAdminNovoRoute: typeof AuthenticatedAdminNovoRoute
+  AuthenticatedAdminUsuariosRoute: typeof AuthenticatedAdminUsuariosRoute
+  AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
+  AuthenticatedAdminEditarIdRoute: typeof AuthenticatedAdminEditarIdRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
-  AuthenticatedAdminRoute: AuthenticatedAdminRouteWithChildren,
   AuthenticatedStaffRoute: AuthenticatedStaffRouteWithChildren,
+  AuthenticatedAdminBibliotecaRoute: AuthenticatedAdminBibliotecaRoute,
+  AuthenticatedAdminNovoRoute: AuthenticatedAdminNovoRoute,
+  AuthenticatedAdminUsuariosRoute: AuthenticatedAdminUsuariosRoute,
+  AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
+  AuthenticatedAdminEditarIdRoute: AuthenticatedAdminEditarIdRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =
@@ -831,3 +844,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}

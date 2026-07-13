@@ -5,14 +5,17 @@ import { SiteHeader, SiteFooter } from "@/components/site-chrome";
 import { ClearanceBadge } from "@/components/lore-card";
 import { listClassified } from "@/lib/lore.functions";
 import { CLEARANCE_META, CATEGORY_META } from "@/lib/lore-meta";
-import { useAuth } from "@/hooks/use-auth";
-import { Lock, Shield } from "lucide-react";
+import { Shield } from "lucide-react";
 
 export const Route = createFileRoute("/arquivos-restritos")({
   head: () => ({
     meta: [
       { title: "Arquivos Restritos | União Trivalente" },
-      { name: "description", content: "Documentação classificada da União Trivalente. Acesso restrito por nível de credencial." },
+      {
+        name: "description",
+        content:
+          "Documentação classificada da União Trivalente. Acesso restrito por nível de credencial.",
+      },
     ],
   }),
   component: Restricted,
@@ -21,20 +24,12 @@ export const Route = createFileRoute("/arquivos-restritos")({
 const LEVELS = ["nivel_1", "nivel_2", "nivel_3", "nivel_4", "nivel_diretor"] as const;
 
 function Restricted() {
-  const { isAuthenticated, isStaff, isAdmin } = useAuth();
   const fetchClassified = useServerFn(listClassified);
   const list = useQuery({ queryKey: ["classified"], queryFn: () => fetchClassified() });
 
   const grouped: Record<string, typeof list.data> = {};
   for (const d of list.data ?? []) {
     grouped[d.clearance] = [...(grouped[d.clearance] ?? []), d];
-  }
-
-  function canSee(level: string) {
-    if (level === "nivel_1" || level === "nivel_2") return isAuthenticated;
-    if (level === "nivel_3" || level === "nivel_4") return isStaff;
-    if (level === "nivel_diretor") return isAdmin;
-    return false;
   }
 
   return (
@@ -45,9 +40,7 @@ function Restricted() {
           <div className="flex items-start gap-4">
             <Shield className="h-6 w-6 shrink-0 text-destructive" />
             <div>
-              <h1 className="text-display text-3xl font-bold md:text-4xl">
-                Arquivos Restritos
-              </h1>
+              <h1 className="text-display text-3xl font-bold md:text-4xl">Arquivos Restritos</h1>
             </div>
           </div>
         </div>
@@ -56,7 +49,6 @@ function Restricted() {
           {LEVELS.map((lvl) => {
             const items = grouped[lvl] ?? [];
             const meta = CLEARANCE_META[lvl];
-            const visible = canSee(lvl);
             return (
               <section key={lvl}>
                 <div className="flex items-end justify-between border-b border-border pb-2">
@@ -69,19 +61,7 @@ function Restricted() {
                   </span>
                 </div>
 
-                {!visible ? (
-                  <div className="mt-4 grid place-items-center border border-border bg-surface-1 py-12">
-                    <Lock className="h-6 w-6 text-muted-foreground" />
-                    <p className="mt-3 text-mono text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
-                      Credencial insuficiente
-                    </p>
-                    {!isAuthenticated && (
-                      <Link to="/auth" className="mt-3 text-cyan text-sm hover:underline">
-                        Identificar-se
-                      </Link>
-                    )}
-                  </div>
-                ) : items.length === 0 ? (
+                {items.length === 0 ? (
                   <p className="mt-4 text-sm text-muted-foreground">Nenhum registro neste nível.</p>
                 ) : (
                   <ul className="mt-4 grid grid-cols-1 gap-3 md:grid-cols-2">
@@ -100,7 +80,9 @@ function Restricted() {
                               {d.title}
                             </p>
                             {d.summary && (
-                              <p className="mt-1 line-clamp-2 text-sm text-muted-foreground">{d.summary}</p>
+                              <p className="mt-1 line-clamp-2 text-sm text-muted-foreground">
+                                {d.summary}
+                              </p>
                             )}
                           </div>
                           <Lock className="h-3.5 w-3.5 shrink-0 text-destructive" />

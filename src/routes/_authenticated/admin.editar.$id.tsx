@@ -1,7 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
+import { useServerFn } from "@tanstack/react-start";
 import { EntryEditor } from "@/components/entry-editor";
+import { getCmsEntry } from "@/lib/admin.functions";
 
 export const Route = createFileRoute("/_authenticated/admin/editar/$id")({
   head: () => ({ meta: [{ title: "Editar Entrada | Admin" }] }),
@@ -10,15 +11,13 @@ export const Route = createFileRoute("/_authenticated/admin/editar/$id")({
 
 function EditEntry() {
   const { id } = Route.useParams();
+  const getEntry = useServerFn(getCmsEntry);
   const q = useQuery({
     queryKey: ["entry-edit", id],
-    queryFn: async () => {
-      const { data, error } = await supabase.from("lore_entries").select("*").eq("id", id).maybeSingle();
-      if (error) throw error;
-      return data;
-    },
+    queryFn: () => getEntry({ data: { id } }),
   });
-  if (q.isLoading) return <p className="p-10 text-center text-mono text-xs uppercase">Carregando...</p>;
+  if (q.isLoading)
+    return <p className="p-10 text-center text-mono text-xs uppercase">Carregando...</p>;
   if (!q.data) return <p className="p-10 text-center">Entrada não encontrada.</p>;
   return <EntryEditor mode="edit" initial={q.data} />;
 }
