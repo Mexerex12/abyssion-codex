@@ -379,6 +379,7 @@ const eventoSchema = z.object({
   relatorio: z.string().max(20000).nullable().optional(),
   status: z.enum(["planejado", "em_andamento", "concluido", "cancelado"]),
   tipo: z.enum(["global", "faccao", "esquadrao", "secreto"]),
+  categoria: z.enum(["evento", "operacao", "sessao", "reuniao"]).default("evento"),
   clearance: z.enum([
     "publico", "uniao", "instrutores", "diretores", "curadores", "restrito", "verdade_absoluta",
   ]),
