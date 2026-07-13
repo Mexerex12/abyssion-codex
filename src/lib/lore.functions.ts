@@ -24,6 +24,37 @@ type PublicRelation = {
   [key: string]: unknown;
 };
 
+type SupabaseErrorLike = {
+  message?: string;
+  code?: string;
+};
+
+function isMissingCmsColumns(error: SupabaseErrorLike | null | undefined) {
+  const message = error?.message ?? "";
+  return (
+    message.includes("cms_status") ||
+    message.includes("visibility") ||
+    message.includes("classification")
+  );
+}
+
+function normalizePublicRow<T extends PublicLoreRow>(row: T) {
+  return {
+    ...row,
+    classification: legacyClearanceToClassification(row.classification ?? row.clearance),
+    visibility: legacyClearanceToVisibility(row.visibility ?? row.clearance),
+    status: legacyStatusToCms(row.cms_status ?? row.status ?? "published"),
+  };
+}
+
+function visibleTarget(target?: PublicLoreRow | null) {
+  if (!target) return false;
+  if (target.visibility || target.cms_status) {
+    return target.visibility === "public" && target.cms_status === "published";
+  }
+  return target.clearance === "publico" && (target.status === "publicado" || !target.status);
+}
+
 export const listLoreEntries = createServerFn({ method: "GET" })
   .inputValidator((data: unknown) =>
     z
@@ -35,11 +66,13 @@ export const listLoreEntries = createServerFn({ method: "GET" })
   )
   .handler(async ({ data }) => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const select =
+      "id, slug, category, title, subtitle, summary, cover_image_url, clearance, classification, visibility, cms_status, status, timeline_date, timeline_order, tags, updated_at";
+    const legacySelect =
+      "id, slug, category, title, subtitle, summary, cover_image_url, clearance, status, timeline_date, timeline_order, tags, updated_at";
     let q = supabaseAdmin
       .from("lore_entries")
-      .select(
-        "id, slug, category, title, subtitle, summary, cover_image_url, clearance, timeline_date, timeline_order, tags, updated_at",
-      )
+      .select(select)
       .eq("cms_status", "published")
       .eq("visibility", "public")
       .order("title", { ascending: true })
@@ -47,53 +80,69 @@ export const listLoreEntries = createServerFn({ method: "GET" })
 
     if (data.category) q = q.eq("category", data.category as never);
 
-    const { data: rows, error } = await q;
+    let { data: rows, error } = await q;
+    if (isMissingCmsColumns(error)) {
+      let fallback = supabaseAdmin
+        .from("lore_entries")
+        .select(legacySelect)
+        .eq("status", "publicado")
+        .eq("clearance", "publico")
+        .order("title", { ascending: true })
+        .limit(data.limit);
+      if (data.category) fallback = fallback.eq("category", data.category as never);
+      const fallbackResult = await fallback;
+      rows = fallbackResult.data;
+      error = fallbackResult.error;
+    }
     if (error) throw new Error(error.message);
-    return (rows ?? []).map((row) => ({
-      ...row,
-      classification: legacyClearanceToClassification(row.classification ?? row.clearance),
-      visibility: legacyClearanceToVisibility(row.visibility ?? row.clearance),
-      status: legacyStatusToCms(row.cms_status ?? "published"),
-    }));
+    return (rows ?? []).map((row) => normalizePublicRow(row));
   });
 
 export const getLoreEntry = createServerFn({ method: "GET" })
   .inputValidator((data: unknown) => slugSchema.parse(data))
   .handler(async ({ data }) => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const { data: entry, error } = await supabaseAdmin
+    let usingLegacySchema = false;
+    let { data: entry, error } = await supabaseAdmin
       .from("lore_entries")
       .select("*")
       .eq("slug", data.slug)
       .eq("cms_status", "published")
       .eq("visibility", "public")
       .maybeSingle();
+    if (isMissingCmsColumns(error)) {
+      usingLegacySchema = true;
+      const fallbackResult = await supabaseAdmin
+        .from("lore_entries")
+        .select("*")
+        .eq("slug", data.slug)
+        .eq("status", "publicado")
+        .eq("clearance", "publico")
+        .maybeSingle();
+      entry = fallbackResult.data;
+      error = fallbackResult.error;
+    }
     if (error) throw new Error(error.message);
     if (!entry) return null;
 
+    const outgoingSelect = usingLegacySchema
+      ? "relation_type, to:lore_entries!lore_relations_to_entry_fkey(id, slug, title, category, clearance, status)"
+      : "relation_type, to:lore_entries!lore_relations_to_entry_fkey(id, slug, title, category, clearance, visibility, classification, cms_status, status)";
+    const incomingSelect = usingLegacySchema
+      ? "relation_type, from:lore_entries!lore_relations_from_entry_fkey(id, slug, title, category, clearance, status)"
+      : "relation_type, from:lore_entries!lore_relations_from_entry_fkey(id, slug, title, category, clearance, visibility, classification, cms_status, status)";
     const { data: outgoing } = await supabaseAdmin
       .from("lore_relations")
-      .select(
-        "relation_type, to:lore_entries!lore_relations_to_entry_fkey(id, slug, title, category, clearance, visibility, classification, cms_status)",
-      )
+      .select(outgoingSelect)
       .eq("from_entry", entry.id);
 
     const { data: incoming } = await supabaseAdmin
       .from("lore_relations")
-      .select(
-        "relation_type, from:lore_entries!lore_relations_from_entry_fkey(id, slug, title, category, clearance, visibility, classification, cms_status)",
-      )
+      .select(incomingSelect)
       .eq("to_entry", entry.id);
 
-    const visibleTarget = (target?: PublicLoreRow | null) =>
-      target?.visibility === "public" && target?.cms_status === "published";
     return {
-      entry: {
-        ...entry,
-        classification: entry.classification ?? legacyClearanceToClassification(entry.clearance),
-        visibility: entry.visibility ?? legacyClearanceToVisibility(entry.clearance),
-        status: legacyStatusToCms(entry.cms_status ?? entry.status),
-      },
+      entry: normalizePublicRow(entry),
       outgoing: ((outgoing ?? []) as PublicRelation[]).filter((rel) => visibleTarget(rel.to)),
       incoming: ((incoming ?? []) as PublicRelation[]).filter((rel) => visibleTarget(rel.from)),
     };
@@ -101,13 +150,24 @@ export const getLoreEntry = createServerFn({ method: "GET" })
 
 export const listTimeline = createServerFn({ method: "GET" }).handler(async () => {
   const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-  const { data, error } = await supabaseAdmin
+  let { data, error } = await supabaseAdmin
     .from("lore_entries")
     .select("id, slug, title, summary, timeline_date, timeline_order, clearance")
     .eq("category", "evento")
     .eq("cms_status", "published")
     .eq("visibility", "public")
     .order("timeline_order", { ascending: true, nullsFirst: false });
+  if (isMissingCmsColumns(error)) {
+    const fallbackResult = await supabaseAdmin
+      .from("lore_entries")
+      .select("id, slug, title, summary, timeline_date, timeline_order, clearance, status")
+      .eq("category", "evento")
+      .eq("status", "publicado")
+      .eq("clearance", "publico")
+      .order("timeline_order", { ascending: true, nullsFirst: false });
+    data = fallbackResult.data;
+    error = fallbackResult.error;
+  }
   if (error) throw new Error(error.message);
   return data ?? [];
 });
@@ -116,15 +176,28 @@ export const listByCategory = createServerFn({ method: "GET" })
   .inputValidator((data: unknown) => categorySchema.parse(data))
   .handler(async ({ data }) => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const { data: rows, error } = await supabaseAdmin
+    let { data: rows, error } = await supabaseAdmin
       .from("lore_entries")
-      .select("id, slug, category, title, subtitle, summary, clearance, tags, updated_at")
+      .select(
+        "id, slug, category, title, subtitle, summary, clearance, classification, visibility, cms_status, status, tags, updated_at",
+      )
       .eq("category", data.category as never)
       .eq("cms_status", "published")
       .eq("visibility", "public")
       .order("title", { ascending: true });
+    if (isMissingCmsColumns(error)) {
+      const fallbackResult = await supabaseAdmin
+        .from("lore_entries")
+        .select("id, slug, category, title, subtitle, summary, clearance, status, tags, updated_at")
+        .eq("category", data.category as never)
+        .eq("status", "publicado")
+        .eq("clearance", "publico")
+        .order("title", { ascending: true });
+      rows = fallbackResult.data;
+      error = fallbackResult.error;
+    }
     if (error) throw new Error(error.message);
-    return rows ?? [];
+    return (rows ?? []).map((row) => normalizePublicRow(row));
   });
 
 export const listClassified = createServerFn({ method: "GET" }).handler(async () => {
@@ -133,11 +206,20 @@ export const listClassified = createServerFn({ method: "GET" }).handler(async ()
 
 export const getStats = createServerFn({ method: "GET" }).handler(async () => {
   const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-  const { data, error } = await supabaseAdmin
+  let { data, error } = await supabaseAdmin
     .from("lore_entries")
     .select("category", { count: "exact" })
     .eq("cms_status", "published")
     .eq("visibility", "public");
+  if (isMissingCmsColumns(error)) {
+    const fallbackResult = await supabaseAdmin
+      .from("lore_entries")
+      .select("category", { count: "exact" })
+      .eq("status", "publicado")
+      .eq("clearance", "publico");
+    data = fallbackResult.data;
+    error = fallbackResult.error;
+  }
   if (error) throw new Error(error.message);
   const counts: Record<string, number> = {};
   for (const row of data ?? []) counts[row.category] = (counts[row.category] ?? 0) + 1;
