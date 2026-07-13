@@ -1,6 +1,23 @@
-CREATE TYPE public.lore_classification AS ENUM ('publico', 'n_i', 'n_ii', 'n_iii', 'diretor');
-CREATE TYPE public.lore_visibility AS ENUM ('public', 'trivalente', 'instructor', 'director', 'council', 'founder');
-CREATE TYPE public.cms_entry_status AS ENUM ('draft', 'published', 'archived', 'obsolete', 'trash');
+DO $$
+BEGIN
+  CREATE TYPE public.lore_classification AS ENUM ('publico', 'n_i', 'n_ii', 'n_iii', 'diretor');
+EXCEPTION
+  WHEN duplicate_object THEN NULL;
+END $$;
+
+DO $$
+BEGIN
+  CREATE TYPE public.lore_visibility AS ENUM ('public', 'trivalente', 'instructor', 'director', 'council', 'founder');
+EXCEPTION
+  WHEN duplicate_object THEN NULL;
+END $$;
+
+DO $$
+BEGIN
+  CREATE TYPE public.cms_entry_status AS ENUM ('draft', 'published', 'archived', 'obsolete', 'trash');
+EXCEPTION
+  WHEN duplicate_object THEN NULL;
+END $$;
 
 ALTER TABLE public.lore_entries
   ADD COLUMN IF NOT EXISTS classification public.lore_classification NOT NULL DEFAULT 'publico',
@@ -27,9 +44,9 @@ SET
     ELSE 'public'::public.lore_visibility
   END,
   cms_status = CASE
-    WHEN status = 'publicado' THEN 'published'
-    WHEN status = 'arquivado' THEN 'archived'
-    ELSE 'draft'
+    WHEN status = 'publicado' THEN 'published'::public.cms_entry_status
+    WHEN status = 'arquivado' THEN 'archived'::public.cms_entry_status
+    ELSE 'draft'::public.cms_entry_status
   END;
 
 CREATE INDEX IF NOT EXISTS lore_entries_visibility_idx ON public.lore_entries(visibility);
@@ -73,12 +90,16 @@ END $$;
 
 DROP POLICY IF EXISTS "Read by clearance" ON public.lore_entries;
 DROP POLICY IF EXISTS "Admins read all" ON public.lore_entries;
+DROP POLICY IF EXISTS "Read published public lore" ON public.lore_entries;
+DROP POLICY IF EXISTS "Staff read cms lore" ON public.lore_entries;
 CREATE POLICY "Read published public lore" ON public.lore_entries FOR SELECT
   USING (cms_status = 'published' AND visibility = 'public');
 CREATE POLICY "Staff read cms lore" ON public.lore_entries FOR SELECT
   USING (public.is_staff(auth.uid()));
 
 DROP POLICY IF EXISTS "Relations readable by all" ON public.lore_relations;
+DROP POLICY IF EXISTS "Relations readable when both ends are visible" ON public.lore_relations;
+DROP POLICY IF EXISTS "Staff read all relations" ON public.lore_relations;
 CREATE POLICY "Relations readable when both ends are visible" ON public.lore_relations FOR SELECT
   USING (
     EXISTS (
