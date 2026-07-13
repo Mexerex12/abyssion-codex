@@ -37,8 +37,7 @@ function Auth() {
           },
         });
         if (error) throw error;
-        toast.success("Cadastro registrado. Verifique seu email se a confirmação estiver ativa.");
-        navigate({ to: "/dashboard" });
+        setVerifyMessage(true);
       } else {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
