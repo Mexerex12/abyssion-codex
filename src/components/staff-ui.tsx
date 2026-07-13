@@ -1,11 +1,11 @@
 import { ReactNode } from "react";
 
-export function PageHeader({ eyebrow, title, sub, actions }: { eyebrow: string; title: string; sub?: string; actions?: ReactNode }) {
+export function PageHeader({ eyebrow, title, sub, actions }: { eyebrow?: string; title: string; sub?: string; actions?: ReactNode }) {
   return (
     <div className="flex flex-wrap items-end justify-between gap-4 border-b border-border pb-5">
       <div>
-        <p className="hud-label text-cyan">{eyebrow}</p>
-        <h1 className="mt-1.5 text-display text-3xl font-bold">{title}</h1>
+        {eyebrow && <p className="hud-label text-cyan">{eyebrow}</p>}
+        <h1 className={`text-display text-3xl font-bold ${eyebrow ? "mt-1.5" : ""}`}>{title}</h1>
         {sub && <p className="mt-1 max-w-2xl text-sm text-muted-foreground">{sub}</p>}
       </div>
       {actions && <div className="flex gap-2">{actions}</div>}
