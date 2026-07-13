@@ -2,7 +2,7 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { Shield, ArrowLeft } from "lucide-react";
+import { Shield, ArrowLeft, Mail, AlertTriangle } from "lucide-react";
 
 export const Route = createFileRoute("/auth")({
   head: () => ({
@@ -21,6 +21,7 @@ function Auth() {
   const [password, setPassword] = useState("");
   const [displayName, setDisplayName] = useState("");
   const [loading, setLoading] = useState(false);
+  const [verifyMessage, setVerifyMessage] = useState(false);
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
