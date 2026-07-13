@@ -8,11 +8,26 @@ export const Route = createFileRoute("/sitemap.xml")({
     handlers: {
       GET: async () => {
         const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-        const { data } = await supabaseAdmin
+        let { data, error } = await supabaseAdmin
           .from("lore_entries")
           .select("slug, updated_at")
           .eq("cms_status", "published")
           .eq("visibility", "public");
+        if (
+          error &&
+          (error.message.includes("cms_status") ||
+            error.message.includes("visibility") ||
+            error.message.includes("classification"))
+        ) {
+          const fallbackResult = await supabaseAdmin
+            .from("lore_entries")
+            .select("slug, updated_at")
+            .eq("status", "publicado")
+            .eq("clearance", "publico");
+          data = fallbackResult.data;
+          error = fallbackResult.error;
+        }
+        if (error) throw new Error(error.message);
 
         const staticPaths = [
           { path: "/", priority: "1.0", changefreq: "weekly" },

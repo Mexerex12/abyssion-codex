@@ -36,11 +36,11 @@ export function HistoryTab({ versions }: { versions: HistoryVersion[] }) {
               {new Date(version.created_at).toLocaleString()} · {version.author_id ?? "sistema"}
             </p>
             <p className="mt-2 text-sm text-foreground">
-              Campos: {(version.changed_fields ?? []).join(", ") || "snapshot"}
+              Campos: {(version.changed_fields ?? []).join(", ") || "registro completo"}
             </p>
             <details className="mt-3">
               <summary className="cursor-pointer text-mono text-[10px] uppercase tracking-[0.16em] text-cyan">
-                Comparar snapshot
+                Comparar registro
               </summary>
               <pre className="mt-2 max-h-72 overflow-auto border border-border bg-background p-3 text-[11px] text-muted-foreground">
                 {JSON.stringify(version.snapshot, null, 2)}

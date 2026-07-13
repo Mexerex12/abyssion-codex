@@ -1,27 +1,27 @@
-# CMS Lore Management
+# CMS de Lore
 
-The CMS separates lore semantics from authorization.
+O CMS separa semântica de lore e autorização.
 
-- `classification` is a lore label only: `publico`, `n_i`, `n_ii`, `n_iii`, `diretor`.
-- `visibility` is the permission field: `public`, `trivalente`, `instructor`, `director`, `council`, `founder`.
-- Public routes and public server functions must return only `cms_status = "published"` and `visibility = "public"`.
-- Restricted documents are hidden from public APIs, cards, timelines, breadcrumbs, relations, search, and sitemap.
+- `classification` é apenas uma classificação narrativa: `publico`, `n_i`, `n_ii`, `n_iii`, `diretor`.
+- `visibility` é o campo de permissão: `public`, `trivalente`, `instructor`, `director`, `council`, `founder`.
+- Rotas públicas e funções públicas do servidor devem retornar apenas `cms_status = "published"` e `visibility = "public"`.
+- Documentos restritos ficam ocultos em APIs públicas, cards, linhas do tempo, breadcrumbs, relações, buscas e sitemap.
 
-Document lifecycle:
+Ciclo de vida dos documentos:
 
-- `draft`
-- `published`
-- `archived`
-- `obsolete`
-- `trash`
+- `draft`: rascunho
+- `published`: publicado
+- `archived`: arquivado
+- `obsolete`: obsoleto
+- `trash`: lixeira
 
-Deletes are soft deletes by default: entries move to `trash`. Permanent delete is only valid for entries already in trash.
+Exclusões são soft delete por padrão: entradas vão para `trash`. Exclusão permanente só é válida para entradas que já estão na lixeira.
 
-The editor is split into modules:
+O editor é dividido em módulos:
 
-- `documents`: schemas and editor tabs
-- `permissions`: classification, visibility, and status policy
-- `relations`: document relationship controls
-- `history`: version timeline and restore controls
+- `documents`: schemas e abas do editor
+- `permissions`: política de classificação, visibilidade e status
+- `relations`: controles de relacionamento entre documentos
+- `history`: linha do tempo de versões e restauração
 
-Version snapshots are stored in `lore_entry_versions` with author, timestamp, changed fields, and the previous snapshot.
+Registros de versão são armazenados em `lore_entry_versions` com autor, data, campos alterados e o registro anterior.

@@ -22,23 +22,23 @@ export const CLASSIFICATION_META: Record<Classification, { label: string; short:
 };
 
 export const VISIBILITY_META: Record<Visibility, { label: string; short: string; rank: number }> = {
-  public: { label: "Public", short: "PUBLIC", rank: 0 },
+  public: { label: "Público", short: "PÚBLICO", rank: 0 },
   trivalente: { label: "Trivalente", short: "TRI", rank: 1 },
-  instructor: { label: "Instructor", short: "INST", rank: 2 },
-  director: { label: "Director", short: "DIR", rank: 3 },
-  council: { label: "Council", short: "COUNCIL", rank: 4 },
-  founder: { label: "Founder", short: "FOUND", rank: 5 },
+  instructor: { label: "Instrutor", short: "INST", rank: 2 },
+  director: { label: "Diretor", short: "DIR", rank: 3 },
+  council: { label: "Conselho", short: "CONS", rank: 4 },
+  founder: { label: "Fundador", short: "FUND", rank: 5 },
 };
 
 export const STATUS_META: Record<
   EntryStatus,
   { label: string; tone: "neutral" | "amber" | "alert" }
 > = {
-  draft: { label: "Draft", tone: "neutral" },
-  published: { label: "Published", tone: "neutral" },
-  archived: { label: "Archived", tone: "amber" },
-  obsolete: { label: "Obsolete", tone: "amber" },
-  trash: { label: "Trash", tone: "alert" },
+  draft: { label: "Rascunho", tone: "neutral" },
+  published: { label: "Publicado", tone: "neutral" },
+  archived: { label: "Arquivado", tone: "amber" },
+  obsolete: { label: "Obsoleto", tone: "amber" },
+  trash: { label: "Lixeira", tone: "alert" },
 };
 
 export function legacyStatusToCms(status: string | null | undefined): EntryStatus {

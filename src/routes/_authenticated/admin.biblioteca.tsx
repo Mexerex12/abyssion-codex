@@ -18,7 +18,7 @@ import {
 import { ArchiveRestore, FileEdit, Search, Trash2, X } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/admin/biblioteca")({
-  head: () => ({ meta: [{ title: "Library | CMS" }] }),
+  head: () => ({ meta: [{ title: "Biblioteca | CMS" }] }),
   validateSearch: (search: Record<string, unknown>) => ({
     status:
       typeof search.status === "string" && ENTRY_STATUSES.includes(search.status as EntryStatus)
@@ -70,7 +70,7 @@ function LibraryPage() {
     mutationFn: (id: string) => restore({ data: { id, status: "draft" } }),
     onSuccess: () => {
       qc.invalidateQueries();
-      toast.success("Entrada restaurada como Draft.");
+      toast.success("Entrada restaurada como rascunho.");
     },
   });
 
@@ -87,7 +87,7 @@ function LibraryPage() {
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div>
             <p className="hud-label text-cyan">CMS</p>
-            <h1 className="mt-2 text-display text-4xl font-bold">Library</h1>
+            <h1 className="mt-2 text-display text-4xl font-bold">Biblioteca</h1>
           </div>
           <Link
             to="/admin/novo"
@@ -137,7 +137,7 @@ function LibraryPage() {
             value={category}
             onChange={(event) => setCategory(event.target.value)}
           >
-            <option value="all">Categorias</option>
+            <option value="all">Todas as categorias</option>
             {(
               Object.entries(CATEGORY_META) as Array<
                 [keyof typeof CATEGORY_META, (typeof CATEGORY_META)[keyof typeof CATEGORY_META]]
@@ -153,7 +153,7 @@ function LibraryPage() {
             value={visibility}
             onChange={(event) => setVisibility(event.target.value as Visibility | "all")}
           >
-            <option value="all">Permissões</option>
+            <option value="all">Todas as permissões</option>
             {VISIBILITIES.map((item) => (
               <option key={item} value={item}>
                 {VISIBILITY_META[item].label}
@@ -164,7 +164,7 @@ function LibraryPage() {
             className="border border-input bg-surface-1 px-3 py-2 text-sm"
             value={tag}
             onChange={(event) => setTag(event.target.value)}
-            placeholder="Tag"
+            placeholder="Etiqueta"
           />
           <select
             className="border border-input bg-surface-1 px-3 py-2 text-sm"
@@ -184,9 +184,9 @@ function LibraryPage() {
               <th className="px-3 py-2.5">Categoria</th>
               <th className="px-3 py-2.5">Título</th>
               <th className="px-3 py-2.5">Status</th>
-              <th className="px-3 py-2.5">Tags</th>
-              <th className="px-3 py-2.5">Class.</th>
-              <th className="px-3 py-2.5">Vis.</th>
+              <th className="px-3 py-2.5">Etiquetas</th>
+              <th className="px-3 py-2.5">Classificação</th>
+              <th className="px-3 py-2.5">Visibilidade</th>
               <th className="px-3 py-2.5 text-right">Ações</th>
             </tr>
           </thead>

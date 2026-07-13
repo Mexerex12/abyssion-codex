@@ -99,6 +99,7 @@ export function GeneralTab({ form, setForm }: FormProps) {
         value={form.status}
         options={ENTRY_STATUSES}
         onChange={(status) => setForm({ ...form, status })}
+        getOptionLabel={(status) => STATUS_META[status].label}
       />
     </div>
   );
@@ -141,7 +142,7 @@ export function ContentTab({
 export function PermissionsTab({ form, setForm }: FormProps) {
   return (
     <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
-      <Field label="Classification">
+      <Field label="Classificação">
         <select
           className={inputCls}
           value={form.classification}
@@ -156,7 +157,7 @@ export function PermissionsTab({ form, setForm }: FormProps) {
           ))}
         </select>
       </Field>
-      <Field label="Visibility">
+      <Field label="Visibilidade">
         <select
           className={inputCls}
           value={form.visibility}
@@ -172,7 +173,7 @@ export function PermissionsTab({ form, setForm }: FormProps) {
       <div className="border border-border bg-surface-1 p-4 md:col-span-2">
         <p className="hud-label text-cyan">Regra de segurança</p>
         <p className="mt-2 text-sm text-muted-foreground">
-          Classification descreve a lore. Visibility controla acesso e é validada no backend.
+          Classificação descreve a lore. Visibilidade controla acesso e é validada no backend.
         </p>
       </div>
     </div>
@@ -203,7 +204,7 @@ export function MetadataTab({ form, setForm }: FormProps) {
           }
         />
       </Field>
-      <Field label="Tags">
+      <Field label="Etiquetas">
         <input
           className={inputCls}
           value={form.tags}
@@ -211,7 +212,7 @@ export function MetadataTab({ form, setForm }: FormProps) {
           placeholder="origem, sistema, anomalia"
         />
       </Field>
-      <Field label="Metadata JSON">
+      <Field label="Metadados JSON">
         <textarea
           className={`${inputCls} text-mono text-[12px] md:col-span-3`}
           rows={10}
