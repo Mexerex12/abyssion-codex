@@ -1,6 +1,12 @@
 import { createServerFn } from "@tanstack/react-start";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { z } from "zod";
+import {
+  canRoleViewVisibility,
+  legacyClearanceToVisibility,
+  VISIBILITIES,
+  type Visibility,
+} from "@/cms/permissions/policy";
 
 // ============================ helpers ============================
 async function assertStaff(ctx: { supabase: any; userId: string }) {
@@ -10,6 +16,33 @@ async function assertStaff(ctx: { supabase: any; userId: string }) {
 async function assertAdmin(ctx: { supabase: any; userId: string }) {
   const { data } = await ctx.supabase.rpc("is_admin", { _user_id: ctx.userId });
   if (!data) throw new Error("Forbidden: requer admin.");
+}
+
+async function getUserRoles(ctx: { supabase: any; userId: string }) {
+  const { data } = await ctx.supabase
+    .from("user_roles")
+    .select("role")
+    .eq("user_id", ctx.userId);
+  return (data ?? []).map((row: { role: string }) => row.role);
+}
+
+function accessValueToVisibility(value: string | null | undefined): Visibility {
+  if (value && (VISIBILITIES as readonly string[]).includes(value)) return value as Visibility;
+  return legacyClearanceToVisibility(value);
+}
+
+function canSeeAccessValue(value: string | null | undefined, roles: string[]) {
+  if (!value) return true;
+  return canRoleViewVisibility(accessValueToVisibility(value), roles, true);
+}
+
+function isMissingCmsColumns(error: { message?: string } | null | undefined) {
+  const message = error?.message ?? "";
+  return (
+    message.includes("cms_status") ||
+    message.includes("visibility") ||
+    message.includes("classification")
+  );
 }
 
 // ============================ WORLD STATE ============================
@@ -585,16 +618,32 @@ export const universalSearch = createServerFn({ method: "GET" })
   .inputValidator((d: unknown) => z.object({ q: z.string().min(1).max(200) }).parse(d))
   .handler(async ({ data, context }) => {
     await assertStaff(context);
+    const roles = await getUserRoles(context);
     const term = `%${data.q}%`;
-    const [npcs, eventos, dominios, vestigios, ganchos, documentos, lore] = await Promise.all([
+    const loreQuery = context.supabase
+      .from("lore_entries")
+      .select("id,slug,title,category,visibility,cms_status,clearance,status")
+      .or(`title.ilike.${term},summary.ilike.${term},body.ilike.${term}`)
+      .neq("cms_status", "trash")
+      .limit(20);
+    const [npcs, eventos, dominios, vestigios, ganchos, documentos, loreResult] = await Promise.all([
       context.supabase.from("npcs").select("id,nome,cargo,faccao,status").or(`nome.ilike.${term},cargo.ilike.${term},faccao.ilike.${term}`).limit(20),
       context.supabase.from("eventos_operacionais").select("id,nome,status,tipo,data").or(`nome.ilike.${term},resumo.ilike.${term}`).limit(20),
       context.supabase.from("dominios").select("id,nome,classe,status").or(`nome.ilike.${term},classe.ilike.${term}`).limit(20),
       context.supabase.from("vestigios").select("id,nome,numero,estado").ilike("nome", term).limit(20),
       context.supabase.from("ganchos_narrativos").select("id,titulo,prioridade,status").or(`titulo.ilike.${term},resumo.ilike.${term}`).limit(20),
       context.supabase.from("documentos").select("id,slug,titulo,categoria").or(`titulo.ilike.${term},conteudo.ilike.${term}`).limit(20),
-      context.supabase.from("lore_entries").select("id,slug,title,category").or(`title.ilike.${term},summary.ilike.${term},body.ilike.${term}`).eq("status", "publicado").limit(20),
+      loreQuery,
     ]);
+    let lore = loreResult;
+    if (isMissingCmsColumns(loreResult.error)) {
+      lore = await context.supabase
+        .from("lore_entries")
+        .select("id,slug,title,category,clearance,status")
+        .or(`title.ilike.${term},summary.ilike.${term},body.ilike.${term}`)
+        .eq("status", "publicado")
+        .limit(20);
+    }
     return {
       npcs: npcs.data ?? [],
       eventos: eventos.data ?? [],
@@ -602,7 +651,11 @@ export const universalSearch = createServerFn({ method: "GET" })
       vestigios: vestigios.data ?? [],
       ganchos: ganchos.data ?? [],
       documentos: documentos.data ?? [],
-      lore: lore.data ?? [],
+      lore: (lore.data ?? []).filter(
+        (row: any) =>
+          (row.cms_status ? row.cms_status !== "trash" : row.status === "publicado") &&
+          canSeeAccessValue(row.visibility ?? row.clearance, roles),
+      ),
     };
   });
 
@@ -674,7 +727,8 @@ function buildIndexableRow(table: string, r: any): { term: string; category: str
       return { term: r.titulo, category: r.categoria || "Fato", clearance: r.escopo_conhecimento ?? null, slug: null,
         content: join([`Fato canônico (${r.status}): ${r.titulo}`, r.descricao, r.notas]) };
     case "lore_entries":
-      return { term: r.title, category: r.category || "Lore", clearance: r.clearance ?? null, slug: r.slug,
+      if (r.cms_status === "trash") return null;
+      return { term: r.title, category: r.category || "Lore", clearance: r.visibility ?? r.clearance ?? null, slug: r.slug,
         content: join([`Lore: ${r.title}`, r.subtitle, r.summary, r.body]) };
   }
   return null;
@@ -723,6 +777,7 @@ export const smartSearch = createServerFn({ method: "POST" })
   }).parse(d))
   .handler(async ({ data, context }) => {
     await assertStaff(context);
+    const roles = await getUserRoles(context);
     const { embedText } = await import("./embeddings.server");
     const [qvec] = await embedText(data.q);
     const { data: semantic, error } = await context.supabase.rpc("match_lore_index", {
@@ -744,7 +799,9 @@ export const smartSearch = createServerFn({ method: "POST" })
     const map = new Map<string, any>();
     for (const r of (semantic ?? []) as any[]) map.set(r.id, r);
     for (const r of (literal ?? []) as any[]) if (!map.has(r.id)) map.set(r.id, { ...r, similarity: 0.15 });
-    const results = Array.from(map.values()).sort((a, b) => (b.similarity ?? 0) - (a.similarity ?? 0));
+    const results = Array.from(map.values())
+      .filter((row) => canSeeAccessValue(row.clearance, roles))
+      .sort((a, b) => (b.similarity ?? 0) - (a.similarity ?? 0));
 
     let explanation: string | null = null;
     if (data.explain && results.length > 0) {
