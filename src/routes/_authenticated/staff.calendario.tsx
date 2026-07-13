@@ -169,29 +169,37 @@ function CalendarioPage() {
       </div>
 
       <div className="border border-border bg-surface-1">
-        <div className="border-b border-border bg-surface-2 px-3 py-2"><p className="hud-label text-cyan">Próximas Sessões</p></div>
+        <div className="border-b border-border bg-surface-2 px-3 py-2"><p className="hud-label text-cyan">Próximos</p></div>
         <div className="divide-y divide-border">
-          {(eventos ?? [])
+          {visibleEventos
             .filter((e: any) => e.data && new Date(e.data) >= new Date(Date.now() - 86400000) && e.status !== "concluido" && e.status !== "cancelado")
             .sort((a: any, b: any) => +new Date(a.data) - +new Date(b.data))
-            .slice(0, 6)
-            .map((e: any) => (
-              <button key={e.id} onClick={() => { setEditing(e); setOpen(true); }} className="flex w-full items-center justify-between px-3 py-2 text-left hover:bg-surface-2">
-                <div>
-                  <p className="text-display text-sm font-bold">{e.nome}</p>
-                  <p className="mt-0.5 text-mono text-[10px] text-muted-foreground">
-                    {new Date(e.data).toLocaleString("pt-BR", { dateStyle: "short", timeStyle: "short" })}
-                    {e.dominio?.nome ? ` · ${e.dominio.nome}` : ""}
-                  </p>
-                </div>
-                <div className="flex gap-1">
-                  <Badge tone="cyan">{e.tipo}</Badge>
-                  <Badge tone={STATUS_TONE[e.status]}>{e.status.replace("_", " ")}</Badge>
-                </div>
-              </button>
-            ))}
-          {(eventos ?? []).filter((e: any) => e.data && new Date(e.data) >= new Date(Date.now() - 86400000) && e.status !== "concluido" && e.status !== "cancelado").length === 0 && (
-            <p className="px-3 py-6 text-center text-mono text-[11px] uppercase tracking-[0.16em] text-muted-foreground">Nenhuma sessão agendada.</p>
+            .slice(0, 8)
+            .map((e: any) => {
+              const cat = (e.categoria ?? "evento") as Categoria;
+              return (
+                <button key={e.id} onClick={() => { setEditing(e); setOpen(true); }} className="flex w-full items-center justify-between px-3 py-2 text-left hover:bg-surface-2">
+                  <div className="flex items-center gap-2">
+                    <span className={`inline-block h-2 w-2 ${CATEGORIA_META[cat].dot}`} />
+                    <div>
+                      <p className="text-display text-sm font-bold">{e.nome}</p>
+                      <p className="mt-0.5 text-mono text-[10px] text-muted-foreground">
+                        {new Date(e.data).toLocaleString("pt-BR", { dateStyle: "short", timeStyle: "short" })}
+                        {e.dominio?.nome ? ` · ${e.dominio.nome}` : ""}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex gap-1">
+                    <span className={`inline-flex items-center border px-1.5 py-0.5 text-mono text-[10px] uppercase tracking-[0.14em] ${CATEGORIA_META[cat].chip}`}>
+                      {CATEGORIA_META[cat].label}
+                    </span>
+                    <Badge tone={STATUS_TONE[e.status]}>{e.status.replace("_", " ")}</Badge>
+                  </div>
+                </button>
+              );
+            })}
+          {visibleEventos.filter((e: any) => e.data && new Date(e.data) >= new Date(Date.now() - 86400000) && e.status !== "concluido" && e.status !== "cancelado").length === 0 && (
+            <p className="px-3 py-6 text-center text-mono text-[11px] uppercase tracking-[0.16em] text-muted-foreground">Nenhum agendamento.</p>
           )}
         </div>
       </div>
@@ -225,6 +233,7 @@ function SessionModal({ e, onClose, onFinalize }: { e: any; onClose: () => void;
     relatorio: e?.relatorio ?? "",
     status: e?.status ?? "planejado",
     tipo: e?.tipo ?? "global",
+    categoria: e?.categoria ?? "evento",
     clearance: e?.clearance ?? "uniao",
   });
   const [esquadInput, setEsquadInput] = useState("");
