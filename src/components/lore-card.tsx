@@ -66,7 +66,7 @@ export function LoreCard({
           /{slug}
         </span>
         <span className="text-mono text-[10px] uppercase tracking-[0.16em] text-cyan opacity-0 transition-opacity group-hover:opacity-100">
-          Abrir →
+          Abrir
         </span>
       </div>
     </Link>

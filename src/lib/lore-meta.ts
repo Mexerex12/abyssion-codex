@@ -8,21 +8,21 @@ export const CATEGORY_META: Record<
   LoreCategory,
   { label: string; plural: string; color: string; description: string }
 > = {
-  universo: { label: "Universo", plural: "Universo", color: "cyan", description: "Princípios, leis e camadas da realidade." },
-  historia: { label: "História", plural: "História", color: "cyan", description: "Eventos fundadores e linha histórica." },
-  npc: { label: "NPC", plural: "NPCs", color: "cyan", description: "Personagens ativos no universo." },
-  faccao: { label: "Facção", plural: "Facções", color: "cyan", description: "Organizações e blocos de poder." },
-  vestigio: { label: "Vestígio", plural: "Vestígios", color: "alert", description: "Entidades remanescentes de Domínios." },
-  regente: { label: "Regente", plural: "Regentes", color: "alert", description: "Arquitetos que governam Domínios." },
-  curador: { label: "Curador", plural: "Curadores", color: "alert", description: "Trabalhadores eternos do Sistema." },
-  dominio: { label: "Domínio", plural: "Domínios", color: "cyan", description: "Realidades acessadas via Rupturas." },
-  evento: { label: "Evento", plural: "Eventos", color: "cyan", description: "Acontecimentos da Linha do Tempo." },
-  bastiao: { label: "Bastião", plural: "Bastiões", color: "cyan", description: "Instalações da União Trivalente." },
-  esquadrao: { label: "Esquadrão", plural: "Esquadrões", color: "cyan", description: "Unidades de Trivalentes." },
-  personagem_historico: { label: "Histórico", plural: "Personagens Históricos", color: "cyan", description: "Figuras do passado." },
-  documento_restrito: { label: "Documento", plural: "Arquivos Restritos", color: "alert", description: "Documentação classificada." },
-  classe: { label: "Classe", plural: "Classes", color: "cyan", description: "Especialidades de Trivalente." },
-  ruptura: { label: "Ruptura", plural: "Rupturas", color: "alert", description: "Rachaduras na realidade." },
+  universo: { label: "Universo", plural: "Universo", color: "cyan", description: "" },
+  historia: { label: "História", plural: "História", color: "cyan", description: "" },
+  npc: { label: "NPC", plural: "NPCs", color: "cyan", description: "" },
+  faccao: { label: "Facção", plural: "Facções", color: "cyan", description: "" },
+  vestigio: { label: "Vestígio", plural: "Vestígios", color: "alert", description: "" },
+  regente: { label: "Regente", plural: "Regentes", color: "alert", description: "" },
+  curador: { label: "Curador", plural: "Curadores", color: "alert", description: "" },
+  dominio: { label: "Domínio", plural: "Domínios", color: "cyan", description: "" },
+  evento: { label: "Evento", plural: "Eventos", color: "cyan", description: "" },
+  bastiao: { label: "Bastião", plural: "Bastiões", color: "cyan", description: "" },
+  esquadrao: { label: "Esquadrão", plural: "Esquadrões", color: "cyan", description: "" },
+  personagem_historico: { label: "Histórico", plural: "Personagens Históricos", color: "cyan", description: "" },
+  documento_restrito: { label: "Documento", plural: "Arquivos Restritos", color: "alert", description: "" },
+  classe: { label: "Classe", plural: "Classes", color: "cyan", description: "" },
+  ruptura: { label: "Ruptura", plural: "Rupturas", color: "alert", description: "" },
 };
 
 export const CLEARANCE_META: Record<
@@ -45,18 +45,18 @@ export const CLEARANCE_META: Record<
 };
 
 export const DASHBOARD_CARDS: { title: string; subtitle: string; href: string; classified?: boolean }[] = [
-  { title: "Universo", subtitle: "Leis e camadas", href: "/categoria/universo" },
-  { title: "História", subtitle: "Linha fundadora", href: "/categoria/historia" },
-  { title: "União Trivalente", subtitle: "Estrutura de poder", href: "/wiki/uniao-trivalente" },
-  { title: "Domínios", subtitle: "Realidades em Ruptura", href: "/categoria/dominio" },
-  { title: "Vestígios", subtitle: "Anomalias remanescentes", href: "/categoria/vestigio" },
-  { title: "Curadores", subtitle: "Trabalhadores do Sistema", href: "/categoria/curador" },
-  { title: "Regentes", subtitle: "Arquitetos de Domínios", href: "/categoria/regente" },
-  { title: "Peregrino Branco", subtitle: "Quem voltou do Núcleo", href: "/wiki/peregrino-branco" },
-  { title: "Rei Pálido", subtitle: "O primeiro Curador", href: "/wiki/rei-palido", classified: true },
-  { title: "Bastiões", subtitle: "Instalações da União", href: "/categoria/bastiao" },
-  { title: "Linha do Tempo", subtitle: "Eventos catalogados", href: "/linha-do-tempo" },
-  { title: "Arquivos Restritos", subtitle: "Documentação classificada", href: "/arquivos-restritos", classified: true },
+  { title: "Universo", subtitle: "", href: "/categoria/universo" },
+  { title: "História", subtitle: "", href: "/categoria/historia" },
+  { title: "União Trivalente", subtitle: "", href: "/wiki/uniao-trivalente" },
+  { title: "Domínios", subtitle: "", href: "/categoria/dominio" },
+  { title: "Vestígios", subtitle: "", href: "/categoria/vestigio" },
+  { title: "Curadores", subtitle: "", href: "/categoria/curador" },
+  { title: "Regentes", subtitle: "", href: "/categoria/regente" },
+  { title: "Peregrino Branco", subtitle: "", href: "/wiki/peregrino-branco" },
+  { title: "Rei Pálido", subtitle: "", href: "/wiki/rei-palido", classified: true },
+  { title: "Bastiões", subtitle: "", href: "/categoria/bastiao" },
+  { title: "Linha do Tempo", subtitle: "", href: "/linha-do-tempo" },
+  { title: "Arquivos Restritos", subtitle: "", href: "/arquivos-restritos", classified: true },
 ];
 
 export function categoryLabel(c: LoreCategory) {

@@ -38,9 +38,7 @@ function CategoryPage() {
     <div className="min-h-screen">
       <SiteHeader />
       <main className="mx-auto max-w-7xl px-6 pt-10">
-        <p className="hud-label">Setor · Categoria</p>
-        <h1 className="mt-2 text-display text-4xl font-bold md:text-5xl">{meta.plural}</h1>
-        <p className="mt-2 max-w-2xl text-sm text-muted-foreground">{meta.description}</p>
+        <h1 className="text-display text-4xl font-bold md:text-5xl">{meta.plural}</h1>
         <div className="hud-divider mt-6" />
         <p className="mt-4 text-mono text-[11px] uppercase tracking-[0.16em] text-muted-foreground">
           {data.length} registro(s)
@@ -59,8 +57,7 @@ function CategoryPage() {
           ))}
           {data.length === 0 && (
             <p className="col-span-full py-10 text-center text-sm text-muted-foreground">
-              Nenhum registro nesta categoria ainda.{" "}
-              <Link to="/wiki" className="text-cyan hover:underline">Explorar tudo</Link>
+              Nenhum registro nesta categoria.
             </p>
           )}
         </div>
