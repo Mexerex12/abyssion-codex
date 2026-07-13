@@ -26,12 +26,7 @@ function Dashboard() {
       <main className="mx-auto max-w-7xl px-6 pt-10">
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div>
-            <p className="hud-label">Painel · Setor de Arquivos · Acesso Operacional</p>
-            <h1 className="mt-2 text-display text-4xl font-bold md:text-5xl">Central de Comando</h1>
-            <p className="mt-2 max-w-xl text-sm text-muted-foreground">
-              Selecione um setor para consultar registros. Documentos marcados como{" "}
-              <span className="text-destructive">CLASSIFICADOS</span> exigem credencial superior.
-            </p>
+            <h1 className="text-display text-4xl font-bold md:text-5xl">Painel</h1>
           </div>
           <div className="flex gap-px border border-border bg-border">
             <div className="bg-background px-4 py-3">
@@ -52,7 +47,7 @@ function Dashboard() {
         <div className="hud-divider mt-8" />
 
         <div className="mt-8 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {DASHBOARD_CARDS.map((card, i) => (
+          {DASHBOARD_CARDS.map((card) => (
             <Link
               key={card.href}
               to={card.href}
@@ -61,10 +56,7 @@ function Dashboard() {
               {card.classified && (
                 <div className="absolute inset-0 classified-stripe opacity-40 transition-opacity group-hover:opacity-20" />
               )}
-              <div className="relative flex items-start justify-between">
-                <span className="text-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
-                  {String(i + 1).padStart(2, "0")}
-                </span>
+              <div className="relative flex items-start justify-end">
                 {card.classified ? (
                   <Lock className="h-3.5 w-3.5 text-destructive" />
                 ) : (
@@ -74,9 +66,6 @@ function Dashboard() {
               <h3 className="relative mt-6 text-display text-lg font-semibold text-foreground group-hover:text-cyan">
                 {card.title}
               </h3>
-              <p className="relative mt-1 text-mono text-[11px] uppercase tracking-[0.14em] text-muted-foreground">
-                {card.subtitle}
-              </p>
             </Link>
           ))}
         </div>
