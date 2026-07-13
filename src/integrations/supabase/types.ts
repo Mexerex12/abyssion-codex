@@ -219,6 +219,7 @@ export type Database = {
       }
       eventos_operacionais: {
         Row: {
+          categoria: Database["public"]["Enums"]["evento_categoria"]
           clearance: Database["public"]["Enums"]["clearance_level"]
           consequencias: string | null
           created_at: string
@@ -237,6 +238,7 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          categoria?: Database["public"]["Enums"]["evento_categoria"]
           clearance?: Database["public"]["Enums"]["clearance_level"]
           consequencias?: string | null
           created_at?: string
@@ -255,6 +257,7 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          categoria?: Database["public"]["Enums"]["evento_categoria"]
           clearance?: Database["public"]["Enums"]["clearance_level"]
           consequencias?: string | null
           created_at?: string
@@ -998,6 +1001,7 @@ export type Database = {
         | "nivel_fundador"
       dominio_status: "ativo" | "encerrado" | "selado" | "instavel"
       entry_status: "rascunho" | "publicado" | "arquivado"
+      evento_categoria: "evento" | "operacao" | "sessao" | "reuniao"
       evento_status: "planejado" | "em_andamento" | "concluido" | "cancelado"
       evento_tipo: "global" | "faccao" | "esquadrao" | "secreto"
       fact_status:
@@ -1203,6 +1207,7 @@ export const Constants = {
       ],
       dominio_status: ["ativo", "encerrado", "selado", "instavel"],
       entry_status: ["rascunho", "publicado", "arquivado"],
+      evento_categoria: ["evento", "operacao", "sessao", "reuniao"],
       evento_status: ["planejado", "em_andamento", "concluido", "cancelado"],
       evento_tipo: ["global", "faccao", "esquadrao", "secreto"],
       fact_status: ["canonico", "provavel", "rumor", "descartado", "retconado"],

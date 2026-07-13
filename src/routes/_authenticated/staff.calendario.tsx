@@ -16,6 +16,14 @@ export const Route = createFileRoute("/_authenticated/staff/calendario")({
 
 const STATUS = ["planejado", "em_andamento", "concluido", "cancelado"] as const;
 const TIPOS = ["global", "faccao", "esquadrao", "secreto"] as const;
+const CATEGORIAS = ["evento", "operacao", "sessao", "reuniao"] as const;
+type Categoria = (typeof CATEGORIAS)[number];
+const CATEGORIA_META: Record<Categoria, { label: string; dot: string; bar: string; chip: string }> = {
+  evento:   { label: "Evento",   dot: "bg-cyan",         bar: "border-cyan bg-cyan/10 text-cyan",                 chip: "border-cyan/40 bg-cyan/10 text-cyan" },
+  operacao: { label: "Operação", dot: "bg-destructive",  bar: "border-destructive bg-destructive/10 text-destructive", chip: "border-destructive/40 bg-destructive/10 text-destructive" },
+  sessao:   { label: "Sessão",   dot: "bg-amber-500",    bar: "border-amber-500 bg-amber-500/10 text-amber-300",  chip: "border-amber-500/40 bg-amber-500/10 text-amber-300" },
+  reuniao:  { label: "Reunião",  dot: "bg-emerald-500",  bar: "border-emerald-500 bg-emerald-500/10 text-emerald-300", chip: "border-emerald-500/40 bg-emerald-500/10 text-emerald-300" },
+};
 const CLEARANCE = ["publico", "uniao", "instrutores", "diretores", "curadores", "restrito", "verdade_absoluta"] as const;
 const STATUS_TONE: Record<string, "cyan" | "amber" | "green" | "alert" | "neutral"> = {
   planejado: "cyan", em_andamento: "amber", concluido: "green", cancelado: "alert",
@@ -33,6 +41,14 @@ function CalendarioPage() {
   const [open, setOpen] = useState(false);
   const [editing, setEditing] = useState<any | null>(null);
   const [finalizing, setFinalizing] = useState<any | null>(null);
+  const [filter, setFilter] = useState<Record<Categoria, boolean>>({
+    evento: true, operacao: true, sessao: true, reuniao: true,
+  });
+
+  const visibleEventos = useMemo(
+    () => (eventos ?? []).filter((e: any) => filter[(e.categoria ?? "evento") as Categoria]),
+    [eventos, filter],
+  );
 
   const grid = useMemo(() => {
     const firstDay = new Date(cursor.getFullYear(), cursor.getMonth(), 1);
@@ -47,13 +63,13 @@ function CalendarioPage() {
 
   const byDay = useMemo(() => {
     const map = new Map<string, any[]>();
-    for (const e of eventos ?? []) {
+    for (const e of visibleEventos) {
       if (!e.data) continue;
       const k = new Date(e.data).toISOString().slice(0, 10);
       const arr = map.get(k) ?? []; arr.push(e); map.set(k, arr);
     }
     return map;
-  }, [eventos]);
+  }, [visibleEventos]);
 
   const openNew = (date?: Date) => {
     const base: any = {};
@@ -69,11 +85,28 @@ function CalendarioPage() {
   return (
     <div className="space-y-5">
       <PageHeader
-        eyebrow="Operações · Agenda"
-        title="Calendário de Sessões"
-        sub="Agende eventos com narrador, NPCs, domínio e esquadrões. Ao finalizar, gere o relatório que entra na linha do tempo da lore."
-        actions={<Button onClick={() => openNew()}><Plus className="h-3 w-3" /> Agendar Evento</Button>}
+        title="Calendário"
+        actions={<Button onClick={() => openNew()}><Plus className="h-3 w-3" /> Agendar</Button>}
       />
+
+      <div className="flex flex-wrap items-center gap-2 border border-border bg-surface-1 px-3 py-2">
+        {CATEGORIAS.map((c) => {
+          const meta = CATEGORIA_META[c];
+          const active = filter[c];
+          return (
+            <button
+              key={c}
+              onClick={() => setFilter((f) => ({ ...f, [c]: !f[c] }))}
+              className={`inline-flex items-center gap-1.5 border px-2 py-1 text-mono text-[10px] uppercase tracking-[0.14em] transition-opacity ${
+                active ? meta.chip : "border-border text-muted-foreground opacity-50"
+              }`}
+            >
+              <span className={`inline-block h-2 w-2 ${meta.dot}`} />
+              {meta.label}
+            </button>
+          );
+        })}
+      </div>
 
       <div className="border border-border bg-surface-1">
         <div className="flex items-center justify-between border-b border-border bg-surface-2 px-3 py-2">
@@ -112,21 +145,21 @@ function CalendarioPage() {
                   </button>
                 </div>
                 <div className="mt-1 space-y-1">
-                  {items.slice(0, 3).map((e) => (
-                    <button
-                      key={e.id}
-                      onClick={() => { setEditing(e); setOpen(true); }}
-                      className={`block w-full truncate border-l-2 px-1.5 py-0.5 text-left text-mono text-[10px] ${
-                        e.status === "concluido" ? "border-emerald-500 bg-emerald-500/10 text-emerald-300"
-                        : e.status === "em_andamento" ? "border-amber-500 bg-amber-500/10 text-amber-300"
-                        : e.status === "cancelado" ? "border-destructive bg-destructive/10 text-destructive line-through"
-                        : "border-cyan bg-cyan/10 text-cyan"
-                      }`}
-                      title={e.nome}
-                    >
-                      {new Date(e.data).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })} · {e.nome}
-                    </button>
-                  ))}
+                  {items.slice(0, 3).map((e) => {
+                    const cat = (e.categoria ?? "evento") as Categoria;
+                    const cancelled = e.status === "cancelado";
+                    const done = e.status === "concluido";
+                    return (
+                      <button
+                        key={e.id}
+                        onClick={() => { setEditing(e); setOpen(true); }}
+                        className={`block w-full truncate border-l-2 px-1.5 py-0.5 text-left text-mono text-[10px] ${CATEGORIA_META[cat].bar} ${cancelled ? "opacity-50 line-through" : ""} ${done ? "opacity-80" : ""}`}
+                        title={`${CATEGORIA_META[cat].label} · ${e.nome}`}
+                      >
+                        {new Date(e.data).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })} · {e.nome}
+                      </button>
+                    );
+                  })}
                   {items.length > 3 && <p className="px-1.5 text-mono text-[9px] text-muted-foreground">+{items.length - 3} mais</p>}
                 </div>
               </div>
@@ -136,29 +169,37 @@ function CalendarioPage() {
       </div>
 
       <div className="border border-border bg-surface-1">
-        <div className="border-b border-border bg-surface-2 px-3 py-2"><p className="hud-label text-cyan">Próximas Sessões</p></div>
+        <div className="border-b border-border bg-surface-2 px-3 py-2"><p className="hud-label text-cyan">Próximos</p></div>
         <div className="divide-y divide-border">
-          {(eventos ?? [])
+          {visibleEventos
             .filter((e: any) => e.data && new Date(e.data) >= new Date(Date.now() - 86400000) && e.status !== "concluido" && e.status !== "cancelado")
             .sort((a: any, b: any) => +new Date(a.data) - +new Date(b.data))
-            .slice(0, 6)
-            .map((e: any) => (
-              <button key={e.id} onClick={() => { setEditing(e); setOpen(true); }} className="flex w-full items-center justify-between px-3 py-2 text-left hover:bg-surface-2">
-                <div>
-                  <p className="text-display text-sm font-bold">{e.nome}</p>
-                  <p className="mt-0.5 text-mono text-[10px] text-muted-foreground">
-                    {new Date(e.data).toLocaleString("pt-BR", { dateStyle: "short", timeStyle: "short" })}
-                    {e.dominio?.nome ? ` · ${e.dominio.nome}` : ""}
-                  </p>
-                </div>
-                <div className="flex gap-1">
-                  <Badge tone="cyan">{e.tipo}</Badge>
-                  <Badge tone={STATUS_TONE[e.status]}>{e.status.replace("_", " ")}</Badge>
-                </div>
-              </button>
-            ))}
-          {(eventos ?? []).filter((e: any) => e.data && new Date(e.data) >= new Date(Date.now() - 86400000) && e.status !== "concluido" && e.status !== "cancelado").length === 0 && (
-            <p className="px-3 py-6 text-center text-mono text-[11px] uppercase tracking-[0.16em] text-muted-foreground">Nenhuma sessão agendada.</p>
+            .slice(0, 8)
+            .map((e: any) => {
+              const cat = (e.categoria ?? "evento") as Categoria;
+              return (
+                <button key={e.id} onClick={() => { setEditing(e); setOpen(true); }} className="flex w-full items-center justify-between px-3 py-2 text-left hover:bg-surface-2">
+                  <div className="flex items-center gap-2">
+                    <span className={`inline-block h-2 w-2 ${CATEGORIA_META[cat].dot}`} />
+                    <div>
+                      <p className="text-display text-sm font-bold">{e.nome}</p>
+                      <p className="mt-0.5 text-mono text-[10px] text-muted-foreground">
+                        {new Date(e.data).toLocaleString("pt-BR", { dateStyle: "short", timeStyle: "short" })}
+                        {e.dominio?.nome ? ` · ${e.dominio.nome}` : ""}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex gap-1">
+                    <span className={`inline-flex items-center border px-1.5 py-0.5 text-mono text-[10px] uppercase tracking-[0.14em] ${CATEGORIA_META[cat].chip}`}>
+                      {CATEGORIA_META[cat].label}
+                    </span>
+                    <Badge tone={STATUS_TONE[e.status]}>{e.status.replace("_", " ")}</Badge>
+                  </div>
+                </button>
+              );
+            })}
+          {visibleEventos.filter((e: any) => e.data && new Date(e.data) >= new Date(Date.now() - 86400000) && e.status !== "concluido" && e.status !== "cancelado").length === 0 && (
+            <p className="px-3 py-6 text-center text-mono text-[11px] uppercase tracking-[0.16em] text-muted-foreground">Nenhum agendamento.</p>
           )}
         </div>
       </div>
@@ -192,6 +233,7 @@ function SessionModal({ e, onClose, onFinalize }: { e: any; onClose: () => void;
     relatorio: e?.relatorio ?? "",
     status: e?.status ?? "planejado",
     tipo: e?.tipo ?? "global",
+    categoria: e?.categoria ?? "evento",
     clearance: e?.clearance ?? "uniao",
   });
   const [esquadInput, setEsquadInput] = useState("");
@@ -219,11 +261,16 @@ function SessionModal({ e, onClose, onFinalize }: { e: any; onClose: () => void;
   const canFinalize = !!form.id && form.status !== "concluido" && form.status !== "cancelado";
 
   return (
-    <Modal open onClose={onClose} title={e?.id ? `Sessão: ${e.nome}` : "Agendar Sessão"} wide>
+    <Modal open onClose={onClose} title={e?.id ? e.nome : "Novo agendamento"} wide>
       <form onSubmit={(ev) => { ev.preventDefault(); m.mutate(); }} className="space-y-4">
         <div className="grid grid-cols-2 gap-3">
           <Field label="Nome*"><Input required value={form.nome} onChange={(ev) => setForm({ ...form, nome: ev.target.value })} /></Field>
           <Field label="Data e Hora"><Input type="datetime-local" value={form.data} onChange={(ev) => setForm({ ...form, data: ev.target.value })} /></Field>
+          <Field label="Categoria*">
+            <Select value={form.categoria} onChange={(ev) => setForm({ ...form, categoria: ev.target.value })}>
+              {CATEGORIAS.map((c) => <option key={c} value={c}>{CATEGORIA_META[c].label}</option>)}
+            </Select>
+          </Field>
           <Field label="Narrador">
             <Select value={form.narrador_id} onChange={(ev) => setForm({ ...form, narrador_id: ev.target.value })}>
               <option value="">Eu (padrão)</option>
