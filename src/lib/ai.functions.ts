@@ -2,46 +2,135 @@ import { createServerFn } from "@tanstack/react-start";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { z } from "zod";
 import { callAI, type ChatMessage } from "./ai-gateway.server";
+import {
+  canRoleViewVisibility,
+  legacyClearanceToVisibility,
+  VISIBILITIES,
+  type Visibility,
+} from "@/cms/permissions/policy";
 
 async function assertStaff(ctx: { supabase: any; userId: string }) {
   const { data } = await ctx.supabase.rpc("is_staff", { _user_id: ctx.userId });
   if (!data) throw new Error("Forbidden: requer staff.");
 }
 
+async function getUserRoles(ctx: { supabase: any; userId: string }) {
+  const { data } = await ctx.supabase
+    .from("user_roles")
+    .select("role")
+    .eq("user_id", ctx.userId);
+  return (data ?? []).map((row: { role: string }) => row.role);
+}
+
+function isMissingCmsColumns(error: { message?: string } | null | undefined) {
+  const message = error?.message ?? "";
+  return (
+    message.includes("cms_status") ||
+    message.includes("visibility") ||
+    message.includes("classification")
+  );
+}
+
+function canSeeLoreRow(
+  row: {
+    visibility?: string | null;
+    clearance?: string | null;
+    cms_status?: string | null;
+    status?: string | null;
+  },
+  roles: string[],
+) {
+  const visibility = (row.visibility ?? legacyClearanceToVisibility(row.clearance)) as Visibility;
+  const isPublished = row.cms_status ? row.cms_status === "published" : row.status === "publicado";
+  return isPublished && canRoleViewVisibility(visibility, roles, true);
+}
+
+function canSeeAccessValue(value: string | null | undefined, roles: string[]) {
+  if (!value) return true;
+  const visibility = ((VISIBILITIES as readonly string[]).includes(value)
+    ? value
+    : legacyClearanceToVisibility(value)) as Visibility;
+  return canRoleViewVisibility(visibility, roles, true);
+}
+
 // ============================================================
 // CONTEXTO: monta um resumo compacto do universo a partir do DB
 // ============================================================
-async function buildUniverseContext(opts?: { full?: boolean; limit?: number }) {
+async function buildUniverseContext(
+  ctx: { supabase: any; userId: string },
+  opts?: { full?: boolean; limit?: number },
+) {
   const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
   const limit = opts?.limit ?? (opts?.full ? 400 : 120);
+  const roles = await getUserRoles(ctx);
 
-  const [lore, npcs, dominios, vestigios, rupturas, eventos, fatos, misterios, faccoes, docs, ws] = await Promise.all([
-    supabaseAdmin.from("lore_entries").select("title, category, summary, body, status").eq("status", "publicado").limit(limit),
-    supabaseAdmin.from("npcs").select("nome, cargo, faccao, status, localizacao, objetivos, segredos, observacoes_staff, ultima_aparicao").limit(limit),
+  const loreQuery = supabaseAdmin
+    .from("lore_entries")
+    .select("title, category, summary, body, status, cms_status, visibility, classification, clearance")
+    .neq("cms_status", "trash")
+    .limit(limit);
+  const faccoesQuery = supabaseAdmin
+    .from("lore_entries")
+    .select("title, summary, status, cms_status, visibility, clearance")
+    .eq("category", "faccao")
+    .neq("cms_status", "trash")
+    .limit(50);
+
+  const [loreResult, npcs, dominios, vestigios, rupturas, eventos, fatos, misterios, faccoesResult, docs, ws] = await Promise.all([
+    loreQuery,
+    supabaseAdmin.from("npcs").select("nome, cargo, faccao, status, localizacao, objetivos, segredos, segredos_clearance, observacoes_staff, ultima_aparicao").limit(limit),
     supabaseAdmin.from("dominios").select("nome, classe, dificuldade, status, recompensas, historico, ultima_abertura").limit(limit),
     supabaseAdmin.from("vestigios").select("nome, numero, vidas_atuais, vidas_limite, estado, ultima_aparicao").limit(limit),
     supabaseAdmin.from("rupturas").select("nome, estado, descricao, aberta_em, fechada_em").limit(limit),
-    supabaseAdmin.from("eventos_operacionais").select("nome, data, tipo, status, resumo, consequencias").order("data", { ascending: false }).limit(limit),
+    supabaseAdmin.from("eventos_operacionais").select("nome, data, tipo, status, clearance, resumo, consequencias").order("data", { ascending: false }).limit(limit),
     supabaseAdmin.from("fatos_canonicos").select("titulo, descricao, categoria, fonte, nivel_confirmacao").limit(limit),
     supabaseAdmin.from("misterios").select("titulo, descricao, status, hipoteses").limit(limit),
-    supabaseAdmin.from("lore_entries").select("title, summary").eq("category", "faccao").eq("status", "publicado").limit(50),
+    faccoesQuery,
     supabaseAdmin.from("documentos").select("titulo, conteudo, clearance").limit(50),
     supabaseAdmin.from("world_state").select("*").maybeSingle(),
   ]);
+  let lore = loreResult;
+  let faccoes = faccoesResult;
+
+  if (isMissingCmsColumns(loreResult.error)) {
+    lore = await supabaseAdmin
+      .from("lore_entries")
+      .select("title, category, summary, body, status, clearance")
+      .eq("status", "publicado")
+      .limit(limit);
+  }
+
+  if (isMissingCmsColumns(faccoesResult.error)) {
+    faccoes = await supabaseAdmin
+      .from("lore_entries")
+      .select("title, summary, status, clearance")
+      .eq("category", "faccao")
+      .eq("status", "publicado")
+      .limit(50);
+  }
 
   const trim = (s: any, n = 220) => (s ? String(s).replace(/\s+/g, " ").slice(0, n) : "");
+  const visibleLore = (lore.data ?? []).filter((row: any) => canSeeLoreRow(row, roles));
+  const visibleFaccoes = (faccoes.data ?? []).filter((row: any) => canSeeLoreRow(row, roles));
+  const visibleEventos = (eventos.data ?? []).filter((row: any) =>
+    canSeeAccessValue(row.clearance, roles),
+  );
+  const visibleDocs = (docs.data ?? []).filter((row: any) =>
+    canSeeAccessValue(row.clearance, roles),
+  );
 
   const sections: string[] = [];
   sections.push(`# ESTADO DO MUNDO\n${JSON.stringify(ws.data ?? {})}`);
-  if (lore.data?.length) sections.push(`# LORE (${lore.data.length})\n` + lore.data.map((l: any) => `- [${l.category}] ${l.title}: ${trim(l.summary || l.content)}`).join("\n"));
-  if (npcs.data?.length) sections.push(`# NPCs (${npcs.data.length})\n` + npcs.data.map((n: any) => `- ${n.nome} (${n.cargo ?? "?"}, ${n.faccao ?? "?"}, ${n.status}) loc=${n.localizacao ?? "?"} obj=${(n.objetivos ?? []).slice(0, 3).join("; ")} | seg=${trim(n.segredos, 140)}`).join("\n"));
+  if (visibleLore.length) sections.push(`# LORE (${visibleLore.length})\n` + visibleLore.map((l: any) => `- [${l.category}] ${l.title}: ${trim(l.summary || l.body)}`).join("\n"));
+  if (visibleFaccoes.length) sections.push(`# FACÇÕES (${visibleFaccoes.length})\n` + visibleFaccoes.map((f: any) => `- ${f.title}: ${trim(f.summary)}`).join("\n"));
+  if (npcs.data?.length) sections.push(`# NPCs (${npcs.data.length})\n` + npcs.data.map((n: any) => `- ${n.nome} (${n.cargo ?? "?"}, ${n.faccao ?? "?"}, ${n.status}) loc=${n.localizacao ?? "?"} obj=${(n.objetivos ?? []).slice(0, 3).join("; ")} | seg=${canSeeAccessValue(n.segredos_clearance, roles) ? trim(n.segredos, 140) : "[segredo restrito]"}`).join("\n"));
   if (dominios.data?.length) sections.push(`# DOMÍNIOS (${dominios.data.length})\n` + dominios.data.map((d: any) => `- ${d.nome} [${d.classe}] dif=${d.dificuldade} ${d.status} ult=${d.ultima_abertura ?? "?"} | ${trim(d.historico, 140)}`).join("\n"));
   if (vestigios.data?.length) sections.push(`# VESTÍGIOS (${vestigios.data.length})\n` + vestigios.data.map((v: any) => `- #${v.numero ?? "?"} ${v.nome} (${v.vidas_atuais}/${v.vidas_limite} vidas, ${v.estado})`).join("\n"));
   if (rupturas.data?.length) sections.push(`# RUPTURAS\n` + rupturas.data.map((r: any) => `- ${r.nome} (${r.estado}) ${trim(r.descricao, 120)}`).join("\n"));
-  if (eventos.data?.length) sections.push(`# EVENTOS\n` + eventos.data.map((e: any) => `- ${e.data ?? "?"} [${e.tipo}/${e.status}] ${e.nome}: ${trim(e.resumo, 160)}`).join("\n"));
+  if (visibleEventos.length) sections.push(`# EVENTOS\n` + visibleEventos.map((e: any) => `- ${e.data ?? "?"} [${e.tipo}/${e.status}] ${e.nome}: ${trim(e.resumo, 160)}`).join("\n"));
   if (fatos.data?.length) sections.push(`# FATOS CANÔNICOS (imutáveis)\n` + fatos.data.map((f: any) => `- [${f.nivel_confirmacao}] ${f.titulo}: ${trim(f.descricao, 200)}`).join("\n"));
   if (misterios.data?.length) sections.push(`# MISTÉRIOS EM ABERTO\n` + misterios.data.map((m: any) => `- [${m.status}] ${m.titulo}: ${trim(m.descricao, 160)}`).join("\n"));
-  if (docs.data?.length) sections.push(`# DOCUMENTOS (${docs.data.length})\n` + docs.data.map((d: any) => `- [${d.clearance}] ${d.titulo}: ${trim(d.conteudo, 180)}`).join("\n"));
+  if (visibleDocs.length) sections.push(`# DOCUMENTOS (${visibleDocs.length})\n` + visibleDocs.map((d: any) => `- [${d.clearance}] ${d.titulo}: ${trim(d.conteudo, 180)}`).join("\n"));
 
   let context = sections.join("\n\n");
   // Cap context to ~30k chars to stay safe
@@ -58,8 +147,12 @@ REGRAS ABSOLUTAS:
 - Estilo: sombrio, ocultista, técnico-burocrático no tom (SCP/Control).
 - Português do Brasil. Markdown permitido.`;
 
-async function generate(prompt: string, ctxMode: "compact" | "full" = "compact"): Promise<string> {
-  const context = await buildUniverseContext({ full: ctxMode === "full" });
+async function generate(
+  authContext: { supabase: any; userId: string },
+  prompt: string,
+  ctxMode: "compact" | "full" = "compact",
+): Promise<string> {
+  const context = await buildUniverseContext(authContext, { full: ctxMode === "full" });
   const messages: ChatMessage[] = [
     { role: "system", content: SYSTEM_BASE },
     { role: "system", content: `CONTEXTO DO UNIVERSO (somente dados oficiais):\n\n${context}` },
@@ -77,6 +170,7 @@ export const askLore = createServerFn({ method: "POST" })
   .handler(async ({ data, context }) => {
     await assertStaff(context);
     const out = await generate(
+      context,
       `Pergunta da staff: ${data.question}\n\nResponda usando EXCLUSIVAMENTE os dados do contexto acima. Se não há informação suficiente, diga claramente "INFORMAÇÃO NÃO REGISTRADA" e sugira o que precisa ser cadastrado.`,
       "full",
     );
@@ -113,7 +207,7 @@ Estrutura obrigatória em markdown:
 ## Possíveis Finais (mínimo 3)
 ## Consequências (para mundo, NPCs, facções)
 ## NPCs e Domínios envolvidos (apenas existentes)`;
-    return { result: await generate(prompt) };
+    return { result: await generate(context, prompt) };
   });
 
 // ============================================================
@@ -139,7 +233,7 @@ Estrutura em markdown:
 ## Regras internas
 ## Recompensas
 ## História / Origem`;
-    return { result: await generate(prompt) };
+    return { result: await generate(context, prompt) };
   });
 
 // ============================================================
@@ -163,7 +257,7 @@ Responda em markdown:
 ## Relações (com NPCs ou facções existentes)
 ## Segredos (1-3, classificados)
 ## Potencial de plot (ganchos narrativos)`;
-    return { result: await generate(prompt) };
+    return { result: await generate(context, prompt) };
   });
 
 // ============================================================
@@ -189,7 +283,7 @@ Para cada gancho:
 - **NPCs/facções envolvidos (existentes):**
 - **Por que é interessante agora:**
 - **Possível desdobramento:**`;
-    return { result: await generate(prompt, "full") };
+    return { result: await generate(context, prompt, "full") };
   });
 
 // ============================================================
@@ -215,7 +309,7 @@ Responda em markdown estruturado:
 ## 6. Conflitos com FATOS CANÔNICOS? (sim/não, cite o fato)
 ## 7. Risco de furo de roteiro (baixo/médio/alto + justificativa)
 ## 8. Recomendação final (aprovar / ajustar / rejeitar)`;
-    return { result: await generate(prompt, "full") };
+    return { result: await generate(context, prompt, "full") };
   });
 
 // ============================================================
@@ -245,7 +339,7 @@ export const chatComoNpc = createServerFn({ method: "POST" })
       ? "Você é um REGENTE de Domínio: proponha desafios, jogos, regras absurdas mas internamente coerentes. Tom autoritário e teatral."
       : "Interprete fielmente este NPC.";
 
-    const context_text = await buildUniverseContext({ limit: 80 });
+    const context_text = await buildUniverseContext(context, { limit: 80 });
     const sysPersona = `${SYSTEM_BASE}
 
 ${tomExtra}
