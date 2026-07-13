@@ -99,26 +99,13 @@ export function SiteHeader() {
 export function SiteFooter() {
   return (
     <footer className="mt-24 border-t border-border bg-surface-1">
-      <div className="mx-auto max-w-7xl px-6 py-10">
-        <div className="flex flex-wrap items-end justify-between gap-6">
-          <div>
-            <p className="hud-label">União Trivalente · Arquivos Públicos</p>
-            <p className="mt-2 text-display text-2xl font-bold">ABYSSION SMP</p>
-            <p className="mt-1 max-w-md text-sm text-muted-foreground">
-              "O Núcleo está morrendo. A União observa."
-            </p>
-          </div>
-          <div className="grid grid-cols-2 gap-x-10 gap-y-1 text-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground">
-            <span>Doc Rev. 17.04</span>
-            <span>Class. PÚBLICO</span>
-            <span>Bastião Vulcanom</span>
-            <span>Setor Arquivos</span>
-          </div>
+      <div className="mx-auto max-w-7xl px-6 py-8">
+        <div className="flex flex-wrap items-center justify-between gap-4">
+          <p className="text-display text-lg font-bold">ABYSSION SMP</p>
+          <p className="text-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground">
+            União Trivalente
+          </p>
         </div>
-        <div className="hud-divider mt-6" />
-        <p className="mt-4 text-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground">
-          Reprodução não autorizada constitui violação de protocolo nível S.
-        </p>
       </div>
     </footer>
   );

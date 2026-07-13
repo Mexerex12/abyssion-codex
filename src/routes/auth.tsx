@@ -130,7 +130,7 @@ function Auth() {
               disabled={loading}
               className="w-full border border-cyan bg-cyan py-3 text-mono text-xs font-semibold uppercase tracking-[0.18em] text-cyan-foreground transition-all hover:bg-cyan/90 disabled:opacity-50"
             >
-              {loading ? "Processando..." : mode === "login" ? "Confirmar Identidade" : "Solicitar Acesso"}
+              {loading ? "Processando..." : mode === "login" ? "Entrar" : "Registrar"}
             </button>
 
             <button
@@ -138,7 +138,7 @@ function Auth() {
               onClick={() => setMode(mode === "login" ? "signup" : "login")}
               className="w-full text-mono text-[11px] uppercase tracking-[0.18em] text-muted-foreground hover:text-cyan"
             >
-              {mode === "login" ? "Não possui credencial? Registrar →" : "Já possui credencial? Identificar →"}
+              {mode === "login" ? "Registrar" : "Entrar"}
             </button>
           </form>
         </div>

@@ -73,11 +73,7 @@ function Timeline() {
       <main className="mx-auto max-w-7xl px-6 pt-10 pb-16">
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div>
-            <p className="hud-label">Cronologia Oficial · União Trivalente</p>
-            <h1 className="mt-2 text-display text-4xl font-bold md:text-5xl">Linha do Tempo</h1>
-            <p className="mt-2 max-w-xl text-sm text-muted-foreground">
-              Visualização cronológica com zoom. Use os controles para expandir períodos densos.
-            </p>
+            <h1 className="text-display text-4xl font-bold md:text-5xl">Linha do Tempo</h1>
           </div>
           <div className="flex items-center gap-2">
             <div className="flex items-center border border-border">
