@@ -261,11 +261,16 @@ function SessionModal({ e, onClose, onFinalize }: { e: any; onClose: () => void;
   const canFinalize = !!form.id && form.status !== "concluido" && form.status !== "cancelado";
 
   return (
-    <Modal open onClose={onClose} title={e?.id ? `Sessão: ${e.nome}` : "Agendar Sessão"} wide>
+    <Modal open onClose={onClose} title={e?.id ? e.nome : "Novo agendamento"} wide>
       <form onSubmit={(ev) => { ev.preventDefault(); m.mutate(); }} className="space-y-4">
         <div className="grid grid-cols-2 gap-3">
           <Field label="Nome*"><Input required value={form.nome} onChange={(ev) => setForm({ ...form, nome: ev.target.value })} /></Field>
           <Field label="Data e Hora"><Input type="datetime-local" value={form.data} onChange={(ev) => setForm({ ...form, data: ev.target.value })} /></Field>
+          <Field label="Categoria*">
+            <Select value={form.categoria} onChange={(ev) => setForm({ ...form, categoria: ev.target.value })}>
+              {CATEGORIAS.map((c) => <option key={c} value={c}>{CATEGORIA_META[c].label}</option>)}
+            </Select>
+          </Field>
           <Field label="Narrador">
             <Select value={form.narrador_id} onChange={(ev) => setForm({ ...form, narrador_id: ev.target.value })}>
               <option value="">Eu (padrão)</option>
