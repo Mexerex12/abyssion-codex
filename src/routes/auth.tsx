@@ -21,7 +21,7 @@ function Auth() {
   const [password, setPassword] = useState("");
   const [displayName, setDisplayName] = useState("");
   const [loading, setLoading] = useState(false);
-  const [verifyMessage, setVerifyMessage] = useState(false);
+  const [verifyMessage, setVerifyMessage] = useState(true);
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
