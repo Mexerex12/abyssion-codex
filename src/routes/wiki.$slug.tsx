@@ -61,7 +61,7 @@ function Entry() {
           to="/wiki"
           className="inline-flex items-center gap-2 text-mono text-[11px] uppercase tracking-[0.18em] text-muted-foreground hover:text-cyan"
         >
-          <ArrowLeft className="h-3 w-3" /> Voltar aos Arquivos
+          <ArrowLeft className="h-3 w-3" /> Voltar
         </Link>
 
         <article className="mt-6">
@@ -91,10 +91,7 @@ function Entry() {
           {classified && (
             <div className="mt-3 border border-destructive/60 bg-destructive/10 p-4 classified-stripe">
               <p className="text-mono text-[11px] font-semibold uppercase tracking-[0.18em] text-destructive">
-                ⚠ DOCUMENTO RESTRITO · {CATEGORY_META[entry.category].label}
-              </p>
-              <p className="mt-1 text-sm text-foreground/80">
-                A divulgação não autorizada deste registro constitui quebra de protocolo nível S.
+                DOCUMENTO RESTRITO · {CATEGORY_META[entry.category].label}
               </p>
             </div>
           )}

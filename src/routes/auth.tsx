@@ -69,35 +69,21 @@ function Auth() {
           <p className="text-display text-[15px] font-bold">ABYSSION</p>
         </Link>
         <div className="relative">
-          <p className="hud-label">Protocolo de Verificação · K-09</p>
-          <h2 className="mt-4 text-display text-4xl font-bold leading-tight">
+          <h2 className="text-display text-4xl font-bold leading-tight">
             Identifique-se<br />perante a União.
           </h2>
-          <p className="mt-4 max-w-md text-sm text-muted-foreground">
-            Operadores credenciados acessam registros de Domínios catalogados, fichas de Vestígios
-            e relatórios operacionais. Documentos classificados exigem aprovação adicional do Alto Conselho.
-          </p>
         </div>
-        <div className="relative border-l-2 border-destructive/60 pl-4">
-          <p className="hud-label text-destructive">AVISO</p>
-          <p className="mt-1 text-sm text-foreground/80">
-            Toda atividade nesta plataforma é monitorada. Tentativas de acesso indevido constituem
-            quebra de protocolo nível S.
-          </p>
-        </div>
+        <div className="relative" />
       </aside>
 
       <section className="flex items-center justify-center p-6 sm:p-10">
         <div className="w-full max-w-md">
           <Link to="/" className="mb-8 inline-flex items-center gap-2 text-mono text-[11px] uppercase tracking-[0.18em] text-muted-foreground hover:text-foreground">
-            <ArrowLeft className="h-3 w-3" /> Voltar ao portal
+            <ArrowLeft className="h-3 w-3" /> Voltar
           </Link>
 
-          <p className="hud-label">
-            {mode === "login" ? "Acesso · Operador Existente" : "Registro · Novo Trivalente"}
-          </p>
-          <h1 className="mt-2 text-display text-3xl font-bold">
-            {mode === "login" ? "Identificação" : "Solicitar credencial"}
+          <h1 className="text-display text-3xl font-bold">
+            {mode === "login" ? "Identificação" : "Registro"}
           </h1>
 
           <form onSubmit={submit} className="mt-8 space-y-5">
@@ -144,7 +130,7 @@ function Auth() {
               disabled={loading}
               className="w-full border border-cyan bg-cyan py-3 text-mono text-xs font-semibold uppercase tracking-[0.18em] text-cyan-foreground transition-all hover:bg-cyan/90 disabled:opacity-50"
             >
-              {loading ? "Processando..." : mode === "login" ? "Confirmar Identidade" : "Solicitar Acesso"}
+              {loading ? "Processando..." : mode === "login" ? "Entrar" : "Registrar"}
             </button>
 
             <button
@@ -152,7 +138,7 @@ function Auth() {
               onClick={() => setMode(mode === "login" ? "signup" : "login")}
               className="w-full text-mono text-[11px] uppercase tracking-[0.18em] text-muted-foreground hover:text-cyan"
             >
-              {mode === "login" ? "Não possui credencial? Registrar →" : "Já possui credencial? Identificar →"}
+              {mode === "login" ? "Registrar" : "Entrar"}
             </button>
           </form>
         </div>

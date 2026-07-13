@@ -48,8 +48,7 @@ function Wiki() {
     <div className="min-h-screen">
       <SiteHeader />
       <main className="mx-auto max-w-7xl px-6 pt-10">
-        <p className="hud-label">Enciclopédia · Banco de Dados Completo</p>
-        <h1 className="mt-2 text-display text-4xl font-bold md:text-5xl">Arquivos</h1>
+        <h1 className="text-display text-4xl font-bold md:text-5xl">Arquivos</h1>
 
         <div className="mt-6 flex flex-col gap-3 md:flex-row md:items-center">
           <div className="relative flex-1">

@@ -18,17 +18,14 @@ function NotFoundComponent() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
       <div className="max-w-md text-center corner-frame p-10">
-        <p className="hud-label">Erro de Acesso · 404</p>
-        <h1 className="mt-4 text-display text-5xl font-bold text-foreground">DOCUMENTO NÃO LOCALIZADO</h1>
-        <p className="mt-4 text-sm text-muted-foreground">
-          Este arquivo não existe nos registros da União Trivalente ou foi expurgado por ordem do Alto Conselho.
-        </p>
+        <p className="hud-label">404</p>
+        <h1 className="mt-4 text-display text-4xl font-bold text-foreground">Documento não localizado</h1>
         <div className="mt-8">
           <Link
             to="/"
             className="inline-flex items-center justify-center border border-cyan/40 bg-cyan/10 px-5 py-2 text-mono text-xs uppercase tracking-[0.18em] text-cyan transition-colors hover:bg-cyan hover:text-cyan-foreground"
           >
-            Retornar ao Portal
+            Voltar
           </Link>
         </div>
       </div>
@@ -46,13 +43,10 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
       <div className="max-w-md text-center corner-frame p-10">
-        <p className="hud-label text-destructive">Falha de Sistema</p>
+        <p className="hud-label text-destructive">Erro</p>
         <h1 className="mt-4 text-display text-2xl font-semibold text-foreground">
-          Não foi possível carregar este registro
+          Falha ao carregar
         </h1>
-        <p className="mt-2 text-sm text-muted-foreground">
-          Anomalia detectada no canal de transmissão. Tente novamente ou retorne ao Portal.
-        </p>
         <div className="mt-6 flex flex-wrap justify-center gap-2">
           <button
             onClick={() => {
@@ -61,13 +55,13 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
             }}
             className="border border-cyan/40 bg-cyan/10 px-4 py-2 text-mono text-xs uppercase tracking-[0.18em] text-cyan hover:bg-cyan hover:text-cyan-foreground"
           >
-            Retransmitir
+            Tentar novamente
           </button>
           <a
             href="/"
             className="border border-border px-4 py-2 text-mono text-xs uppercase tracking-[0.18em] text-muted-foreground hover:text-foreground"
           >
-            Portal
+            Início
           </a>
         </div>
       </div>

@@ -45,16 +45,9 @@ function Restricted() {
           <div className="flex items-start gap-4">
             <Shield className="h-6 w-6 shrink-0 text-destructive" />
             <div>
-              <p className="text-mono text-[11px] font-semibold uppercase tracking-[0.18em] text-destructive">
-                ARQUIVOS RESTRITOS · UNIÃO TRIVALENTE
-              </p>
-              <h1 className="mt-2 text-display text-3xl font-bold md:text-4xl">
-                Documentação Classificada
+              <h1 className="text-display text-3xl font-bold md:text-4xl">
+                Arquivos Restritos
               </h1>
-              <p className="mt-2 max-w-2xl text-sm text-foreground/80">
-                Conteúdo organizado por nível de credencial. A tentativa de acessar documentos
-                acima do seu nível autorizado é registrada automaticamente.
-              </p>
             </div>
           </div>
         </div>
@@ -84,7 +77,7 @@ function Restricted() {
                     </p>
                     {!isAuthenticated && (
                       <Link to="/auth" className="mt-3 text-cyan text-sm hover:underline">
-                        Identificar-se →
+                        Identificar-se
                       </Link>
                     )}
                   </div>
