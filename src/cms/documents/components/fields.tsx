@@ -17,11 +17,13 @@ export function SelectField<T extends string>({
   value,
   options,
   onChange,
+  getOptionLabel,
 }: {
   label: string;
   value: T;
   options: readonly T[];
   onChange: (value: T) => void;
+  getOptionLabel?: (value: T) => string;
 }) {
   return (
     <Field label={label}>
@@ -32,7 +34,7 @@ export function SelectField<T extends string>({
       >
         {options.map((option) => (
           <option key={option} value={option}>
-            {option}
+            {getOptionLabel ? getOptionLabel(option) : option}
           </option>
         ))}
       </select>

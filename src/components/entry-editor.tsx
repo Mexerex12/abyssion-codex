@@ -181,12 +181,12 @@ export function EntryEditor({
 
         <Tabs defaultValue="general" className="mt-8">
           <TabsList className="grid w-full grid-cols-2 md:grid-cols-6">
-            <TabsTrigger value="general">General</TabsTrigger>
-            <TabsTrigger value="content">Content</TabsTrigger>
-            <TabsTrigger value="relations">Relations</TabsTrigger>
-            <TabsTrigger value="permissions">Permissions</TabsTrigger>
-            <TabsTrigger value="metadata">Metadata</TabsTrigger>
-            <TabsTrigger value="history">History</TabsTrigger>
+            <TabsTrigger value="general">Geral</TabsTrigger>
+            <TabsTrigger value="content">Conteúdo</TabsTrigger>
+            <TabsTrigger value="relations">Relações</TabsTrigger>
+            <TabsTrigger value="permissions">Permissões</TabsTrigger>
+            <TabsTrigger value="metadata">Metadados</TabsTrigger>
+            <TabsTrigger value="history">Histórico</TabsTrigger>
           </TabsList>
           <div className="mt-6 border border-border bg-background p-5">
             <TabsContent value="general">

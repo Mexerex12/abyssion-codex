@@ -91,7 +91,7 @@ function AdminHome() {
           <div>
             <SectionTitle
               icon={<Library className="h-4 w-4" />}
-              title="Library"
+              title="Biblioteca"
               href="/admin/biblioteca"
             />
             <div className="mt-4 grid grid-cols-2 gap-2 md:grid-cols-5">
@@ -129,8 +129,8 @@ function AdminHome() {
                   <th className="px-3 py-2.5">Categoria</th>
                   <th className="px-3 py-2.5">Título</th>
                   <th className="px-3 py-2.5">Status</th>
-                  <th className="px-3 py-2.5">Class.</th>
-                  <th className="px-3 py-2.5">Vis.</th>
+                  <th className="px-3 py-2.5">Classificação</th>
+                  <th className="px-3 py-2.5">Visibilidade</th>
                   <th className="px-3 py-2.5 text-right">Ações</th>
                 </tr>
               </thead>
@@ -186,7 +186,7 @@ function AdminHome() {
             <div className="mt-4 border border-border bg-surface-1 p-4">
               <div className="flex items-center gap-2 text-cyan">
                 <Tags className="h-4 w-4" />
-                <p className="hud-label">Tags catalogadas</p>
+                <p className="hud-label">Etiquetas catalogadas</p>
               </div>
               <p className="mt-2 text-display text-3xl font-bold">{d?.tags ?? 0}</p>
             </div>
