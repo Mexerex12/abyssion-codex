@@ -28,7 +28,7 @@ function AdminHome() {
     enabled: isStaff,
   });
 
-  if (loading) return null;
+  f (loading) return null;
 
   return (
     <div className="min-h-screen">
