@@ -5,7 +5,7 @@ import { useState, useMemo } from "react";
 import { SiteHeader, SiteFooter } from "@/components/site-chrome";
 import { LoreCard } from "@/components/lore-card";
 import { listLoreEntries } from "@/lib/lore.functions";
-import { CATEGORY_META } from "@/lib/lore-meta";
+import { categoryMeta } from "@/lib/lore-meta";
 import type { LoreCategory } from "@/lib/lore-meta";
 import { Search, X } from "lucide-react";
 
@@ -22,7 +22,7 @@ export const Route = createFileRoute("/wiki/")({
   notFoundComponent: () => <p className="p-10 text-center">Não encontrado.</p>,
 });
 
-const GROUP_ORDER: LoreCategory[] = [
+const GROUP_ORDER: string[] = [
   "universo",
   "historia",
   "faccao",
@@ -45,9 +45,10 @@ function Wiki() {
   const { data } = useSuspenseQuery({
     queryKey: ["lore", "all"],
     queryFn: () => fetchEntries({ data: {} }),
+    staleTime: 60_000,
   });
   const [q, setQ] = useState("");
-  const [cat, setCat] = useState<"all" | LoreCategory>("all");
+  const [cat, setCat] = useState<"all" | string>("all");
 
   const filtered = useMemo(() => {
     return (data ?? []).filter((e) => {
@@ -66,23 +67,34 @@ function Wiki() {
   }, [data, q, cat]);
 
   const grouped = useMemo(() => {
-    const map: Partial<Record<LoreCategory, typeof filtered>> = {};
+    const map: Record<string, typeof filtered> = {};
     for (const e of filtered) {
-      const k = e.category as LoreCategory;
+      const k = e.category;
       (map[k] ||= []).push(e);
     }
-    return GROUP_ORDER.filter((k) => (map[k]?.length ?? 0) > 0).map((k) => ({
-      cat: k,
-      items: map[k]!,
-    }));
+    const custom = Object.keys(map)
+      .filter((k) => !GROUP_ORDER.includes(k))
+      .sort((a, b) => categoryMeta(a).label.localeCompare(categoryMeta(b).label));
+    return [...GROUP_ORDER, ...custom]
+      .filter((k) => (map[k]?.length ?? 0) > 0)
+      .map((k) => ({
+        cat: k,
+        items: map[k]!,
+      }));
   }, [filtered]);
 
   const totalByCat = useMemo(() => {
-    const m: Partial<Record<LoreCategory, number>> = {};
-    for (const e of data ?? [])
-      m[e.category as LoreCategory] = (m[e.category as LoreCategory] ?? 0) + 1;
+    const m: Record<string, number> = {};
+    for (const e of data ?? []) m[e.category] = (m[e.category] ?? 0) + 1;
     return m;
   }, [data]);
+
+  const categoryOrder = useMemo(() => {
+    const custom = Object.keys(totalByCat)
+      .filter((k) => !GROUP_ORDER.includes(k))
+      .sort((a, b) => categoryMeta(a).label.localeCompare(categoryMeta(b).label));
+    return [...GROUP_ORDER, ...custom].filter((k) => (totalByCat[k] ?? 0) > 0);
+  }, [totalByCat]);
 
   return (
     <div className="min-h-screen">
@@ -130,17 +142,20 @@ function Wiki() {
             <Chip active={cat === "all"} onClick={() => setCat("all")} count={data?.length ?? 0}>
               Todas
             </Chip>
-            {GROUP_ORDER.filter((k) => (totalByCat[k] ?? 0) > 0).map((k) => (
-              <Chip
-                key={k}
-                active={cat === k}
-                onClick={() => setCat(k)}
-                count={totalByCat[k] ?? 0}
-                tone={CATEGORY_META[k].color === "alert" ? "alert" : "cyan"}
-              >
-                {CATEGORY_META[k].plural}
-              </Chip>
-            ))}
+            {categoryOrder.map((k) => {
+              const meta = categoryMeta(k);
+              return (
+                <Chip
+                  key={k}
+                  active={cat === k}
+                  onClick={() => setCat(k)}
+                  count={totalByCat[k] ?? 0}
+                  tone={meta.color === "alert" ? "alert" : "cyan"}
+                >
+                  {meta.plural}
+                </Chip>
+              );
+            })}
           </div>
         </div>
 
@@ -151,7 +166,7 @@ function Wiki() {
         ) : (
           <div className="mt-8 space-y-12">
             {grouped.map(({ cat: k, items }) => {
-              const meta = CATEGORY_META[k];
+              const meta = categoryMeta(k);
               const tone = meta.color === "alert" ? "text-destructive" : "text-cyan";
               return (
                 <section key={k}>

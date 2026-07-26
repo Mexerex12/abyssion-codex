@@ -1,19 +1,18 @@
-import { createFileRoute, notFound } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { SiteHeader, SiteFooter } from "@/components/site-chrome";
 import { LoreCard } from "@/components/lore-card";
 import { listByCategory } from "@/lib/lore.functions";
-import { CATEGORY_META } from "@/lib/lore-meta";
+import { categoryMeta } from "@/lib/lore-meta";
 import type { LoreCategory } from "@/lib/lore-meta";
 
 export const Route = createFileRoute("/categoria/$category")({
   loader: async ({ params }) => {
-    if (!(params.category in CATEGORY_META)) throw notFound();
     return await listByCategory({ data: { category: params.category } });
   },
   head: ({ params }) => {
-    const meta = CATEGORY_META[params.category as LoreCategory];
+    const meta = categoryMeta(params.category);
     return {
       meta: [
         { title: `${meta?.plural ?? "Categoria"} | União Trivalente` },
@@ -27,7 +26,7 @@ export const Route = createFileRoute("/categoria/$category")({
 function CategoryPage() {
   const params = Route.useParams();
   const cat = params.category as LoreCategory;
-  const meta = CATEGORY_META[cat];
+  const meta = categoryMeta(cat);
   const fetchByCat = useServerFn(listByCategory);
   const { data } = useSuspenseQuery({
     queryKey: ["category", cat],

@@ -1,5 +1,6 @@
 import { Upload } from "lucide-react";
-import { CATEGORY_META } from "@/lib/lore-meta";
+import { useState } from "react";
+import { BUILTIN_CATEGORY_OPTIONS, type CategoryMeta } from "@/lib/lore-meta";
 import {
   CLASSIFICATION_META,
   CLASSIFICATIONS,
@@ -16,7 +17,7 @@ import { Field, SelectField, inputCls } from "./fields";
 export type CmsEntryForm = {
   id?: string;
   slug: string;
-  category: keyof typeof CATEGORY_META;
+  category: string;
   title: string;
   subtitle: string;
   summary: string;
@@ -37,7 +38,28 @@ type FormProps = {
   setForm: (form: CmsEntryForm) => void;
 };
 
-export function GeneralTab({ form, setForm }: FormProps) {
+export function GeneralTab({
+  form,
+  setForm,
+  categories = BUILTIN_CATEGORY_OPTIONS,
+  onCreateCategory,
+  creatingCategory = false,
+}: FormProps & {
+  categories?: CategoryMeta[];
+  onCreateCategory?: (name: string) => Promise<CategoryMeta | void>;
+  creatingCategory?: boolean;
+}) {
+  const [newCategory, setNewCategory] = useState("");
+
+  async function createCategory() {
+    if (!newCategory.trim() || !onCreateCategory) return;
+    const created = await onCreateCategory(newCategory);
+    if (created?.slug) {
+      setForm({ ...form, category: created.slug });
+      setNewCategory("");
+    }
+  }
+
   return (
     <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
       <Field label="Título">
@@ -59,23 +81,38 @@ export function GeneralTab({ form, setForm }: FormProps) {
         />
       </Field>
       <Field label="Categoria">
-        <select
-          className={inputCls}
-          value={form.category}
-          onChange={(event) =>
-            setForm({ ...form, category: event.target.value as CmsEntryForm["category"] })
-          }
-        >
-          {(
-            Object.entries(CATEGORY_META) as Array<
-              [keyof typeof CATEGORY_META, (typeof CATEGORY_META)[keyof typeof CATEGORY_META]]
-            >
-          ).map(([key, value]) => (
-            <option key={key} value={key}>
-              {value.label}
-            </option>
-          ))}
-        </select>
+        <div className="space-y-2">
+          <select
+            className={inputCls}
+            value={form.category}
+            onChange={(event) => setForm({ ...form, category: event.target.value })}
+          >
+            {categories.map((category) => (
+              <option key={category.slug} value={category.slug}>
+                {category.label}
+                {!category.is_system ? " · custom" : ""}
+              </option>
+            ))}
+          </select>
+          {onCreateCategory && (
+            <div className="grid grid-cols-[1fr_auto] gap-2">
+              <input
+                className={inputCls}
+                value={newCategory}
+                onChange={(event) => setNewCategory(event.target.value)}
+                placeholder="Nova categoria"
+              />
+              <button
+                type="button"
+                disabled={creatingCategory || !newCategory.trim()}
+                onClick={createCategory}
+                className="border border-border px-3 text-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground hover:border-cyan hover:text-cyan disabled:opacity-50"
+              >
+                Criar
+              </button>
+            </div>
+          )}
+        </div>
       </Field>
       <Field label="Subtítulo">
         <input

@@ -1,6 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { z } from "zod";
+import { BUILTIN_CATEGORY_OPTIONS, type CategoryMeta } from "@/lib/lore-meta";
 import {
   cmsStatusToLegacy,
   legacyClearanceToClassification,
@@ -41,6 +42,26 @@ type CmsEntryRow = UnknownRecord & {
   cms_status?: string | null;
   status?: string | null;
 };
+type CmsCategoryRow = {
+  slug: string;
+  label: string;
+  plural: string;
+  color: string;
+  description: string;
+  is_system: boolean;
+};
+
+const categoryPayloadSchema = z.object({
+  slug: z
+    .string()
+    .min(2)
+    .max(40)
+    .regex(/^[a-z0-9-]+$/),
+  label: z.string().trim().min(2).max(80),
+  plural: z.string().trim().min(2).max(100).optional(),
+  color: z.enum(["cyan", "alert"]).default("cyan"),
+  description: z.string().trim().max(300).optional().default(""),
+});
 
 async function assertAdmin(ctx: AuthContext) {
   const { data } = await ctx.supabase.rpc("is_admin", { _user_id: ctx.userId });
@@ -58,6 +79,17 @@ function normalizeEntry(row: CmsEntryRow) {
     classification: row.classification ?? legacyClearanceToClassification(row.clearance),
     visibility: row.visibility ?? legacyClearanceToVisibility(row.clearance),
     status: legacyStatusToCms(row.cms_status ?? row.status),
+  };
+}
+
+function normalizeCategory(row: CmsCategoryRow): CategoryMeta {
+  return {
+    slug: row.slug,
+    label: row.label,
+    plural: row.plural,
+    color: row.color,
+    description: row.description,
+    is_system: row.is_system,
   };
 }
 
@@ -136,6 +168,48 @@ export const listCmsEntries = createServerFn({ method: "GET" })
     return (rows ?? []).map(normalizeEntry);
   });
 
+export const listCmsCategories = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    await assertStaff(context);
+    const { data, error } = await context.supabase
+      .from("lore_categories")
+      .select("slug, label, plural, color, description, is_system")
+      .order("is_system", { ascending: false })
+      .order("label", { ascending: true });
+
+    if (error) {
+      const message = error.message ?? "";
+      if (message.includes("lore_categories")) return BUILTIN_CATEGORY_OPTIONS;
+      throw new Error(message);
+    }
+
+    const categories = ((data ?? []) as CmsCategoryRow[]).map(normalizeCategory);
+    return categories.length > 0 ? categories : BUILTIN_CATEGORY_OPTIONS;
+  });
+
+export const createCmsCategory = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((data: unknown) => categoryPayloadSchema.parse(data))
+  .handler(async ({ data, context }) => {
+    await assertStaff(context);
+    const payload = {
+      slug: data.slug,
+      label: data.label,
+      plural: data.plural || data.label,
+      color: data.color,
+      description: data.description,
+      created_by: context.userId,
+    };
+    const { data: row, error } = await context.supabase
+      .from("lore_categories")
+      .insert(payload)
+      .select("slug, label, plural, color, description, is_system")
+      .single();
+    if (error) throw new Error(error.message);
+    return normalizeCategory(row as CmsCategoryRow);
+  });
+
 export const getCmsEntry = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .inputValidator((data: unknown) => z.object({ id: z.string().uuid() }).parse(data))
@@ -183,11 +257,7 @@ export const upsertLoreEntry = createServerFn({ method: "POST" })
       .parse(data),
   )
   .handler(async ({ data, context }) => {
-    const { data: isAdmin } = await context.supabase.rpc("is_admin", { _user_id: context.userId });
-    const { data: isStaff } = await context.supabase.rpc("is_staff", { _user_id: context.userId });
-    if (!isAdmin && !(isStaff && data.category === "evento")) {
-      throw new Error("Forbidden: você não tem permissão para esta operação.");
-    }
+    await assertStaff(context);
 
     const payload = {
       slug: data.slug.trim(),

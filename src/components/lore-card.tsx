@@ -1,7 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import {
-  CATEGORY_META,
   CLEARANCE_META,
+  categoryMeta,
   classificationMeta,
   isClassified,
   isRestrictedVisibility,
@@ -29,8 +29,8 @@ export function ClearanceBadge({ level }: { level: ClearanceLevel }) {
 }
 
 export function CategoryBadge({ category }: { category: LoreCategory }) {
-  const meta = CATEGORY_META[category];
-  return <span className="hud-label">{meta?.label ?? category}</span>;
+  const meta = categoryMeta(category);
+  return <span className="hud-label">{meta.label}</span>;
 }
 
 export function ClassificationBadge({ classification }: { classification: Classification }) {

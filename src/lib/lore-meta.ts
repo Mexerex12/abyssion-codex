@@ -7,15 +7,21 @@ import {
   type Visibility,
 } from "@/cms/permissions/policy";
 
-export type LoreCategory = Database["public"]["Enums"]["lore_category"];
+export type LoreCategory = string;
 export type ClearanceLevel = Database["public"]["Enums"]["clearance_level"];
 export type AppRole = Database["public"]["Enums"]["app_role"];
 export type { Classification, Visibility, EntryStatus };
 
-export const CATEGORY_META: Record<
-  LoreCategory,
-  { label: string; plural: string; color: string; description: string }
-> = {
+export type CategoryMeta = {
+  slug: string;
+  label: string;
+  plural: string;
+  color: "cyan" | "alert" | string;
+  description: string;
+  is_system?: boolean;
+};
+
+export const CATEGORY_META: Record<string, Omit<CategoryMeta, "slug">> = {
   universo: { label: "Universo", plural: "Universo", color: "cyan", description: "" },
   historia: { label: "História", plural: "História", color: "cyan", description: "" },
   npc: { label: "NPC", plural: "NPCs", color: "cyan", description: "" },
@@ -42,6 +48,33 @@ export const CATEGORY_META: Record<
   classe: { label: "Classe", plural: "Classes", color: "cyan", description: "" },
   ruptura: { label: "Ruptura", plural: "Rupturas", color: "alert", description: "" },
 };
+
+export const BUILTIN_CATEGORY_OPTIONS: CategoryMeta[] = Object.entries(CATEGORY_META).map(
+  ([slug, meta]) => ({
+    slug,
+    ...meta,
+    is_system: true,
+  }),
+);
+
+export function categoryMeta(category: string | null | undefined): CategoryMeta {
+  const slug = category || "sem-categoria";
+  const builtIn = CATEGORY_META[slug];
+  if (builtIn) return { slug, ...builtIn, is_system: true };
+  const label = slug
+    .split(/[-_]/g)
+    .filter(Boolean)
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+    .join(" ");
+  return {
+    slug,
+    label: label || slug,
+    plural: label || slug,
+    color: "cyan",
+    description: "",
+    is_system: false,
+  };
+}
 
 export const CLEARANCE_META: Record<
   ClearanceLevel,
@@ -83,7 +116,7 @@ export const DASHBOARD_CARDS: {
 ];
 
 export function categoryLabel(c: LoreCategory) {
-  return CATEGORY_META[c]?.label ?? c;
+  return categoryMeta(c).label;
 }
 
 export function clearanceMeta(c: ClearanceLevel) {
