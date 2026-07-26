@@ -42,7 +42,10 @@ const GROUP_ORDER: LoreCategory[] = [
 
 function Wiki() {
   const fetchEntries = useServerFn(listLoreEntries);
-  const { data } = useSuspenseQuery({ queryKey: ["lore", "all"], queryFn: () => fetchEntries({ data: {} }) });
+  const { data } = useSuspenseQuery({
+    queryKey: ["lore", "all"],
+    queryFn: () => fetchEntries({ data: {} }),
+  });
   const [q, setQ] = useState("");
   const [cat, setCat] = useState<"all" | LoreCategory>("all");
 
@@ -76,7 +79,8 @@ function Wiki() {
 
   const totalByCat = useMemo(() => {
     const m: Partial<Record<LoreCategory, number>> = {};
-    for (const e of data ?? []) m[e.category as LoreCategory] = (m[e.category as LoreCategory] ?? 0) + 1;
+    for (const e of data ?? [])
+      m[e.category as LoreCategory] = (m[e.category as LoreCategory] ?? 0) + 1;
     return m;
   }, [data]);
 
@@ -89,7 +93,8 @@ function Wiki() {
             <p className="hud-label text-cyan">Enciclopédia</p>
             <h1 className="mt-2 text-display text-4xl font-bold md:text-5xl">Arquivos</h1>
             <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
-              Registros catalogados da União Trivalente. Filtre por categoria ou busque por nome, tag ou resumo.
+              Registros catalogados da União Trivalente. Filtre por categoria ou busque por nome,
+              tag ou resumo.
             </p>
           </div>
           <p className="text-mono text-[11px] uppercase tracking-[0.16em] text-muted-foreground">
@@ -138,7 +143,6 @@ function Wiki() {
             ))}
           </div>
         </div>
-
 
         {filtered.length === 0 ? (
           <p className="mt-16 border border-dashed border-border bg-surface-1 px-6 py-16 text-center text-mono text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
