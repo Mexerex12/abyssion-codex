@@ -29,12 +29,13 @@ import {
 
 type EntryEditorInitial =
   | {
-      entry?: Partial<CmsEntryForm> & Record<string, unknown>;
+      entry?: Partial<CmsEntryForm> & { clearance?: string | null; cms_status?: string | null };
       outgoing?: RelationRow[];
       incoming?: RelationRow[];
       versions?: HistoryVersion[];
     }
-  | (Partial<CmsEntryForm> & Record<string, unknown>);
+  | (Partial<CmsEntryForm> & { clearance?: string | null; cms_status?: string | null });
+
 
 export function EntryEditor({
   mode,
