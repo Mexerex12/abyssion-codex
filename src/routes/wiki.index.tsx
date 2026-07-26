@@ -88,52 +88,57 @@ function Wiki() {
           <div>
             <p className="hud-label text-cyan">Enciclopédia</p>
             <h1 className="mt-2 text-display text-4xl font-bold md:text-5xl">Arquivos</h1>
+            <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
+              Registros catalogados da União Trivalente. Filtre por categoria ou busque por nome, tag ou resumo.
+            </p>
           </div>
-          <p className="text-mono text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
+          <p className="text-mono text-[11px] uppercase tracking-[0.16em] text-muted-foreground">
             {filtered.length} de {data?.length ?? 0}
           </p>
         </div>
 
-        <div className="mt-6 flex flex-col gap-3 md:flex-row md:items-center">
-          <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-            <input
-              type="search"
-              placeholder="Buscar por nome, tag ou resumo..."
-              value={q}
-              onChange={(e) => setQ(e.target.value)}
-              className="w-full border border-input bg-surface-1 py-2.5 pl-10 pr-10 text-sm focus:border-cyan focus:outline-none"
-            />
-            {q && (
-              <button
-                onClick={() => setQ("")}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+        {/* Sticky toolbar */}
+        <div className="sticky top-14 z-30 -mx-6 mt-8 border-b border-border bg-background/95 px-6 py-4 backdrop-blur-md">
+          <div className="flex flex-col gap-3 md:flex-row md:items-center">
+            <div className="relative md:max-w-md md:flex-1">
+              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              <input
+                type="search"
+                placeholder="Buscar por nome, tag ou resumo..."
+                value={q}
+                onChange={(e) => setQ(e.target.value)}
+                className="w-full border border-input bg-surface-1 py-2.5 pl-10 pr-10 text-sm focus:border-cyan focus:outline-none"
+              />
+              {q && (
+                <button
+                  onClick={() => setQ("")}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              )}
+            </div>
+          </div>
+
+          {/* Category chips */}
+          <div className="mt-3 flex flex-wrap gap-1">
+            <Chip active={cat === "all"} onClick={() => setCat("all")} count={data?.length ?? 0}>
+              Todas
+            </Chip>
+            {GROUP_ORDER.filter((k) => (totalByCat[k] ?? 0) > 0).map((k) => (
+              <Chip
+                key={k}
+                active={cat === k}
+                onClick={() => setCat(k)}
+                count={totalByCat[k] ?? 0}
+                tone={CATEGORY_META[k].color === "alert" ? "alert" : "cyan"}
               >
-                <X className="h-4 w-4" />
-              </button>
-            )}
+                {CATEGORY_META[k].plural}
+              </Chip>
+            ))}
           </div>
         </div>
 
-        {/* Category chips */}
-        <div className="mt-4 -mx-1 flex flex-wrap gap-1">
-          <Chip active={cat === "all"} onClick={() => setCat("all")} count={data?.length ?? 0}>
-            Todas
-          </Chip>
-          {GROUP_ORDER.filter((k) => (totalByCat[k] ?? 0) > 0).map((k) => (
-            <Chip
-              key={k}
-              active={cat === k}
-              onClick={() => setCat(k)}
-              count={totalByCat[k] ?? 0}
-              tone={CATEGORY_META[k].color === "alert" ? "alert" : "cyan"}
-            >
-              {CATEGORY_META[k].plural}
-            </Chip>
-          ))}
-        </div>
-
-        <div className="hud-divider mt-6" />
 
         {filtered.length === 0 ? (
           <p className="mt-16 border border-dashed border-border bg-surface-1 px-6 py-16 text-center text-mono text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
