@@ -17,7 +17,21 @@ function slugify(input: string): string {
 
 export type TocItem = { id: string; text: string; level: 2 | 3 };
 
-export function renderMarkdown(md: string | null | undefined): { html: string; toc: TocItem[] } {
+const SANITIZE_OPTS = {
+  ALLOWED_TAGS: [
+    "p","br","strong","em","u","s","blockquote","ul","ol","li","h1","h2","h3","h4","h5","h6",
+    "a","code","pre","hr","img","table","thead","tbody","tr","th","td","span","mark","sup","sub",
+  ],
+  ALLOWED_ATTR: ["href","title","alt","src","class","target","rel","id"],
+};
+
+export function renderMarkdown(md: string | null | undefined): string {
+  if (!md) return "";
+  const html = marked.parse(md, { async: false }) as string;
+  return DOMPurify.sanitize(html, SANITIZE_OPTS);
+}
+
+export function renderMarkdownWithToc(md: string | null | undefined): { html: string; toc: TocItem[] } {
   if (!md) return { html: "", toc: [] };
   const raw = marked.parse(md, { async: false }) as string;
   const toc: TocItem[] = [];
@@ -32,12 +46,5 @@ export function renderMarkdown(md: string | null | undefined): { html: string; t
     toc.push({ id, text, level: tag === "h2" ? 2 : 3 });
     return `<${tag} id="${id}">${inner}</${tag}>`;
   });
-  const html = DOMPurify.sanitize(withIds, {
-    ALLOWED_TAGS: [
-      "p","br","strong","em","u","s","blockquote","ul","ol","li","h1","h2","h3","h4","h5","h6",
-      "a","code","pre","hr","img","table","thead","tbody","tr","th","td","span","mark","sup","sub",
-    ],
-    ALLOWED_ATTR: ["href","title","alt","src","class","target","rel","id"],
-  });
-  return { html, toc };
+  return { html: DOMPurify.sanitize(withIds, SANITIZE_OPTS), toc };
 }
