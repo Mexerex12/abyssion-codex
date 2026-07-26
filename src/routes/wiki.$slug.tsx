@@ -43,7 +43,9 @@ function Entry() {
 
   useEffect(() => {
     if (typeof window === "undefined") return;
-    const els = Array.from(document.querySelectorAll<HTMLElement>(".prose-doc h2[id], .prose-doc h3[id]"));
+    const els = Array.from(
+      document.querySelectorAll<HTMLElement>(".prose-doc h2[id], .prose-doc h3[id]"),
+    );
     if (els.length === 0) return;
     const obs = new IntersectionObserver(
       (entries) => {
@@ -68,7 +70,8 @@ function Entry() {
   const byType: Record<string, typeof outgoing> = {};
   for (const r of outgoing) byType[r.relation_type] = [...(byType[r.relation_type] ?? []), r];
   const incomingByType: Record<string, typeof incoming> = {};
-  for (const r of incoming) incomingByType[r.relation_type] = [...(incomingByType[r.relation_type] ?? []), r];
+  for (const r of incoming)
+    incomingByType[r.relation_type] = [...(incomingByType[r.relation_type] ?? []), r];
 
   return (
     <div className="min-h-screen">
@@ -76,9 +79,13 @@ function Entry() {
       <main className="mx-auto max-w-[1400px] px-6 pt-8">
         {/* Breadcrumbs */}
         <nav className="flex items-center gap-1.5 text-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
-          <Link to="/" className="hover:text-cyan">Arquivos</Link>
+          <Link to="/" className="hover:text-cyan">
+            Arquivos
+          </Link>
           <ChevronRight className="h-3 w-3" />
-          <Link to="/wiki" className="hover:text-cyan">Enciclopédia</Link>
+          <Link to="/wiki" className="hover:text-cyan">
+            Enciclopédia
+          </Link>
           <ChevronRight className="h-3 w-3" />
           {catMeta && (
             <>
@@ -108,7 +115,11 @@ function Entry() {
                 )}
               </div>
               <h1 className="mt-5 text-display text-3xl font-bold leading-tight md:text-5xl">
-                {classified ? <span className="bg-foreground/90 px-1.5 text-background">{entry.title}</span> : entry.title}
+                {classified ? (
+                  <span className="bg-foreground/90 px-1.5 text-background">{entry.title}</span>
+                ) : (
+                  entry.title
+                )}
               </h1>
               {entry.subtitle && (
                 <p className="mt-3 text-lg text-muted-foreground">{entry.subtitle}</p>
@@ -138,7 +149,10 @@ function Entry() {
               <div className="mt-12 flex flex-wrap items-center gap-2 border-t border-border pt-6">
                 <Tag className="h-3 w-3 text-muted-foreground" />
                 {entry.tags.map((t) => (
-                  <span key={t} className="text-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground">
+                  <span
+                    key={t}
+                    className="text-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground"
+                  >
                     #{t}
                   </span>
                 ))}
@@ -151,10 +165,18 @@ function Entry() {
                 <div className="hud-divider mt-2" />
                 <div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-2">
                   {Object.entries(byType).map(([type, rels]) => (
-                    <RelGroup key={`out-${type}`} title={prettyRel(type)} rels={rels.map((r) => r.to).filter(Boolean) as RelTarget[]} />
+                    <RelGroup
+                      key={`out-${type}`}
+                      title={prettyRel(type)}
+                      rels={rels.map((r) => r.to).filter(Boolean) as RelTarget[]}
+                    />
                   ))}
                   {Object.entries(incomingByType).map(([type, rels]) => (
-                    <RelGroup key={`in-${type}`} title={`${prettyRel(type)} (referenciado por)`} rels={rels.map((r) => r.from).filter(Boolean) as RelTarget[]} />
+                    <RelGroup
+                      key={`in-${type}`}
+                      title={`${prettyRel(type)} (referenciado por)`}
+                      rels={rels.map((r) => r.from).filter(Boolean) as RelTarget[]}
+                    />
                   ))}
                 </div>
               </section>
@@ -186,9 +208,7 @@ function Entry() {
                           <a
                             href={`#${item.id}`}
                             className={`block truncate text-sm transition-colors ${
-                              active
-                                ? "text-cyan"
-                                : "text-muted-foreground hover:text-foreground"
+                              active ? "text-cyan" : "text-muted-foreground hover:text-foreground"
                             }`}
                           >
                             {item.text}
