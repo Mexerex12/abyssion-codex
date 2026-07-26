@@ -29,13 +29,12 @@ import {
 
 type EntryEditorInitial =
   | {
-      entry?: Partial<CmsEntryForm> & { clearance?: string | null; cms_status?: string | null };
+      entry?: Partial<CmsEntryForm> & Record<string, unknown>;
       outgoing?: RelationRow[];
       incoming?: RelationRow[];
       versions?: HistoryVersion[];
     }
-  | (Partial<CmsEntryForm> & { clearance?: string | null; cms_status?: string | null });
-
+  | (Partial<CmsEntryForm> & Record<string, unknown>);
 
 export function EntryEditor({
   mode,
@@ -49,22 +48,10 @@ export function EntryEditor({
   const save = useServerFn(upsertLoreEntry);
   const del = useServerFn(deleteLoreEntry);
   const listEntries = useServerFn(listCmsEntries);
-  const asWrapped =
-    initial && typeof initial === "object" && "entry" in initial
-      ? (initial as {
-          entry?: Partial<CmsEntryForm> & Record<string, unknown>;
-          outgoing?: RelationRow[];
-          incoming?: RelationRow[];
-          versions?: HistoryVersion[];
-        })
-      : undefined;
-  const normalizedInitial: (Partial<CmsEntryForm> & Record<string, unknown>) | undefined =
-    asWrapped ? asWrapped.entry : (initial as Partial<CmsEntryForm> & Record<string, unknown> | undefined);
-  const relations = asWrapped ?? {
-    outgoing: [] as RelationRow[],
-    incoming: [] as RelationRow[],
-    versions: [] as HistoryVersion[],
-  };
+  const normalizedInitial = "entry" in (initial ?? {}) ? initial?.entry : initial;
+  const relations =
+    "entry" in (initial ?? {}) ? initial : { outgoing: [], incoming: [], versions: [] };
+
 
 
   const [form, setForm] = useState<CmsEntryForm>(() => ({
