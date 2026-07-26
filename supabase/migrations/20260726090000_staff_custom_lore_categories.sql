@@ -60,3 +60,8 @@ CREATE POLICY "Staff can update custom lore categories"
   ON public.lore_categories FOR UPDATE
   USING (public.is_staff(auth.uid()) AND NOT is_system)
   WITH CHECK (public.is_staff(auth.uid()) AND NOT is_system);
+
+GRANT SELECT, INSERT, UPDATE ON public.lore_categories TO authenticated;
+
+-- Force PostgREST/Supabase API to refresh its schema cache after deployment.
+NOTIFY pgrst, 'reload schema';
