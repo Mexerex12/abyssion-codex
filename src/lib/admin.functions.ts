@@ -51,6 +51,11 @@ type CmsCategoryRow = {
   is_system: boolean;
 };
 
+function isMissingLoreCategories(error: DbError) {
+  const message = error?.message ?? "";
+  return error?.message?.includes("public.lore_categories") || message.includes("lore_categories");
+}
+
 const categoryPayloadSchema = z.object({
   slug: z
     .string()
@@ -180,7 +185,7 @@ export const listCmsCategories = createServerFn({ method: "GET" })
 
     if (error) {
       const message = error.message ?? "";
-      if (message.includes("lore_categories")) return BUILTIN_CATEGORY_OPTIONS;
+      if (isMissingLoreCategories(error)) return BUILTIN_CATEGORY_OPTIONS;
       throw new Error(message);
     }
 
@@ -206,7 +211,14 @@ export const createCmsCategory = createServerFn({ method: "POST" })
       .insert(payload)
       .select("slug, label, plural, color, description, is_system")
       .single();
-    if (error) throw new Error(error.message);
+    if (error) {
+      if (isMissingLoreCategories(error)) {
+        throw new Error(
+          "A tabela lore_categories ainda não existe no Supabase. Aplique a migration 20260726090000_staff_custom_lore_categories.sql e recarregue o schema cache.",
+        );
+      }
+      throw new Error(error.message);
+    }
     return normalizeCategory(row as CmsCategoryRow);
   });
 
