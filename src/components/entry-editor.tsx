@@ -52,6 +52,8 @@ export function EntryEditor({
   const relations =
     "entry" in (initial ?? {}) ? initial : { outgoing: [], incoming: [], versions: [] };
 
+
+
   const [form, setForm] = useState<CmsEntryForm>(() => ({
     id: normalizedInitial?.id,
     slug: normalizedInitial?.slug ?? "",
