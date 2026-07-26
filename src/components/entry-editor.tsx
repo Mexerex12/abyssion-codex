@@ -4,7 +4,13 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { toast } from "sonner";
 import { SiteFooter, SiteHeader } from "@/components/site-chrome";
-import { deleteLoreEntry, listCmsEntries, upsertLoreEntry } from "@/lib/admin.functions";
+import {
+  createCmsCategory,
+  deleteLoreEntry,
+  listCmsCategories,
+  listCmsEntries,
+  upsertLoreEntry,
+} from "@/lib/admin.functions";
 import { supabase } from "@/integrations/supabase/client";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ArrowLeft, Save, Trash2 } from "lucide-react";
@@ -48,6 +54,8 @@ export function EntryEditor({
   const save = useServerFn(upsertLoreEntry);
   const del = useServerFn(deleteLoreEntry);
   const listEntries = useServerFn(listCmsEntries);
+  const listCategories = useServerFn(listCmsCategories);
+  const createCategory = useServerFn(createCmsCategory);
   const normalizedInitial = "entry" in (initial ?? {}) ? initial?.entry : initial;
   const relations =
     "entry" in (initial ?? {}) ? initial : { outgoing: [], incoming: [], versions: [] };
@@ -78,7 +86,36 @@ export function EntryEditor({
 
   const entries = useQuery({
     queryKey: ["cms", "entries", "relations-picker"],
-    queryFn: () => listEntries({ data: { limit: 1000 } }),
+    queryFn: () => listEntries({ data: { limit: 300, sort: "title_asc" } }),
+    staleTime: 60_000,
+  });
+
+  const categories = useQuery({
+    queryKey: ["cms", "categories"],
+    queryFn: () => listCategories(),
+    staleTime: 5 * 60_000,
+  });
+
+  const categoryMut = useMutation({
+    mutationFn: (name: string) => {
+      const label = name.trim();
+      const slug = label
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .toLowerCase()
+        .replace(/[^a-z0-9\s-]/g, "")
+        .trim()
+        .replace(/\s+/g, "-")
+        .replace(/-+/g, "-")
+        .slice(0, 40);
+      return createCategory({ data: { slug, label, plural: label } });
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["cms", "categories"] });
+      toast.success("Categoria criada.");
+    },
+    onError: (error) =>
+      toast.error(error instanceof Error ? error.message : "Falha ao criar categoria"),
   });
 
   const payload = useMemo(() => {
@@ -114,7 +151,7 @@ export function EntryEditor({
   const saveMut = useMutation({
     mutationFn: () => save({ data: payload }),
     onSuccess: () => {
-      qc.invalidateQueries();
+      qc.invalidateQueries({ queryKey: ["cms"] });
       toast.success("Entrada salva.");
       navigate({ to: "/admin" });
     },
@@ -127,7 +164,7 @@ export function EntryEditor({
       return del({ data: { id: form.id } });
     },
     onSuccess: () => {
-      qc.invalidateQueries();
+      qc.invalidateQueries({ queryKey: ["cms"] });
       toast.success("Entrada movida para a lixeira.");
       navigate({ to: "/admin" });
     },
@@ -190,7 +227,13 @@ export function EntryEditor({
           </TabsList>
           <div className="mt-6 border border-border bg-background p-5">
             <TabsContent value="general">
-              <GeneralTab form={form} setForm={setForm} />
+              <GeneralTab
+                form={form}
+                setForm={setForm}
+                categories={categories.data}
+                creatingCategory={categoryMut.isPending}
+                onCreateCategory={(name) => categoryMut.mutateAsync(name)}
+              />
             </TabsContent>
             <TabsContent value="content">
               <ContentTab form={form} setForm={setForm} onFile={uploadImage} />

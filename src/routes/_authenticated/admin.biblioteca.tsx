@@ -1,12 +1,16 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { useState } from "react";
+import { useDeferredValue, useState } from "react";
 import { toast } from "sonner";
 import { SiteFooter, SiteHeader } from "@/components/site-chrome";
 import { CategoryBadge, ClassificationBadge, VisibilityBadge } from "@/components/lore-card";
-import { deleteLoreEntry, listCmsEntries, restoreLoreEntry } from "@/lib/admin.functions";
-import { CATEGORY_META } from "@/lib/lore-meta";
+import {
+  deleteLoreEntry,
+  listCmsCategories,
+  listCmsEntries,
+  restoreLoreEntry,
+} from "@/lib/admin.functions";
 import {
   ENTRY_STATUSES,
   STATUS_META,
@@ -32,9 +36,11 @@ function LibraryPage() {
   const search = Route.useSearch();
   const qc = useQueryClient();
   const listEntries = useServerFn(listCmsEntries);
+  const listCategories = useServerFn(listCmsCategories);
   const moveTrash = useServerFn(deleteLoreEntry);
   const restore = useServerFn(restoreLoreEntry);
   const [q, setQ] = useState("");
+  const deferredQ = useDeferredValue(q);
   const [status, setStatus] = useState<EntryStatus | "all">(search.status ?? "all");
   const [category, setCategory] = useState<string>("all");
   const [visibility, setVisibility] = useState<Visibility | "all">("all");
@@ -44,32 +50,39 @@ function LibraryPage() {
   );
 
   const entries = useQuery({
-    queryKey: ["cms", "library", q, status, category, visibility, tag, sort],
+    queryKey: ["cms", "library", deferredQ, status, category, visibility, tag, sort],
     queryFn: () =>
       listEntries({
         data: {
-          q,
+          q: deferredQ,
           status: status === "all" ? undefined : status,
-          category: category === "all" ? undefined : (category as never),
+          category: category === "all" ? undefined : category,
           visibility: visibility === "all" ? undefined : visibility,
           tag: tag || undefined,
           sort,
-          limit: 1000,
+          limit: 300,
         },
       }),
+    staleTime: 30_000,
+  });
+
+  const categories = useQuery({
+    queryKey: ["cms", "categories"],
+    queryFn: () => listCategories(),
+    staleTime: 5 * 60_000,
   });
 
   const trashMut = useMutation({
     mutationFn: (id: string) => moveTrash({ data: { id } }),
     onSuccess: () => {
-      qc.invalidateQueries();
+      qc.invalidateQueries({ queryKey: ["cms"] });
       toast.success("Entrada movida para a lixeira.");
     },
   });
   const restoreMut = useMutation({
     mutationFn: (id: string) => restore({ data: { id, status: "draft" } }),
     onSuccess: () => {
-      qc.invalidateQueries();
+      qc.invalidateQueries({ queryKey: ["cms"] });
       toast.success("Entrada restaurada como rascunho.");
     },
   });
@@ -138,13 +151,9 @@ function LibraryPage() {
             onChange={(event) => setCategory(event.target.value)}
           >
             <option value="all">Todas as categorias</option>
-            {(
-              Object.entries(CATEGORY_META) as Array<
-                [keyof typeof CATEGORY_META, (typeof CATEGORY_META)[keyof typeof CATEGORY_META]]
-              >
-            ).map(([key, value]) => (
-              <option key={key} value={key}>
-                {value.label}
+            {(categories.data ?? []).map((item) => (
+              <option key={item.slug} value={item.slug}>
+                {item.label}
               </option>
             ))}
           </select>

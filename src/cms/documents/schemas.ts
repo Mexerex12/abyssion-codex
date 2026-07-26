@@ -1,10 +1,11 @@
 import { z } from "zod";
-import { CATEGORY_META } from "@/lib/lore-meta";
 import { CLASSIFICATIONS, ENTRY_STATUSES, VISIBILITIES } from "@/cms/permissions/policy";
 
-export const loreCategorySchema = z.enum(
-  Object.keys(CATEGORY_META) as [keyof typeof CATEGORY_META, ...(keyof typeof CATEGORY_META)[]],
-);
+export const loreCategorySchema = z
+  .string()
+  .min(2)
+  .max(40)
+  .regex(/^[a-z0-9-]+$/);
 export const classificationSchema = z.enum(CLASSIFICATIONS);
 export const visibilitySchema = z.enum(VISIBILITIES);
 export const entryStatusSchema = z.enum(ENTRY_STATUSES);
